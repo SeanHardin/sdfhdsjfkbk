@@ -1,1 +1,18 @@
 book for class: Machine Learning Tom Mitchell
+
+grading
+projects 40% 4 for 10 each
+midterm 30%
+non-cumulative final 30%
+
+machine learning - the study of algorithms that improves their performance P at some task T with experience E.
+p - desired outcome
+T - task
+E - given data
+performance is related to the desired outcome of an event. ie. win chess, accurately diagnose, identify groups.
+
+supervised learning - training data includes expected output
+unsupervised learning - training data does not include expected output.
+
+
+
