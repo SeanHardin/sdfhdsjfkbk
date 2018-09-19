@@ -1,0 +1,18 @@
+show sites used when i looked online to find something i needed.
+
+"lo" from login was the very first message sent on the internet. (it crashed before it was finished typing)
+
+hosts = end systems
+communication links - fiber, copper, radio, satellite
+transmission rate - bandwidth
+packet switches - forward packets (chunks of data) through routers and switches.
+
+interconnected network of networks    shortened to internet.
+protocols - control sending and receiving of messages (TCP, IP, HTTP, Skype, 802.11)
+internet standards - RFC (request for comments), IETF (internet engineering task force)
+
+protocol - define format, order of mssages sent and received among network entities, and actions taken on mesage transmission receipt.
+
+network edge - essentially the 2 hosts communicating at a given time.
+network core - all the routers connecting the hosts.
+
