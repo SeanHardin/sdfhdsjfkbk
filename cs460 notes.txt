@@ -16,3 +16,75 @@ unsupervised learning - training data does not include expected output.
 
 
 
+attributes - features
+prediction - class (label)
+preprocessing is often needed.
+x1, x2 etc - a single training example
+X: - set of all possible combinations of features
+F:X->Y - target concept
+H: - set of all hypotheses that the learner may consider regarding the identity of F
+goal of the learner - find h within H such that h(x) == f(x) (the right hypothesis) for all xi in X.
+if y is discrete, it is called a classification task
+if y is continuous, it is called a regression task
+
+model representations - supervised learning
+ decision trees
+ neural networks
+ support vector machines (SVM)
+ Bayesian networks
+
+representations with unsupervised learning - discover pattern in the data
+ data without labels?
+ clustering
+ 
+
+probability = # times event occurs/total trials
+sample space - set of all possible outcomes of an event
+P(a|B) = P(A && B)/P(B)
+P(x1,x2,x3,x4) = P(x1|others)P(x2|x3,x4)P(x3|x4)P(x4)
+P(A || B) = P(A) + P(B) - P(A,B)
+gradient descent better when used with higher dimensional space.
+ minimize sum of squared errors..... derive SSE/2, calculate partial derivative with M, get vector.
+ something something put a negative on the vector to get the steepest decrease..?
+  gradient of F(x,y) = [partial deriv x, partial deriv y] if f(x,y) = x+3y^2, gradient = [1,6y]
+   so applying a point to the negative of the gradient, you get closer to minimum.
+   
+sum of squared error = the sum((actualData - predictedValue)^2)
+
+concept learning - infer a concept by learning from past experiences
+inductive learning hypothesis - READ CHAPTER 2 BECAUSE WHAT THE HELL IS THIS.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

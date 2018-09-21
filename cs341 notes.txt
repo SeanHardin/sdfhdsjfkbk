@@ -16,3 +16,58 @@ protocol - define format, order of mssages sent and received among network entit
 network edge - essentially the 2 hosts communicating at a given time.
 network core - all the routers connecting the hosts.
 
+connect end systems to edge router - residential access not, institutional access network, mobile access networks
+ consider bandwidth, shared or dedicated?
+
+cabel modem termination system single connect to larger network, branches for end users.
+HFC hybrid fiber coax - asymmetric up to 30 Mbps downstream transmission rate 2 Mbps upstream
+network of cable, fiber attaches home to isp, homes share access network to cable headend
+
+DHCP - ip is given by the host institution
+NETWORKS USE BITS, HARD DRIVE USES BYTES.
+
+packets have ip header and ip footer, then a TCP header and footer, next layer has HTTP header, next layer has post
+
+radio link types
+ terrestrial microwave - point at each other and transfer data through air.
+
+routing - determines source destination route taken by packets IDENTIFY
+forwarding - move the packes from router's input to appropriate router output. PHYSICAL
+
+circuit switching
+
+internet protocol stack:**************
+ application - supporting network applications - FTP, SMTP, HTTP
+ transport - process-process data transfer - TCP, UDP
+ network - routing of datagrams from source to destination - IP, routing protocols
+ link - data ransfer between neighboring nework elements - ethernet, 802.11 (wifi), PPP. (physical - bits (on the wire)
+
+transmission control protocol - guarantees that a packet can get to destination in order.
+LAYERING PROTOCOLS IS IMPORTANT, MODULARIZED SUCH THAT OTHERS CAN FOCUS ON THEIR OWN THING.
+
+ISO/OSI reference model: ******************
+ presentation - allow app to interpret meaning of data, encryption, compression, machine specific conventions
+ session - synchronization, checkpointing*********MISSING****
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
