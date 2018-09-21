@@ -54,8 +54,18 @@ sum of squared error = the sum((actualData - predictedValue)^2)
 concept learning - infer a concept by learning from past experiences
 inductive learning hypothesis - READ CHAPTER 2 BECAUSE WHAT THE HELL IS THIS.
 
+attributes have various values. introduce new value ? meaning that any value is okay.
 
+given hi and hj, hi is more general than or rqual to hj (hi >= hj) if and only if all possibilities of hj are contained within hi...........
+A ? ?   h1
+? B ?   h3
+h1 !>= h3, h3 !>= h1
 
+find-s algorithm - make a hypothesis to match the first data point, then check every other positive data point and generalize
+ the hypothesis with each one. this is a pretty bad algorithm.
+ it can predict known failures as positive.
+  this algorithm finds the h: <sunny, warm, ?, Strong, ?, ?>, which could be one of 6. itself, one of the 3 pairs, or one of the singles.
+ if 2 of 3 options are found, then no hypothesis can explain the data. BUT A ? IS STILL USED TO SHOW IT. THATS STUPID.
 
 
 
