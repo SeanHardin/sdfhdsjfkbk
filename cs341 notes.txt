@@ -36,11 +36,12 @@ forwarding - move the packes from router's input to appropriate router output. P
 
 circuit switching
 
+encapsulation - must first peel from the most recently added, adds top one first.
 internet protocol stack:**************
  application - supporting network applications - FTP, SMTP, HTTP
- transport - process-process data transfer - TCP, UDP
+ transport - process-process data transfer - TCP, UDP - ensure ordering, guaranteed delivery
  network - routing of datagrams from source to destination - IP, routing protocols
- link - data ransfer between neighboring nework elements - ethernet, 802.11 (wifi), PPP. (physical - bits (on the wire)
+ link - data transfer between neighboring nework elements - ethernet, 802.11 (wifi), PPP. (physical - bits (on the wire)
 
 transmission control protocol - guarantees that a packet can get to destination in order.
 LAYERING PROTOCOLS IS IMPORTANT, MODULARIZED SUCH THAT OTHERS CAN FOCUS ON THEIR OWN THING.
@@ -50,8 +51,25 @@ ISO/OSI reference model: ******************
  session - synchronization, checkpointing*********MISSING****
 
 
+packet queue in router buffers - loss if queue is overloaded, 
+delay when packets need to get through queues. - time waiting at output link for transmission, depends on congestion
+delay from processing - checking bit errors, determine output link, typically < msec
+delay from transmitting data to next routing - d = packet length/link bandwidth
+delay from propogating message through to next router. -  = length of physical link/propagation speed
+
+ip does not guarantee order
+internet trace route - traceroute program - provides delay measurements from source to router along internet path towards destination
+ sends 3 packets that will reach destination
+tracert europa.eu - command to get traceroute to destination, shows each router passed through.
+
+every computer has an ip, but not every computer has a name. DNS turns a name into its respective ip address for browsers.(domain name service)
+
+networking card can be set to promiscuous mode which reads all records sent through a hub system.
 
 
+APPLICATION LAYER - 
+
+sockets - a way for C programs to communicate over the internet. will use Java sockets for class
 
 
 

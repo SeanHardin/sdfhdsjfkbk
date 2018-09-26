@@ -66,10 +66,35 @@ find-s algorithm - make a hypothesis to match the first data point, then check e
  it can predict known failures as positive.
   this algorithm finds the h: <sunny, warm, ?, Strong, ?, ?>, which could be one of 6. itself, one of the 3 pairs, or one of the singles.
  if 2 of 3 options are found, then no hypothesis can explain the data. BUT A ? IS STILL USED TO SHOW IT. THATS STUPID.
+ conditions - there are no training errors (aka impossible on real data), there exists a hypothesis that can explains the target concept
+ weaknesses - only finds single hypothesis when there could be more, breaks if training errors exist, only finds single hypothesis
 
+candidate elimination algorithm - finds all potential hypotheses that can match the data?
+ version space - VSh,d = {h in H | consistent(h,D)} the version space is the set of all hypotheses consistent with training data.
+ start with the empty set as the marker for most specific, all ? hypothesis for most general.
+  most specific will follow find-S algorithm, 
+  most general will include a number of hypotheses, each focusing on a single attribute's value. the possibilities are then limited
+   based on what is allowed from the most specific hypothesis. constant checking between them is needed.
+   <sunny,warm,?,strong,warm,same> is S3
+   <sunny ?????>, <?warm?????><?????same> is G
+    next iteration changes same from s3 into a ?, thus the third hypothesis in G must be removed because it is now inconsistent with the data.
+ conditions - there can not be any training errors, can be explained by a set of hypotheses.
+ using results - all yes, positive.   majority yes, positive, even or more fail, negative.
 
-
-
+decision tree - learning by inductive inference that is much more widely used than what we covered in concept leaning
+ robust to noisy data, search a more expressive hypothesis space.
+ learned function is represented as a decision tree, classification label usually discrete values, can be continuous
+ used to classify patients by disease, find cause of equipment malfunctions, assess credit risk of loan applicants.
+core algorithm known as ID3 (uses entropy and information gain to construct tree)
+ 'intuition' explains that the more an attribute is able to determine the classification outcome by itself, the higher up it should be.
+  information gain is the measure of how well a given attribute determines the classification.
+  entropy is used to measure the degree of similarity
+   entropy - how pure something is. Entropy(s) = -P+*log(P+) - P-*log(P-)    P+ = probability value is positive.  log is base 2.
+    min = 0 at only pos/neg.   max = 1 at 50% each
+information gain - measures reduction in entropy caused by partitioning training examples based on A
+ gain(S,A) = Entropy(S) - SIGMA(v in Values(A))(|Sv|*Entropy(Sv)/|S|) this formula is a fucking mess...
+ 
+gain(S,wind)=entropy(S)-(|Sweak|/|S| * entropy(Sweak) + |Sstrong|/|S| * entropy (Sstrong))
 
 
 
