@@ -37,7 +37,7 @@ forwarding - move the packes from router's input to appropriate router output. P
 circuit switching
 
 encapsulation - must first peel from the most recently added, adds top one first.
-internet protocol stack:**************
+**internet protocol stack:**************
  application - supporting network applications - FTP, SMTP, HTTP
  transport - process-process data transfer - TCP, UDP - ensure ordering, guaranteed delivery
  network - routing of datagrams from source to destination - IP, routing protocols
@@ -46,7 +46,7 @@ internet protocol stack:**************
 transmission control protocol - guarantees that a packet can get to destination in order.
 LAYERING PROTOCOLS IS IMPORTANT, MODULARIZED SUCH THAT OTHERS CAN FOCUS ON THEIR OWN THING.
 
-ISO/OSI reference model: ******************
+**ISO/OSI reference model: ******************
  presentation - allow app to interpret meaning of data, encryption, compression, machine specific conventions
  session - synchronization, checkpointing*********MISSING****
 
@@ -71,8 +71,112 @@ APPLICATION LAYER -
 
 sockets - a way for C programs to communicate over the internet. will use Java sockets for class
 
+client server - always on host, permanent IP address, data centers for scaling
+ clients - communicate with server, may e intermittently connected, may have dynamic IP, do not communicate directly with each other
 
+p2p architecture - no always on server
+ arbitrary end systems directly communicate
+ peers request service from other peers, self scalability - new peers bring new service capacity, as well as new service demands
+ peers are intermittently connected and change IP addresses - complex management.
 
+processes communicating - 
+ process - program running within a host, within a host, 2 processes communicate using inter-process communication
+  processes in different hosts communicate by exchanging messages
+ client process - initiates communication       server process - waits to be contacted
+ aside - applications with p2p architectures have client processes and server processes
+
+sockets - process sends/receives messages to/from its socket
+ analogous to a door - sending process shoves message out, sending process relies on transport infrastructure on other side to deliver
+  message to socket at receiving process.
+ computers listen on a port which is a positive integer. port can only take single thing per port
+  HTTP generally listens on port 80  SMTP 21  HTTPS 443
+  computers have a lot of ports 65535?
+
+addressing processes - need an identifier to receive messages
+ host device has unique 32 bit IP,    identifier includes both ip address and port numbers associated with process on host
+ 
+app layer protocol defines
+ types of messages exchanged - request, response
+ message syntax - fields an delineation
+ message semantics - meaning of information in fields
+ rules - for when and how processes send and respond to messages
+ open protocols - defines in RFCs, allows for interoperability (HTTP, SMTP)     proprietary protocols (Skype)
+
+transport service - 
+ data integrity - some apps require 100% reliable transfer (file transfer, web transactions), others can tolerate loss (audio)
+ timing - some apps require low delay to be effective (internet, phone, interactive games)
+ throughput - some require minimum amount of throughput to be effective (multimedia) others make do
+ security - encryption, data integrity.
+
+nslookup <website name? to get their ip address
+can add :<port> to connect to specific ports ie https://www.google.com:217
+
+data loss   throughput    time sensitive   application
+no	    elastic       no		   file transfer
+email
+web documents
+loss tolerant audio 5-1kMbps video 10-5k   yes 100's msec
+
+internet transport protocols services
+ TCP 
+  reliable transport between sending and receiving process
+  flow control - sender wont overwhelm receiver
+  congestion control - throttle sender when network overloaded
+  does not provide timing, minimum throughput guarantee, security
+  connection oriented - setup required between client and server process
+ UDP
+  unreliable data transfer between sending and receiving process
+  does not provide reliability, flow control, congestion control, timing, throughput guarantee, security, or connection setup
+  very fast.
+
+there aint no such thing as a free lunch TANSTAAFL
+
+securing TCP - 
+TCP and UDP - no encryption, cleartext passwords sent int socket traverse internet in cleartext
+SSL - secure sockets layer - provides encrypted TCP connection, data integrity, end point authentication
+ apps use SSL libraries that 'talk' to TCP
+ cleartext passwords sent into socket traverse internet encrypted
+
+**what internet layer does SSL correspond to? application layer.********************************
+ 
+web and HTTP - web page consists of objects, which can be HTML file, JPEG, Java applet, audio file...
+ page has base HTML file which includes several referenced objects, each addressable by a URL
+url - uniform resource locator
+path name is the stuff after the first slash
+query stream is the stuff after the ?
+
+HTTP - hypertext transfer protocol
+ eb's application layer protocol, client server model - client is browser that requrests, receives and displays web objects
+ server - web server sends objects in response to requests
+
+HTTP connections - 
+ non persistent - at most one object sent over TCP connection, conection is closed, multiple objects required multiple connections
+  requires to RTTs per object, 
+ persistent - multiple objects can be sent over single TCP connection between client, server.
+  more efficient...
+
+upload form input
+ post - web page includes form input, input uploaded to server in entity body
+ url - uses get method, input is uploaded in url
+
+method types
+ HTTP 
+  GET
+  POST
+  HEAD - request server to leave requested object out of response
+ HTTP 1.1
+  GET,POST,HEAD
+  PUT - uploads file to specified path
+  DELETE
+
+**HTTP Codes
+ 200 - ok
+ 301 - moved permanently
+ 400 - bad request - message not understood by server
+ 404 - item not found
+ 501
+
+**SMTP, POP3, IMAP know the differences, generally what they do.
 
 
 

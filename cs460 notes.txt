@@ -89,22 +89,52 @@ core algorithm known as ID3 (uses entropy and information gain to construct tree
  'intuition' explains that the more an attribute is able to determine the classification outcome by itself, the higher up it should be.
   information gain is the measure of how well a given attribute determines the classification.
   entropy is used to measure the degree of similarity
-   entropy - how pure something is. Entropy(s) = -P+*log(P+) - P-*log(P-)    P+ = probability value is positive.  log is base 2.
+   entropy - how pure something is. 
+Entropy(s) = -P+*log(P+) - P-*log(P-)    P+ = probability value is positive.  log is base 2.
     min = 0 at only pos/neg.   max = 1 at 50% each
 information gain - measures reduction in entropy caused by partitioning training examples based on A
- gain(S,A) = Entropy(S) - SIGMA(v in Values(A))(|Sv|*Entropy(Sv)/|S|) this formula is a fucking mess...
+gain(S,A) = Entropy(S) - SIGMA(v in Values(A))(|Sv|*Entropy(Sv)/|S|) this formula is a fucking mess...
+          = Entropy(S) - (Sv1/S*Entropy(Sv) + 
  
 gain(S,wind)=entropy(S)-(|Sweak|/|S| * entropy(Sweak) + |Sstrong|/|S| * entropy (Sstrong))
+ 14 entries, strong/yes 3   strong/no 3   weak/yes 6  weak/no 2  
+ total strong 6  total weak 8  total yes 9   total no 5
+
+ entropy(S) = -9/14*log(9/14) - 5/14 * log(5/14) = .94ish
+ gain = .94 - (6/14 * entropy(Sstrong) + 8/14 * entropy(Sweak))
+		      -3/6 * log(3/6) - 3/6*log(3/6)          -6/8*log(6/8) - 2/8*log(2/8)
+ = .94 - (6/14*(-3/6 * log(3/6) - 3/6*log(3/6)) + 8/14*( -6/8*log(6/8) - 2/8*log(2/8)))
+
+weakness - doesn't backtrack, but does it need to?
+
+S = sample space of given attribute
+A = set potential values of attribute
+
+Entropy(S) = -(prob pos (total yes/total))*log(prob pos)) - (prob neg(total no/total))*log(prob neg))
+gain(S,A) = Entropy(S) - {prob S has Ai(total strong/total) * Entropy(S with Ai)} SUMMED FOR ALL Ai
+ Entropy(S with Ai) = -(prob+((strong/yes / total strong)3/6)log(prob+(3/6)) -(prob-(3/6)log(prob-(3/6))
+
+entropy(S) = total entropy in table
+gain(S,A) = current entropy minus the sum of the entropy found within each possible value of the attribute
+ if the entropy within the sum of potential values is significantly smaller than the original entropy, then they should be split up to
+  reduce the total entropy in the table. THE VALUE WITH THE HIGHEST GAIN VALUE IS THE BEST OPTION FOR THE ROOT NODE OF A SPLIT.
 
 
+After going down a branch, S becomes SAi (ie Ssunny on the sunny path)
 
+inductive bias - assumptions regarding the hypothesis and training data allow us to generalize over unseen examples.
+bias favors smaller trees?
+approximate bias - shorter trees are preferred over larger ones.
+Occam's razor - choosing the simplest way to describe why something happens when multiple hypotheses are present.
 
+with training data, overfitting increases accuracy (for obvious reasons)
+with real data, accuracy falls once too many nodes are made. peaks at 5, drops around 20, progressively gets worse (in one study)
 
-
-
-
-
-
+binning - giving ranges for continuous values to partition them into a manageable number of potential values.
+strategies to fill in blank values - 
+ choose most common value for that attribute
+ choose most common value for that attribute and class label (y/n)
+ fill in as probabilities based on previous values.
 
 
 
