@@ -38,17 +38,18 @@ circuit switching
 
 encapsulation - must first peel from the most recently added, adds top one first.
 **internet protocol stack:**************
- application - supporting network applications - FTP, SMTP, HTTP
- transport - process-process data transfer - TCP, UDP - ensure ordering, guaranteed delivery
- network - routing of datagrams from source to destination - IP, routing protocols
- link - data transfer between neighboring nework elements - ethernet, 802.11 (wifi), PPP. (physical - bits (on the wire)
+ application - enables user to access the network and connect to other hosts - FTP, SMTP, HTTP
+ transport - transfer data onto network - TCP, UDP - ensure ordering, guaranteed delivery
+ network - finding optimal route for packets and sending them - IP, routing protocols
+ link - links directly with next switch along path - ethernet, 802.11 (wifi), PPP.
+ physical - moves actual bits to switch found by link
 
 transmission control protocol - guarantees that a packet can get to destination in order.
 LAYERING PROTOCOLS IS IMPORTANT, MODULARIZED SUCH THAT OTHERS CAN FOCUS ON THEIR OWN THING.
 
 **ISO/OSI reference model: ******************
- presentation - allow app to interpret meaning of data, encryption, compression, machine specific conventions
- session - synchronization, checkpointing*********MISSING****
+ presentation - allow app to interpret meaning of data, if encrypted/compressed/machine specific
+ session - synchronizes end systems and creates checkpoints for quickly recovering connection or transmission if dropped connection
 
 
 packet queue in router buffers - loss if queue is overloaded, 
@@ -169,26 +170,126 @@ method types
   PUT - uploads file to specified path
   DELETE
 
-**HTTP Codes
+HTTP Codes
  200 - ok
  301 - moved permanently
  400 - bad request - message not understood by server
  404 - item not found
  501
 
-**SMTP, POP3, IMAP know the differences, generally what they do.
+SMTP, POP3, IMAP know the differences, generally what they do.
 
 
+o Be able to explain / define the following terms/acronyms:
+ o Internet (including structure such as Global / Regional ISPs and IXP)
+     collection of computers all connected through routers that belong to ISPs/other users. IXP is international router between ISPs
+ o Protocol (including the purposes / acronym for protocols we discussed like HTTP, SMTP, IMAP, etc.)
+     set of instructions to send a message to another host system
+ o DNS, TLD - domain name system, top level domains
+     DNS translates web addresses into IP address to connect, Top level domain system does so for top level domains
+ o Throughput
+     rate at which bits are transferred between sender and receiever
+ o SSL - secure socket layer
+     part of the application layer, encrypts data and sends it through TCP to secure data
+ o DDoS - distributed denial of service
+     an attack using computers in a botnet to take down servers from too much traffic
+ o TCP/UDP -  transport control protocol, user datagram protocol,guarantees order
+     transport protocols
+ o Cookies
+     tiny bits of information websites use to store information about user
+o Fully understand Chapter 1 slide 38 on Internet structure
+ o Be able to answer the question: why doesn’t every network just connect to every other network directly? (Chapter 1 slide 34) 
+     that would take absurd resources to connect across the world multiple times over
+o Packet Switching/Routing
+    store and forward - queue up, send full packets at a time, routed based on preset destinations
+o Understand the 4 sources of packet delays (Chapter 1 slide 45)
+    processing - check bit errors, determine output link
+    queueing - time waiting to get through queue
+    transmission - time spent being transmitted (packet size/transmission speed(also called bandwidth))
+    propagation - travel time (length of wire/travel speed)
+o How does packet data loss occur (Chapter 1 slide 43)
+    overflow of queue
+o Protocol layers
+ o ISO protocol layers -  international standardization organization
+     Presentation - allow app to interpret what data being received is (encrypted, zipped etc)
+     Session - synchronizes end systems and creates checkpoints for quick recovery if connection drops
+ o Internet protocol layers (including what protocol(s) correspond to what layer)
+     application - enables application to access the network and connect to other hosts FTP, SMTP, HTTP
+     transport - transfers data onto network TCP, UDP
+     network - finds optimal route for packets IP
+     link - links directly with next router in route Ethernet, Wifi, PPP
+     physical - moves actual bits to switch found by link
+ o What layers are missing from the Internet protocol layers relative to the ISO protocol layers, and what that means
+     presentation, session. they aren't needed for most things, and only are included in applications that do need them.
+ o How does SSL fit in to the layers
+    application?
+o Packet sniffing
+    some hosts set up computer to watch internet requests on same network and can steal data that way
+o IP address spoofing
+    send packet with false source address, to make server talk to that address
+o Client / Server vs. P2P architectures
+    client server - always on, permanent ip address, need data centers to scale up
+    p2p - users connect with each other..
+o IP addresses & Ports – what are ports used for? Why do we need them?
+    ports send and receive information, but can only handle listening for one thing at a time, so we need to use many to connect to others..
+    clients find a port and connect to it to hear messages
+    sockets are an API to allow app devs to use ports more easily.
+o TCP vs. UDP – explain the uses, differences, strengths, weaknesses... why do even have UDP?
+    TCP - guarantee transmission, controls flow and congestion, but no throughput, timing or security, needs connection
+    UDP - throws everything else to the wayside to maximize speed for sound and video which loss is tolerable.
+o How does HTTP work? (http is stateless) - hypertext transfer protocol
+    client initiates TCP connection, server accepts, client sends hypertext over, connection gets closed
+ o status codes
+     200 - ok
+     301 - moved permanently
+     400 - bad request
+     404 - not found
+     505 - HTTP version not supported
+ o Please understand the header and its general structure (Chapter 2 slide 28)
+     header contains information about the connection being made, like browser version, character set, how long to keep connection, etc
+     structure is a series of lines under the request line in http request. in format Accept-Language: en-us, en; \r\n
+     an additional \r\n is required on the final line to end the header lines
+ o Understand the different methods / verbs: HEAD, POST, GET and what they are used for
+     Get - gets the page
+     Post - sends request
+     Head - Get http header. used to check if it has been updated from before.
+ o Persistent vs. Non-persistent
+     persistent - multiple objects can be sent over a single connection
+     non-persistent - at most one object is sent over the TCP connection, multiple objects requires connecting multiple times
+ o Cookies and session state - conceptually, how would you implement state using a cookie?
+     cookies hold information about the user's id, which the server uses to take their state from their database.
+o Email
+ o how does SMTP work? (Chapter 2 slide 48) - simple mail transfer protocol
+     send mail...   emails get sent to their local mail server, which forms TCP connection with destination's mail server, sends, that server delivers it
+     to the destination user.
+ o What does IMAP do? - internet message access protocol
+     retrive mail   keeps all messages in a server that users can organize into folders.
+
+imposter syndrome - feeling like you don't belong in the environment you have reached.
+
+hw - book questions, build http header to retrieve web pages with.
+     java SocketGet httpRESTOFPAGE
+     telnet gaia.cs.umass.edu 80
+
+DNS - hostname to ip address translation, not a single server to avoid having a single point of failure
+ a distributed, hierarchical database, query root server for com, DNS server for amazon, something something
+ TLD maintains servers for .com
+ authoritative DNS server - organization's own DNS servers
+records, 2 types of DNS resolutions********************************************************************
 
 
+DNS poisoning - sending bogus replies and making them cache that.
+
+java server - runs server
+ telnet 127.0.0.1 8080 - connect to port 8080 of host computer.
+ hello class - sends message to server, server copies it and prints it, then closes connection.
 
 
+rdt 3.0 - send packet, wait, if timeout resend
 
-
-
-
-
-
+PIPELINING.***************************************************
+port numbers are unsigned 16 bit
+sequence numbers are 32 bits...
 
 
 

@@ -79,7 +79,7 @@ candidate elimination algorithm - finds all potential hypotheses that can match 
    <sunny ?????>, <?warm?????><?????same> is G
     next iteration changes same from s3 into a ?, thus the third hypothesis in G must be removed because it is now inconsistent with the data.
  conditions - there can not be any training errors, can be explained by a set of hypotheses.
- using results - all yes, positive.   majority yes, positive, even or more fail, negative.
+ using results - all yes, positive.   majority yes, positive, even, need more data, more fail, negative.
 
 decision tree - learning by inductive inference that is much more widely used than what we covered in concept leaning
  robust to noisy data, search a more expressive hypothesis space.
@@ -136,17 +136,91 @@ strategies to fill in blank values -
  choose most common value for that attribute and class label (y/n)
  fill in as probabilities based on previous values.
 
+k nearest neighbor - save training data, classify new instance based on classification of subset of training instances that the new one
+ is 'most near' assumes nearness indicates similarity
+ measure nearness - d(xi,xj) = (sum((ar*xi - ar*xj)^2) from 1 to n)^(1/2)
+essentially, finding the nearest n points, describes the newly added point as the color that is most common among the nearest n previous ones
+ in the case of numbers, it would be the mean of them
+ k must be odd so that ties dont happen. but they still can if theres 3 types...
 
+ for weighted k nearest neighbor, multiply the distance by the weight
+ weight = 1/(d(xq,xi)^2)
+as k increases, noise has less of an effect.
 
+advantages - intuitive and easy to understand
+ estimate of target function is local and different for every sample
+ robust to noisy data, good classificatio if data is suficiently large
 
+disadvantages - cost of classification is high because computation takes place at classification time
+ all attributes are used when determining what samples to pick
+ determining the optimum k can be tricky.
 
+curse of dimensionality - distance between instances is calculated based on all attributes of the instance. this is in contrast to other learning algorithms
+ this can be bad. for instance, with 20 attributes where only 2 apply
 
+Bayesian Learning - dont remove hypotheses, each example only changes liklihood of one
+ prior knowledge can be used to determine probability of a hypothesis
+ accomodate hypotheses that have probabilistic predictions - ie. 70% chance it will rain.
+ P(h|D) = P(D|h)*P(h)/P(D)
+  P(h) = prior prob of h
+  P(D) = prob of training data being observed
+  P(D|h) = probability of observing D given h
+  P(h|D) = posterior probability of h after observing D.......
 
+example
+ P(cancer) = .008
+ P(!cancer) = .992
+ P(+|cancer) = .98
+ P(-|cancer) = .02
+ P(+|!cancer) = .03
+ P(-|!cancer) = .97
+  Hmap = P(+|cancer)*P(cancer) = .98*.008 = .0078
+  Hmap = P(+|!cancer)*P(!cancer) = .003*.992 = .0298
+   liklihood is that you dont have cancer.as that one has higher probability.
+   in this case we ignore the P(D) because its a general question?
+  P(cancer|+) + P(!cancer|+) = 1
+  .0078/P(+) + .0298/P(+) = 1
+  P(+) = .0078+.0298=.0376
+  p(cancer|+) = P(+|cancer)*P(cancer)/P(+) = .0078/.0376 = .21
+  p(!cancer|+) = .79
 
+ p(h1|D) = .4
+ p(h2|D) = .3
+ p(h3|D) = .3
+Bayes optimal classifier
+ given a hypothesis set and probabilities of each, outputs most likely output if a given data point.
+ consider sum of each for yes and each for no, whichever is higher is the guess.
 
+naive bayes classifier - find the most probable v in V given <a1,a2...an>
+ Vmap = argmax for v in V OF P(Vj) PI P(ai|Vj)
 
+example... - V={yes,no}
+ Vmap=argmax v in yes,no   P(Vj) times? P(ai|Vj)
+ P(yes)*P(outlook=sunny | yes)*P(temp=cool|yes)*P(humidity=high|yes)*P(wind=strong|yes)
+ 9/14 * 2/9 * 3/9 * 3/9 * 3/9 = .0053
+ P(no)*p(outlook=sunny|no) ETC... = 5/14 * 3/5 * 1/5 * 4/5 * 3/5 = .0206 THIS IS THE MORE LIKELY ONE.
+ have 9 yes, 14 total, 5 no
 
+NAIVE BAYES ALGORITHM, follows process above.
+process - calculate probability of both classifications. then identify values in desired example, calculate the probability of all of those
+ values given each classification, then multiply them together. the higher one is the most likely classification for the new data.
 
+sample error (errorS(h) = # misclassifies/# samples
+true error (error on future sample w/ respect to distribution D) (errorD(h) = P(misclassify|sample from D)
+errirS(h) = (errorS(h)*(1-errorS(h))/n)^(1/2)
+
+motivation - s is subset of D [errorD(La(S)) - errorD(Lb(S))]
+
+split data into k subsets, find error on each, average them together.
+
+like simple bayes, conceptual points, review slides...************************************************************************
+ ie unseen error - by sampling data and getting error from those?
+
+evaluation of hypotheses?
+
+concept learning - taking tuples of data to determine a concept.
+
+decision tree - 
 
 
 
