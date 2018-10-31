@@ -1,0 +1,15 @@
+render a table?
+design architecture
+
+understand webGL (merge projects) eh.....
+
+
+start working on design doc
+start working on test doc
+
+update project management plan and SRS
+11/14 tech talk, know how webgl draws by then.
+
+drag cards within the canvas, snap in place, draw from deck yourself?
+cards aren't defined until server acknowledges that a player should be drawing it.
+FOR NOW, let cards just pop in.

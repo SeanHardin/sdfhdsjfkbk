@@ -276,7 +276,10 @@ DNS - hostname to ip address translation, not a single server to avoid having a 
  TLD maintains servers for .com
  authoritative DNS server - organization's own DNS servers
 records, 2 types of DNS resolutions********************************************************************
-
+  iterative - contacted server replies with name of server to contact
+    pc to local DNS, locan DNS to option 1, option 1 back, local DNS to option 2... 
+  recursive - puts burden of name resolution on contacted server
+    pc to local, locak to option 1, option 1 to option 2, all the way back to pc.
 
 DNS poisoning - sending bogus replies and making them cache that.
 
@@ -287,9 +290,183 @@ java server - runs server
 
 rdt 3.0 - send packet, wait, if timeout resend
 
-PIPELINING.***************************************************
-port numbers are unsigned 16 bit
-sequence numbers are 32 bits...
+PIPELINING - sending multiple packets at once to mitigate waiting delay***************************************************
+port numbers are unsigned 16 bit******
+sequence numbers are 32 bits... - byte stream 'numbers' of first byte in segment's data****
+acknowledgement number - seq # of next byte expected from other side. cumulative ACK*********************
+
+rolling average - average 10 sequential points make that new point, drop leftmost add next on right and do again.
+TCP acknowledgements are cumulative. if 120 is sent, then 100 is also determined to have been received.
+acks sum byte number to ack number to respond. if receive multiple ones after missing one, will resend number for one missed multiple times
+ essentially, always send an ack with the next needed sequence number
+
+multiplexing/demultiplexing - the act of breaking apart the data into different parts and sending them to different destinations
+ ie have 4 different applications, assign port to each one of them...
+
+UDP segment header - 
+ source port # and destination port # 16 bits each
+ length (of packet) and checksum 16 bits each
+ data in rest
+
+checksum - detect errors in transmitted packets.
+ sum together source port, dest port, and length, carrying over any overflow. take 1's complement, that number becomes checksum
+ checksum attached to header, then sent for receiver to check with.
+
+rdt - reliable data transfer
+
+oBe able to explain / define the following terms/acronyms:
+  o DNS
+     DNS translates web addresses into IP address to connect
+  o SSL
+     part of the application layer, encrypts data and sends it through TCP to secure data
+  o TCP
+     transmission control protocol
+  o UDP
+     user datagram protocol
+  o Cookies
+     tiny bits of information websites use to store information about user
+
+
+  o Switching fabric
+     controls flow through a mesh of switches to increase total network speed through them. ie, routers connected like a fabric
+     used internally in routers to forward packets.
+  o Protocol encapsulation
+     encapsulation.
+ // o Data plane
+     determines how datagram arriving on router input port is forwarded to router output port
+  o Control plane
+     determines how datagram is routed among routers along end-end path from source to destination hosts.
+  o Forwarding
+     move packets from router's input to appropriate router output
+  o Routing
+     determine route taken by packets from source to destination
+o TCP and UDP at a deep level
+   pipelining - send multiple packets at once, receiver sends ACK cumulatively for last received packet.???
+*o TCP Transmissions
+  o TCP sequence numbers and segment structure (in general what is in there, no need to be able to reproduce drawing) Chapter 3 slide 58
+     32 bits per layer:
+	source port, dest port
+	sequence number
+	acknowledgement number
+	some mess in here
+	checksum, data pointer
+	options of variable length
+	application data of variable length
+  o How TCP Ack works (Chapter 3 slides 60, 68, 69), including diagrams
+     upon receiving data, send ACK back to confirm. one method has sequence # + bytes of data sent to make next.
+  o TCP Fast Retransmit
+     resend unACKed packet for every ACK received, receiver sends duplicate ACK for every packet they receive that isn't next in sequence.
+     sender sends next after receiving 3 duplicate acks
+*o DNS and name resolution(Chapter 2 slides63-66)
+  o How does a DNS query happen?
+     iterated - contact server, server contacts next server, server responds with next server to look at. never has more than 2 servers on stack
+     recursive - long chain of servers until name is matched, then feeds back to host.
+  o Root/ TLD / authoritative DNS servers
+     root - tell us which TLD to use
+     TLD - like .com .net and others, links to authoritative dns.
+     authoritative - authority on any dns with specific addresses.
+  o Caching and TTL
+     servers cache the names they find in case they are used again. TTL deletes entries after some time. may be out of date
+*o RDT
+  o RDT 3.0(Chapter 3 slides 38-43) - INCLUDE BEING ABLE TO DRAW FSM
+     timer, send data. if time up, resend, if corrupt or wrong ACK, wait. if good and right ACK, stop timer and reset with other sequence number.
+  o Understand how this works delivering data on top of unreliable data transfer (UDT)
+     timer handles lost data, checksum and false ACKs handle corrupt data
+  o Understand finite state machines (FSM) and be able to explain all of the RDTs in terms of FSM
+     
+  o Data pipelining
+     multiple 'in flight' packets waiting to be acknowledged, 
+  o Go-back-N
+     sender can have up to N unacked packets, receiver only sends cumulative ack(doesnt send if gap), sender has timer for oldest unacked packet, retransmit all unacked
+  o Selective Repeat
+     up to N unacked packets, keep log of which acks received, timer on all unacked packets, more overhead.
+
+
+o Fully understand Chapter 1 slide 38 on Internet structure
+  o Be able to answer the question: why doesn’t every network just connect to every other network directly? (Chapter 1 slide 34) 
+     that would take absurd resources to connect across the world multiple times over
+o How does packet data loss occur (Chapter 1 slide 43)
+    overflow of queue, corruption of packets as they travel along the wires.
+o Protocol layers
+ o ISO protocol layers -  international standardization organization
+     Presentation - allow app to interpret what data being received is (encrypted, zipped etc)
+     Session - synchronizes end systems and creates checkpoints for quick recovery if connection drops
+ o Internet protocol layers (including what protocol(s) correspond to what layer)
+     application - enables application to access the network and connect to other hosts FTP, SMTP, HTTP
+     transport - transfers data onto network TCP, UDP
+     network - finds optimal route for packets IP
+     link - links directly with next router in route Ethernet, Wifi, PPP
+     physical - moves actual bits to switch found by link
+ o What layers are missing from the Internet protocol layers relative to the ISO protocol layers, and what that means
+     presentation, session. they aren't needed for most things, and only are included in applications that do need them.
+ o How does SSL fit in to the layers
+    application?
+o Client / Server vs. P2P architectures
+    client server - always on, permanent ip address, need data centers to scale up
+    p2p - users connect with each other..
+o IP addresses & Ports – what are ports used for? Why do we need them?
+    ports send and receive information, but can only handle listening for one thing at a time, so we need to use many to connect to others..
+    clients find a port and connect to it to hear messages, ports are part of transport layer.
+    sockets are an API to allow app devs to use ports more easily.
+    ip identify a single machine, in network layer
+*o TCP vs. UDP
+  o explain the uses, differences, strengths, weaknesses
+     TCP guarantees transmission, controls flow and congestion, no timing or security and needs connection
+  o why do even have UDP?
+     speed
+*o How does HTTP work? 
+ o Please understand the header and its general structure (Chapter 2 slide 28)
+     header contains information about the connection being made, like browser version, character set, how long to keep connection, etc
+     structure is a series of lines under the request line in http request. in format Accept-Language: en-us, en; \r\n
+     an additional \r\n is required on the final line to end the header lines
+ o Understand the different methods / verbs: HEAD, POST, GET and what they are used for
+     Get - gets the page    get /the\path HTTP/1.1/r\nHost: http://host.domain\r\n\r\n+
+     Post - sends request
+     Head - Get http header. used to check if it has been updated from before.
+ o Persistent vs. Non-persistent
+     persistent - multiple objects can be sent over a single connection
+     non-persistent - at most one object is sent over the TCP connection, multiple objects requires connecting multiple times
+ o Cookies and session state - conceptually, how would you implement state using a cookie?
+     cookies hold information about the user's id, which the server uses to take their state from their database.
+o Email
+ o how does SMTP work? (Chapter 2 slide 48) - simple mail transfer protocol
+     send mail...   emails get sent to their local mail server, which forms TCP connection with destination's mail server, sends, that server delivers it
+     to the destination user.
+ o What does IMAP do? - internet message access protocol
+     retrive mail   keeps all messages in a server that users can organize into folders.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

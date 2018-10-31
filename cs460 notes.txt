@@ -75,7 +75,9 @@ candidate elimination algorithm - finds all potential hypotheses that can match 
   most specific will follow find-S algorithm, 
   most general will include a number of hypotheses, each focusing on a single attribute's value. the possibilities are then limited
    based on what is allowed from the most specific hypothesis. constant checking between them is needed.
-   <sunny,warm,?,strong,warm,same> is S3
+   S: <sunny,warm,?,strong,warm,same> is S3
+   G: <??????> next data point: <rainy, cold, high, strong, warm, change>
+   rainy, cold, change fields are only consistent ones. thus, 3 new hypotheses, the opposite of these 3
    <sunny ?????>, <?warm?????><?????same> is G
     next iteration changes same from s3 into a ?, thus the third hypothesis in G must be removed because it is now inconsistent with the data.
  conditions - there can not be any training errors, can be explained by a set of hypotheses.
@@ -216,11 +218,87 @@ split data into k subsets, find error on each, average them together.
 like simple bayes, conceptual points, review slides...************************************************************************
  ie unseen error - by sampling data and getting error from those?
 
-evaluation of hypotheses?
+artificial neural network - the sequence of nodes where the nodes in the next sequence equals some formula of the nodes in the previous
+ the formula following the pattern of weight1*val1 + weight2*val2 + etc
 
-concept learning - taking tuples of data to determine a concept.
+perceptron - single step in a neural network.
 
-decision tree - 
+xor with neural network - 
+x1 toh1 w=.5, toh2 w=.5, h1 w=-.8, h1 toh3 w=-2
+x2 toh1 w=.5, toh2 w=.5, h2 w=-.3, h2 toh3 w=1.1    h3 w=-1?
+0*.5 + 0*.5 - .8 < 0 so 0
+0*.5 + 1*.5 - .3 > 0 so 1
+x1  x2   h1   h2   h3
+0   0    0    0    0+0    0-1   = 0
+0   1    0    1    0+1.1  1.1-1 = 1
+1   0    0    1    0+1.1  1.1-1 = 1
+1   1    1    1    -2+1.1 -.9-1 = 0
+feed forward neural network - only pass data forwards.
+
+training a perceptron - find the weight vector w that best explains the data.
+ perception training rule - pick random set of Wi, using above weighs, apply the perceptron to training data
+  if misclassify training eample, adjust weights. BUT HOW???? THATS THE IMPORTANT PART. repeat.
+  new weight = old weight + change in weight
+  change in weight = learning rate * (target output - perceptron's output)*xi
+  learning rate is decided on from the start, his example uses .01
+ Algorithm only works for linearly seperable data.
+
+
+support vector machine - somehow finds the center of the lines between separated data sets.
+
+Delta rule - gradient descent to minimize error instead of find 'one true line'
+ converges to best approximation, introducing us to gradient descent
+ (upsidedowntriangle)E(w) = [derivative of w0, deriv w1, etc]
+ w = w + change in weight
+ change in weight = -learning rate * (tri)E(w)
+ ERROR = 1/2 * sum(td-0d)^2
+SIMPLIFIED:
+ wi = wi + change in weight
+ change in weight = (learning rate)(SUM for all data((expected result - predicted result) * respective input value, what was multiplied with weight))
+  the change in error is the same as the derivative of the error, so by w = w + change in w where change in w = -learning rate * change in error
+   we get a simpler formula to use by plugging in the derivation and combining the equations into one.
+
+Stochastic approximation to gradient descent - variation of delta rule to address the local minimum problem
+ change in weight = learning rate*(expected output - predicted output)*xi
+ calculation done while calculating individual errors, not after calculating all of them.
+
+perceptron -> computational unit
+sigmoid function - G(y) = 1/(1+e^(-y))
+derivative(F(x)) = derivative E/dw1, deriv E/dw2...
+E = 1/2 * SUM (t - o)^2
+E(w) = 1/2 * SUM d in D(SUM k in perceptrons(t(kd) - o(kd))^2)
+
+backpropagation - propagates error back to previous layers..?
+ each hidden layer's error is found by 
+
+neural net: 2 inputs, layer 1 has 2 perceptrons, layer 2 has 2 outputs
+sigmoid function of net value in each perceptron generates the value multiplied by the next layer's weights.
+sigmoid(i1*wh1i1 + i2*wh1i2 + wh1) = h1
+error of o1 = o1(1-o1)(t1-o1)
+error or h1 = h1(1-h1)(wo1h1*errorOFo1 + wo2h1*errorOFo2) (which is the sum of all connected errors)
+error of o1 = 1/2 * (t1-o1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
