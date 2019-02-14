@@ -1,0 +1,633 @@
+COURSE GOALS - how compiler recognizes language, then logic-based programming
+
+2 groups of programming languages
+  imperative - tell the compiler what to do step by step
+    von neumann
+    object oriented
+  
+  declarative - tell end goal, not steps to reach it.
+    ie. group based program, make groups, define groups, query something..?
+
+
+C#
+using system
+class Program{
+static void Main(String[] args){
+Console.WriteLine("Hello World"):
+}
+}
+
+python
+print("Hello, world");
+
+lisp
+(print "Hello, World");
+
+C
+#include <stdio.h>
+int main(){
+printf("Hello world");
+}
+
+php
+<?php echo "Hello, World";>
+
+Program execution models
+  compilation - compiler translated high level source into equivalent target program, then runs that with given input
+    java
+  interpretation - executes code as it reads it, takes input at same time
+    python
+  hybrid - preprocessing followed by interpretation
+
+preprocessing - removes comments and white space, groups characters into tokens
+
+linker - separate program that merges appropriate library routines into package?
+
+post-compilation assembly - many compilers generate assembly instead of machine code
+
+source to source translation - compiles from one language to another.
+
+bootstrapping - compiler written in same language that it compiles.
+
+Just In Time compiler - compiles at runtime, while interpreting, picks recurring code to convert to machine code to save time?
+
+OVERVIEW OF COMPILATION - entire process is pipelined, meaning one step completes before the next starts, can be swapped out easily.
+  Scanner (Lexical Analysis) (character stream input, token stream output) int main(){while(true)} into {int main ( ) ...}
+    create symbol table with tokens?   process all characters in this phase, cant go back later.
+  Parser (Syntax Analysis) (token stream input, parse tree output) must give errors when using improper syntax
+  Semantic Analysis and intermediate code generation (parse tree in, abstract syntax out) (last part of front end, interpreters end here)
+  Machine-indepentent code improvement (optional) (intermediate form in, modified intermediate form out)
+  target code generation (target code out)
+  Machine-dependent code improvement (optional) (target code in, modified target code out) (last part of back end)
+
+EX - meanings - * means there are 0 or many of the item that precedes it - letter is some letter - digit is some number digit 
+  regular expression is this V     - 
+  Scanner -      identifier -> letter(letter|digit)*      (int MAIN(){int X = 5;) MAIN and X are identifiers that follow the rule given.
+    finite state automata ->0->letter->1(arrow to self, letter/digit)->other->2->find   reads string. "track;" t is letter, move to 1, 
+      rack are all letters, stay in 1, ; isnt letter or digit, move to 2..?
+  source code a=b+c*d   'a' '=' etc scanner converts to tokens, identifier(a,b,c,d), operator(=,+,*)
+    translated into assembly...= ldr id3  mut id4  add id2  store id1      (ldr=load mut=multiply)
+
+(SIGMA) - alphabet, a set of symbols   (SIGMA) = {a,b,c,d}...
+String - a finite sequence of symbols
+(EPSILON) - symbol for empty string
+|String| - length
+x=bac y=abb xy=bacabb  x^R is reverse of x (cab)
+Language - set of strings over an alphabet, L1={ab.bc,ac,dd}  bb not valid.
+  the strings of a language are called sentences/statements
+    the syntax rules of a language specify which string of characters from the alphaet are in the language.
+    the lowest level syntactic units are called lexemes
+      lexemes are partitioned into groups called tokens.    sum=10 is 3 lexemes, sum is identifier, = is operator, 10 is literal
+        in some cases a token can only have 1 lexeme, ie. + is only representation for plus operator. but 5 and 6 are both literals.
+        index=2*count+17;   index,count identifiers = =operator 2,17 literals + +operator ; semicolon
+          regular expressions are needed to extract each of these expressions.
+  syntax for calculator:
+  number -> integer|real  - displayed number on calc, some integer or some real
+  integer -> digit digit*  - defines what an integer is, MUST have at least 1 digit
+  real -> integer (exponent|(decimal(exponent|(EPSILON)))   - 
+  decimal -> digit*(.digit|digit.)digit*
+  exponent -> (e|E)(+|-|(EPSILON) integer
+  digit -> 0|1|2|3|4|5|6|7|8|9
+  how to describe a language - enumeration - write all valid combinations for language
+    regular expressions - a recursive definition
+      (SIGMA) -> a is a regular expression where a is contained within (SIGMA)
+      R1 | R2 is a regular expression    ab|cd  = {ab, cd}    ab|cd   = {abd, acd}     ab|(EPSILON)c = {abc, ac}
+      R1 o R2 = R1R2   o - concatenation, 
+      R1* is a regular expression   * means 0 or more occurrences      ab*c = {ac, abc, abbc...}
+      R1+    + means 1 or more occurences
+      (EPSILON) is a regular expression
+      (R1)     abccd = {abccd}
+      [a] - can be a or (EPSILON)
+      abc(EMPTY SET) = {} empty set eliminated rest.
+      c(AB)* - any string starting with c, followed by and number of ab
+      precedence - *+ o |    ab* = a(b)* = a o b*      ab|c = (ab)|c     
+    context-free grammar - 
+
+Java regular expressions -      cd C:\Users\Sean\Downloads\regex to get to class file in that location.
+  regex foo, search foo. finds it from index 0 to 3.   finds every match to the reg expression in the string searched.
+  cat.      . means any character so cats, cate both seen.
+  [.] means a period character, for some reason.
+            \ escape character, following treated as character and not command.
+  [abc] - a, b, or c      [bcr]at will find bat, cat, rat.
+  [^abc] - any character but a, b, or c
+  [a-zA-Z] - a-z or A-Z inclusive
+  [a-d[m-p] - union of the two
+  [1-9&&4-6] - makes sure both true
+  [0-9&&[^345] - subtract 345 from all other digits
+  . - any character but newline
+  \d - any digit
+  \D - any non-digit
+  \s - whitespace character
+  \S - non-whitespace character
+  \w - word character, any letter or digit
+  \W - non word character.
+  X? - once or not at all (will see the end of string as an additional match)
+  X* - 0 or more  (will see end of string as additional match)   XXXXX  regex sees XXXXX and seesthe space after
+  X+ - 1 or more
+  X{n} - X exactly n times
+  X{n,} - X at least n times
+  X{n,m} - X at least n times but not more than m times
+  backreferencing - 
+    (\d\d)\n  - reads the value from (), then adds that to the key after value, 1212 is found, 1234 is not
+    
+FINITE STATE MACHINE (FINITE AUTOMATON/AUTOMATA) - simplest conceptual model of computation. describes all possible states for a system.
+  OFF -> turn off = OFF  OFF -> turn on = ON,  ON turn on = ON,  ON turn off = OFF
+  states: on, off       commands: turn_on, turn_off       switch(state){case on: if(command=turn_on){}else if(command=turn_off){state=off}
+    break;  case off... ETC
+  circles are states, states need to be unique, states are connected by labeled edges (alphabet) (like a graph), must have single starting 
+    node (denoted by arrow), all letters should point to another state
+    must have 0,1 or more final states, denoted by a double circle. only commands that end on final state are within the language.
+  formal definition - 5 tuples (symbols) to define one.
+    Q - set of states
+    (SIGMA) - alphabet of finite # of symbols
+    (DELTA) - transition function, takes 2 arguments, returns result. (DELTA): Q X (SIGMA) -> Q   DELTA gives final Q based on Q initial,(SIGMA)
+    q0 - initial state
+    F - set of accepting states (final states)   is a subset of Q
+    
+    Q = {a,b,c,d}
+    (SIGMA) = {0,1}
+    (Delta) - matrix of states and letters, Q X SIGMA  =>   a0=c  a1=b  b0=d  b1=a  c0=a  c1=d  d0=b  d1=c
+    q0 = a
+    F = {d}
+The empty string - if the first node is also a final node, then empty string is accepted.
+dead state - inescapable state with no path to an accepting state. (signified by not having arm for language.
+
+L(M1) L is the language that M1 recognizes.
+L = {w|w is 10 or a set of strings containing any number of 0s followed by a single 1} 
+
+Scanner converting character stream into tokens should have a Finite State Machine within to determine allowed tokens.
+  takes regular expression, converts to NFSM, then converts to DFSM
+Deterministic FSM - what we learned above.
+non-Deterministic FSM (NFSM) - given a certain state and input, the next state isn't uniquely determined.
+  allows (EPSILON) transitions - ability to take step w/out reading any input
+    C->O->L->O->U,(EPSILON)->R   as opposed to creating new state for u pointing to same r
+  allows a state to have no transition on a particular symbol   A: 1->B input=2 stays on A
+    NOT AN ASUMED DEAD STATE, JUST A NONEXISTING PATH.
+  allows a state to transition to more than one state with a given symbol, essentially creating multiple active states.
+    01 to self, 1 to next.
+  DELTA FOR NFSM - A0 = a,b  A1 = a  B0 = c  B1 = c  C0 = empty set  C1 = empty set
+    A0 = a  A1 = a,b  A(EPSILON) = --  B0 = c  B1 = --  B(EPSILON) = c  ....
+For every NFSM, there is an equivalent DFSM.  if no transition, create dead state for it.(include into transition function)
+  DESIGN ARCHITECTURE IN NFSM?????????????????????????????????????????????????  
+
+problem set 6 answers: 1. draw (a+b)*b   
+  ALPHABET FOR DFA TREATS EPSILON AS ATTACHED.
+  regex for mess: (a*|(ab)*)b*  1a=--  1b=-- 1e=2,3  2a=2  2b=--  2e=5  3a=4  3b=--  3e=5  4a=--  4b=3  4e=--  5a=--  5b=5
+    1235(ae*)=245  1235(be*)=5  245(ae*)=25  245(be*)=35  25(ae*)=25  25(be*)=5  35(ae*)=45  35(be*)=5  45(ae*)=D  45(be*)=35  5(ae*)=D
+    5(be*)=5  D(ae*)=D  D(be*)=D       4,5 final state, all containing 4 or 5 are final.
+
+Regular language - a language is regular if and only if some FSM recognizes it.
+000111 find all strings with equal 0s and 1s.  cannot be done with FSM.
+CFG (context free grammar) - to eliminate recursion of FSM?
+  Chomsky representation grammar... - E->E+T|T  T->TxF|F   F->(E)|a    ::= is another form for the arrow.
+    left side capitals called non-terminals     x,+,a,(,) all called terminals, alphabet symbols, no need for rule
+    | means or, x means multiplication, + means addition   drive rules until reach terminals.
+    variables are nonterminals, alphabetic symbols are terminals     rules(productions)
+    all context free grammar needs to have a start variable   E->E+T  E->T  is expanded from original.
+  derivations - start with start symbol, apply one of the rules ot change until left with only terminal characters.
+    E->E+T->T+T->TxF+T->FxF+F->axa+F->axa+a  ...   E->T->F->(E)->(T)->(F)->(a)
+  Parse Tree - just a fucking visualization. nothing special, each character is a branch, terminals represented without circle.
+    order we extend is abstract, only see which rules are used and where they are used. not when.
+  Formal definition of CFG - G=(V, (SIGMA), R, S)
+    V = the set of variables (non terminals)
+    (SIGMA) = the set of terminals
+    R = the set of rules
+    S = start variable (S)
+   A context free language is a language generated by a CFG.
+    S->(S)|SS|(EPSILON)   ()()(())      S->(EPSILON)|0S1   grammar for language of all combos of n 0s followed by n 1s
+  S->S+S|S*S|0|1...|9
+    AMBIGUOUS SINCE CAN CREATE MULTIPLE PARSE TREES FOR SINGLE WORD.
+      2+5*3  + first = 17      * first = 21
+    surround both operators with () and strings will need to be surrounded in (). removes ambiguity.
+
+  L = {w|w is contained within{0,1} and # 0s = # 1s}    S->0A|1B|EPSILON  A->1S|0AA   B->0S|1BB
+Given any FSM for a language, you can construct a context free grammar for the same language.
+  make nonterminal for each state.
+  starting state->starting symbol
+  make a rule for each edge
+  add epsilon for each accept state.
+    A->1B|3C   B->2B|3D   C->2D   D->4D|EPSILON   A1=B A3=C B2=B B3=D C2=D D4=D F={D}
+
+type nul > file.txt  //makes an empty file.txt in the current directory.
+
+antlr4 file.g4  to make the java files
+javac file*.java to make the class files
+grun fileNameWithoutExtension firstNonTerminal -gui fileNameToCheckGrammarOf
+
+grammar rgb;
+r: '0x' R G B;//lowercase names 
+R: WORD;
+G: WORD;
+B: WORD;
+WORD: DIGIT DIGIT;
+DIGIT: [0-9A-F];
+WS: [ \t\n\r]+
+
+PDA - Push Down Automata - finite state machine to represent context free grammar.  full word must be read to be accepted.
+  stack based. has a stack of memory to be able to handle other patterns. NONDETERMINISTIC SINCE IT USES EPSILON
+    stack operation - READ(pop)|ignore      PUSH|ignore
+    has own alphabet
+  state transitions - depend on stack top. may PUSH,POP    Aa=B  for DFA   A(a|EPSILON, b|EPSILON->c|EPSILON)=B  if a in string, pop. 
+    if b popped, push c, now at B. if not b popped, string rejected. with only A(a, b->c)=B, no possible string will be accepted
+  PDA for strings with n 0s before n 1s - Ae=B Ae,e->$=B B0,e->0=B Be,e->e=C C1,0->e=C Ce,$->e=D D=final.  $ used as bottom of stack.
+    to use stacks, must add 2 states to put 'escape' character at bottom and remove it at end.
+  
+lexical analyzer (scanner), parser (CFG, PDA, Parse), semantic analysis...
+  semantic analysis - names - variable, function, object, symbol, type
+  design considerations - maximum size/length, are names case sensitive?, connector characters (two_words),
+    length - fortran -> 6    cobalt -> 30      C -> 31      java, C++ -> no limit
+    connector chars - fortran uses spaces
+  dynamic data cannot be named, only the address of it can be.
+BINDING HERE******************************************************************************************************************
+int x - x is bound as int.    binding time - time which binding takes place.
+  language design... - bind operators to symbols.    implementation - bind floating point type to representation
+    compile time - bind variable to a type.     load time,   runtime - bind a local variable to memory cell
+      int x=5;   x->int   = => opAssignment   x=5 => x->5
+  static and dynamic binding - static if occurs before runtime and remain unchanged. dynamic if during execution or can change during execution
+  ex - count = count + 1;   =->assignment operator(design time)   count->value(runtime)   count->possible values
+    int y=4; char x='a'+y;//compile error    if y hardcoded as 4, would output e       x=x+'a' != x+='a' = x=(char)x+'a'//valid, done in design phase
+  scope - the region of the program where the binding is active.
+    double f,y; int f(){}  double y;   f already bound to double, can't make function.    reusing name inside smaller scope hides global scope
+  environment - set of binding occurences Struct Person{int f(int a){double y;int x; (1)} int main(){double a; (2)}}
+    (1) - struct person->type x->int y->double f->function a->int 
+    (2) - struct person->type main->function a->double f->function
+  block structures - monolithic block structure - whole program is one block (fortran), a long program with many identifiers. share same scope
+    Flat block structure - program contains global scope and only a single level local scope of function definitions.  cannot nest more blocks
+    Nested block structure - multiple blocks with nested local scopes can be defined.
+  object lifetime - static, stack, heap    code, data, heap ->  <- stack    code=machine code  all is inside RAM  data=all global/static variables  stack=all local vars/function calls
+    static - every variable bound to a type and object(value)        the type value must match the type of the object.
+    dynamic - every variable name is bound only to an object.  python has dynamic typing.  the object is attached to type
+
+PYTHON LANGUAGE - interpreted language, either in command line or script mode.
+  IDLE integrated development environment
+  >>> means the interpreter is ready for a new command.
+  print("hello")   can use 'hello' too.
+    DOESN'T NEED TO INSTANTIATE OR INCLUDE ANYTHING TO RUN
+  8+6 will print 14 to console.
+  import math      mmath.sqrt(67) prints square root of given number, as a float.   math.cos(3)    cosine of number.
+  a=10  print(a)   10 to console   type(a)   prints type of a(int now) to console     a='hello'  print a  prints hello to console.
+  a^b is represented by a**b     *operator also multiplies strings 'f'*3 results in 'fff'
+  # is used for comments.
+  name = input("enter your name:") # takes input and puts it into var called name
+  fruit = 'banana'   letter = fruit[1]    print letter    prints a
+  len(string)   outputs length of string
+  print ('p' in string)  prints whether or not p is in string
+  print ('Part' in string)  prints whether or not Part is in string
+  s='Part 1Part 1   print(s[0])   prints p    print(s[0:4])   prints Part    print(s[5:])  prints 5th character and on.
+  strings cannot be changed in python.   s[0] = 'B' gives error    s = 'B' + s[1:]   print s   why does this work?
+  print(s.count('st'))  prints number of appearances of st
+  s.find('stu'))   prints location of substring if any
+  print (s.isdigit())    prints true if letter is a digit
+  str = str.upper()    makes string uppercase
+  print(s.rjust(30)    prints right justified
+  BLOCK STRUCTURE - indentation assigns code to specific block, not curly braces
+    if (conditional):
+        code shows up here
+    elif (conditional):
+        other code
+    FILES SAVES AS .PY
+  while n > 0:
+    more code
+  fruit = 'apple'
+  for char in fruit:
+    print char
+  for j in range(150):
+    #iterates from 1 to 149
+  for i in range(2,20,1):
+  a = [1,2,3]  not locked in to single type, can have lists in lists and can change lists
+  tuple - (1,2,3) # unable to change these values
+  print (r)   prints the list
+  print (r[-1]) prints last element in list
+  print (6 in r)   print true if 6 is in list.
+  r.append('thing')  adds additional element(s) to list
+  r.pop() remove last element
+  r.reverse()  reverses elements in list
+  def NAME( LIST OF PARAMETERS):
+    STATEMENTS
+    can add return to return some object
+  
+int x = 10;//declaration, create new binding
+int &y = x;//definition, create new binding for existing binding
+
+low memory -> high memory: code, data(global/static data),HEAP-> , <- STACK
+Functions are held in stack memory, calling new function adds to stack, finishing pops the stack. these are called stack frames.
+  each stack frame provides memory for parameters, the return value, and local variables, and some admin stuff.
+stack pointer frame pointer - starting point to locate local variables using offset.
+heap is used to store data from functions that are popped from stack to be used on lower level.
+
+PYGAME
+import pygame     pygame.init()       game_display = pygame.display.set_mode((500,500))
+pygame.display.set_caption("Hello World")     clock = pygame.time.Clock()       crashed = False
+image = pygame.image.load("square.png")      
+def drawImage(x, y):
+  game_display.blit(image, (x,7))
+x = 10      y = 10
+x2 = 0;
+def drawRect(x,y,width,height):
+  pygame.draw.rect(display,(0,255,0),(x,y,width,jeight),2)
+font = pygame.font.SysFont("comicsansms",24)
+text = font.render("Hello World", True, (0,130,234))
+white = (255,255,255)
+while not crashed:
+  for event in pygame.event.get():
+    if(event.type == pygame.QUIT):
+      crashed = True
+    if (event.type == pygame.KEYDOWN):
+      if (event.key == pygame.K_RIGHT):
+        x2 = 5
+      elif (event.key == pygame.K_LEFT):
+        x2 = -5
+    elif (event.type == pygame.KEYUP:
+      if (event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT):
+        x2 = 0
+  x += x2
+  x += x*.1
+    #print(event)#prints what inputs are seen.
+    game_display.fill(white)
+    drawImage(x,y)
+    drawRect(x,y,width,height)
+    game_display.blit(text, (200,200))#displays the text
+  pygame.display.update()
+  clock.tick(60)#fps
+  
+pygame.quit()
+quit()#this is a comment.
+
+heap - needs mechanism to see what space is available to be used.
+  Free-List - a linked list of free spaces
+    first fit - first piece big enough allocated.
+    best fit - searches for best fit for size needed
+    buddy system - multiple sizes, split among lists for more efficient space allocation, if larger one used, remaining space divided
+      and inserted into the next level down, sizes must be a power of 2
+    fibonacci system - same as buddy, but not with powers of 2?
+  fragmentation - when data is scattered around inefficiently
+    internal fragmentation - there is unused data in an alotted block, 7 kb in a size 8 kb.
+    external fragmentation - unused memory addresses far apart
+
+garbage collection 
+  reference counter - once an object has no more references to it, gets deleted.
+  generation GC - gives ages to objects, optimized towards young objects, pauses program to delete objects.
+  GI - similar but not concatenated together.
+  if object outlives binding, its garbage
+  if binding outlives object, its a dangling reference
+  if object not deallocated at end of life, it is memory leak.
+
+scope rules
+  static scoping - determines scopes at compile time each stack frame holds the source of the function call?
+  dynamic scoping - depends on current state of program execution, uses most recent instantiation of variable called
+    stack frames hold the link to the lower levels in the frame.  run through interpreter, holds previous frame....?
+  declaration before use? if class variable then can use it...
+  two uses of same name, do they refer to same binding?
+
+expression evalutation:
+  syntactic sugar - makes language more readable but not in language
+    String title = "CS";   actually is    String title = new String("CS");
+  prefix, infix, postfix notation, juxtaposition, mixfix
+    prefix: operator a b, op(a,b) (op a b)   (*(+ a 3) 2) (lisp)
+    infix: a op b
+    postfix: a b op
+    mixfix: mybox - display on: myscreen at: 100 as it sounds, can be in different places.
+  operator precedence/associativity - associativity is right to left on same level, precedence is levels, ie pemdas.
+    imperative - computation with vars.
+    functional - computation with functions.
+      lisp - (defun sum(n)(if (<= n 0) 0(+ (- n 1) (sum(- n 1))))
+  side effects - a PL construct is said to have a side effect if it influences subsequent computations in any way by returning a value
+    consider a function has side effect if it modifies a data structure or variable, uses IO, or throws exception.
+      ex - func(int x) return 2x+1 pure function, no side effects.
+      ex - func(int y) return 2x+5+y impure since it can have different values for same y because of x.
+      ex - int x=10; func(int y) x=20;returnx+y; impure since changes state of program (x is changed)
+      ex - function that changes nothing and returns nothing impure.
+    
+expression oriented - every construction is an expression and returns a value
+  scala - List(1,2,3,4,5).filter(>2) returns list with 3,4,5
+    val evenOrOdd=i match{ case 1|3|5|7|9 => println("odd")  case evens... print even...}
+statement oriented - dont return values
+
+short circuiting - if using an and operator, stop evaluating if first element false.
+  conversely, if using or, stop if first true.
+
+orthogonality - trying to make functions generic, like assignment operator.
+  a+b if typing, not orthoganal pointer vs int. different responses to each.
+
+Data types:
+  static typing - variables have types, compiler checks typing
+  dynamic typing - variables don't have types, but values do.
+
+syntactic type sugars:
+  C#   var x = 10;  auto determines type -> int x = 10;
+  C++ auto:  template <class T, class U>    auto add(T t,U u({ return ++u;} //return type of operator+(+,u)     what?
+
+strongly typed language - prevents from applying operation to data which is not appropriate.
+  doesn't allow variables to be used in inconsistent way with their type
+weakly typed language - allows many ways to byass the type system.
+  C: #include <stdio.h>   const int myConstant = 5;    int main(){  myConstant=4;   return 0;  }//compile time error, cant change const.
+  #include <stdio.h>  const int myConstant = 5;   int main(){  int* myPointer = &myConstant;  *myPointer = 4;  return 0;  }
+    changed the constant value. works because pointer is not seen as const like previous example.
+
+design choices - 
+  overloading - allow/disallow, types
+    C does not support any overloading.
+    context dependent overloading - overloading is based on name, parameter types, return types
+      cn have identical functions with different return types, somewhat ambiguous
+      context determined by type of variable being assigned to only.
+    context independent overloading - based on name and parameter type, not return type.
+      the standard we're used to.
+  polymorphism - 
+  coercion - automatic type conversion
+  subtypes and type relations.
+
+LISP - prefix notation, functional programming.    (+ 2 5)  prints 7.
+ Reads, evaluates, prints,   reads anything in a parenthesis
+ valid objects in S expressions (things inside parenthesis)
+  atoms/symbols - numbers (real, int), symbols (character sequence), like an identifier
+  strings - sequence of characters bounded by double quotes
+  lists - list of atoms and or lists bound by parenthesis  (a b c) are top elements of list
+   (a (b c)) a, bc are top.
+  evaluate an atom - numerical and string atoms are evaluated to themselves, and t(T) and NIL to selves/TrueFalse
+   symbols evaluate to their values if they are assigned values, return error otherwise.
+   evaluate a list - evaluate every top element of the list as follows:
+    first element is always a function name, each of the rest of the elements are evaluated and used as arguments for the function.
+ assign value to symbol - setq SYMBOL valuetoassign setq is special in that it doesn't evaluate the first atom/symbol.
+ (+ 1 2 3 4 5) adds all together if supported.
+ lisp evaluates everything including function argument and list members.  precede the atom or list with a ' and it wont be evaluated.
+  (write '(- 2 4)) will print (- 2 4)       (quote x)  print x   'x  same.    (setq z 'x)  assign symbol x into z, (+ (x or 2) z)  error, x NAN
+   (setq x 3.0) (setq z 'x) (+ x z)  error because 3+x NAN.   change to  (+ x (eval z))  prints 6.0
+ (setq L '(a b c))  (car L) print a   (cdr L)  print (b c)?
+  a - give first element (no parenthesis)   d - drop first element, give rest of list (in parenthesis)    ad - drop then take new first
+  NIL is lisp's NULL, and what you get if you drop all list elements then try to take first.  neither of these modify the list.
+  
+lisp - same as preorder traversal of tree for an equation. makes lisp better for handling equations?
+LISP data structure - basic element is cons cell - 2 nodes, first is car, pointer for first element, second is cdr, pointer for rest
+  (a b (c nil 1))  first cell points a, next cell  third points to cell with c nil 1, which points to c, rest of cell...
+  points to nil if nothing there. GOOD SOLUTION TO WANTING TO KNOW HOW MANY ELEMENTS IN BASIC LIST, DOESN'T CARE ABOUT INNER LAYERS.
+
+clisp - start running lisp    ALL COMMANDS IN PARENTHESIS
+ =, >, <, >=, <=, eq     (setq x 3)  (setq y 4)  (< x y) return T
+ argumentp - asking if parameter matches argument (numberp 4)   (listp x)
+ (if (= (mod x 2) 0) (print "even"))     (< 1 2 3 4 5 6) applies < to every one.
+
+(cond ((equalp x) 'ten) ((equalp x 20) 'twenty) ('thirty)) if 10, print ten, and so on
+(defun first-name(name) (first name)) - define function called first-name which gives first element of list given.
+(first-name '(some person name)) - prints the word some.
+(defun add-100(number)"returns number + 100. this is a description"(+ number 100)) - defines function to add 100 to passed number
+(defun rand10 () (random 10))
+(defun addxy(x y)(+ x y)) to add 2 values
+(defun evenodd(n)(cond (((not(numberp n)) (print "not a number"))((evenp n)(print "even"))(print "odd"))
+(defun fact(n) (if (= n 1) 1 (* n fact(- num 1))))  - return 1 if equal, n*fact otherwise
+
+HASKELL - pure function programming language. not highperformance, prioritizes programer time over computer time.
+ doesn't run functions until they are called. 'lazy'
+ ghci - start        :set prompt "nameofprompt" - to change prompt to something else.
+ 2+4 - prints 6     floating point numbers   2+(-2) print 0    div 4 3  - does integer division 4/3  NO PARENTHESIS AROUND EVERY COMMAND
+ 4 'div' 3 does same as previous ' mark middle value as operator       4 == 4 - True     4 /= 2 - True(not equal)
+ all data types start with capital letter.      min 3 4 - 3       max 3 4  - 4     odd 4 - False     
+ doubleX x = x + x  - defines function double x takes one parameter and returns double that.       doubleX 12  - return 24
+ add x y = x + y    add 3 4     3 'add' 4  also works with defined functions.
+ doubleSmall x = if x>10 then x else x + x  - if T, X, else, 2x       doubleSmall 8  - print 16   NEED ELSE STATEMENT
+ numbers = [1,2,3,4,5]  - makes list with 1-5   name = "CS 320"  - list of characters.
+ [-1,-2,-3] ++ numbers  - append numbers list after first list.      "hello" ++ " " ++ "world
+ 0:numbers  - appends 0 to left side of numbers list.     CHANGES ORIGINAL LIST.
+ [1,2,3] !! 0  - access element at index 0 of given list.     numbers !! 3  - give fourth element of numbers    name !! 4 
+ reverse numbers  - reverse order of list        4 'elem' numbers  -check if 4 is in numbers
+ sum numbers - sums up all numbers in list     numbers = repeat 5   - function called numbers to infinitely print 5
+ take 5 numbers - print first 5 elements in numbers(which are all 5s now)
+ numbers = [1..100]  - make list of values 1-100    numbers = [1, 4..100]  - same but increments by 3 each time
+ [x*2|x<-[1..10]]  makes set of values 2x for values x = 1-10 (2,4,6,8,10,12,14,16,18,20)
+  EXAMPLE OF WHAT MAKES HASKELL FUNCTIONAL AND NOT IMPERATIVE ^ (as opposed to explicitly defining loops to get values.
+ [2*x|x<-[1..10], 2*x>=12] only for x where 2x>12
+ [x|x<-[50..100], x 'mod' 7 == 3]  - numbers from 50 to 100 that have r=3 when divided by 7
+ [x|x<-[1..20], x/=13, x/=15, x/=19] include all but 13,15,19 (/= not equal)
+
+ type inferencing - infers type of x based on its value.
+ 
+st "Hello World"
+[c|c<- st, c 'elem' ['A'...'Z']]     gives list [H, W]//only catches capital letters.
+
+tuples - like lists, but know exactly how many values you want to combine, type depends on how many components and their types.
+ denoted with (1,2)     [(1,2),(3,2),(4,9)]  - list of tuples.
+ fst(8,11) - returns first component of pair (8)' snd(9,"Hey") - return second component of tuple ("Hey")
+ zip[1..3]['a'..'c']  - combine two lists  [(1,'a'), (2,b)...]
+ 
+:t 'a' - gives type of 'a' as ->   'a' :: Char          Bool, [Char], (Bool, Char) - (True, 'a')
+ :t min   -   min :: Ord a => a -> a -> a     first 2 a's, are passed in, last passed out, a means all same type.
+ removeNonUppercase :: [Char] -> [Char]       -   first means input, second means output.
+ removeNonUppercase st = [same block as under hello world]
+ :t (==)  - shows type for signature functions?     (==) :: Eq a => a -> a -> Bool
+ :t (>)   - 					    (>) :: Ord a => a -> a -> Bool      - Ord is for types with ordering.
+
+currying - every function in Haskell officially takes one parameter
+ max 3 5    prints 5       (max 3) 5     prints 5      
+ max x y = if x > y then x else y       - technically 2 functions, one with max x, the other with (max x) y
+ :t map        map :: (a -> b) -> [a] -> [b]        - function as param, [a] as param, [b] as output
+     TECHNICALLY GENERIC - can change type from a to some other, but may not change as well.
+ map (+2) [1..6]      gives back [3..8]
+ :t filter     filter :: (a -> Bool) -> [a] -> [a]       (predicate, not function)
+ filter (>4) [1..9]         gives [5..9]
+ filter even [1..9]         gives [2,4..8]
+ sum (filter off (map (^2) [1..6]))      return 35.
+ High Order functions in Haskell - functions that accept functions as argument and return functions back.
+  lambda expressions in Haskell - basically anonymous functions used when function is only needed once. ie. when need to pass to high-order function
+  sum (filter off (map (\x -> (x+12) 'div' 3) [1..6]      - defines function inside call to be used only onc.
+  f x = (x+12) 'div' 3             sum (filter odd (map f [1..6]))     is equivalent but in 2 lines.
+
+java... Drawable d = new Drawable(){ //use the manual override.    //drawable is test interface with single method, not in library.
+ Drawable d = () -> {System.out.println("hello")}     //() holds parameters, {} holds body
+ Drawable d - (a,b)-> (a+b)       System.out.println(d.add(5,6))
+ button.addActionListener(e->{txt.setText("Hello BC!");});  //the famed lambda expression i never bothered to learn. definitely wouldn't
+   have been worth it will all the code I had to put into each one~
+ static List<Integer> numbers = Arrays.asList(1,2,3,4,5,6,7,8,9);
+  numbers.forEach(value->System.out.println(value));  //does a for each loop using lambda expressions.
+
+SWI-Prolog   .pl
+Prolog - logic based programming - declarative. database of facts and logical rules. good for organizing large quantities of information
+ running a program is just asking the database a question. think medical systems - give symptoms, get possibilities.
+ horn clauses - H <- B1...Bn means when all Bi are true, H is true;     flowery(X)<-rainy(X)   if x is rainy, then x is flowery.
+ rainy(seattle).//defines seattle as rainy, syntax is a 'fact' must end with period.
+ fact - a clause without a righthand side.
+ rule - a clause with a righthand side - snowy(X):-rainy(X),cold(X)
+ variables - must start with an uppercase letter. rainy(Seattle). cold(Seattle).
+ INTERPRETER MODE - using same syntax as facts, sends a query to be answered through prolog. snowy(Seattle). - True
+
+flowery(X) :- rainy(X).
+rainy(seattle).
+
+save as .pl      pwd - gives directory of path in mac       in interpreter, type full path to pl file['/users....pl'], then can ask questions.
+ 
+location(desk, office).    location(apple, kitchen).    location(flashlight, office).    location(crackers, kitchen).
+location(conputer, office)...   LOAD PL FILE...    interpreter: location(apple, kitchen) - true
+location(computer, kitchen) - false     location(X, kitchen). - X = apple   STOPS WHEN IT FINDS FIRST MATCH.
+
+meet(jack, jenny, l200) //can use more than 2.
+
+location(Apple, kitchen) - Apple = apple.
+lowercase values are considered as constants, uppercase as variables. 
+meet(date(Day,Month,Year), jack, jenny) - include structure inside thing.
+
+backwards chaining - on a fail case, backtrack only to where initial definition made, not resetting completely.
+
+takes(jane, cs210).    takes(mike,cs210).   classmate(X,Y):-takes(X,Z),takes(Y,Z).    ?- classmate(jane,X).  X = mike
+
+p(X):- p(X),q(X).    p(a).   q(a).  error, out of stack, infinite loop.
+
+a(X,Y):-b(X,Y).    a(X,Y):-c(X,Y),a(Z,Y)    b(1,2). b(2,3). c(1,2). c(1,4). c(2,4). c(3,4).
+ a(1,x) x = 2    a(2,X)  x = 3     a(
+
+Unification (prolog) - 
+ 1 - if n and m are constants, they unify iff they have same value
+ 2 - if n is var and m is type of ???, then they unify and n is instantiated to m.
+ 3 - if n and m are complex terms, they unify only if they have the same functor (function name)and arity(number of arguments)
+ex. to test unification - sunny = sunny - true      X = sunny - X set to sunny      X = Y - set X to Y
+ k(s(g),Y) = k(X, t(k)).   - X = s(g)   Y = t(k) by unification. recursively checks, inner function arity matters too.
+
+SCRIPTING.... though im kinda sick of all this at this point.
+ <html>           <body>        <script>  document.write("hello world");    </script>        </body>       </html>
+ javascript - designed to add interactivity to html pages, is most popular scripting language.
+  <head> <script src="xyz.js"></script>    </head>
+CODE SNIPPETS:
+ on powerpoint, moving too damn fast to copy anything.
+form actions - used to make forms for user to fill out then let js process.
+function funcName(){ if(document.myFormName.Name.value == "")  alert("please name yourself"); return false;  if(no email...) else return true;
+
+var http = require('http');
+http.createServer(function(req,res){
+ res.writeHead(200, {'Content-type': 'text/plain'});
+ res.end('Helo World');
+}).listen(8080);
+
+
+cmd node hello.js
+
+browser, urlbar localhost8080
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ae=B Ab=E Ba=A Ba=D Be=E Be=C Ca=D Eb=D De=C
+
+a*ba*((ba*){3})*
+
+20 pts - control flow, binding, scoping, data types, compilation
+20 pts - python, LIsp, haskell, prolog
+10 pts - regex
+20 pts - parse tree
+30 pts - automata
+
+
+
+
+

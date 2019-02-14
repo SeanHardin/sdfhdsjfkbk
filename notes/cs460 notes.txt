@@ -274,9 +274,67 @@ backpropagation - propagates error back to previous layers..?
 neural net: 2 inputs, layer 1 has 2 perceptrons, layer 2 has 2 outputs
 sigmoid function of net value in each perceptron generates the value multiplied by the next layer's weights.
 sigmoid(i1*wh1i1 + i2*wh1i2 + wh1) = h1
+o1(1-o1) = derivative of sigmoid
+t1-o1 = error of the actual output
+  combining them means taking the slope from gradient descent, then multiplying it by the error of the output
 error of o1 = o1(1-o1)(t1-o1)
 error or h1 = h1(1-h1)(wo1h1*errorOFo1 + wo2h1*errorOFo2) (which is the sum of all connected errors)
-error of o1 = 1/2 * (t1-o1)
+w = w + change in w
+change in w = learning rate * error of node * output
+
+for output layer
+change in weight = learning rate * output * (expected - output) * (1 - output) * respective input value
+
+for hidden layers
+change in weight = learning rate * respective input value * output * (1 - output) * SUM all nodes downstream(error * weight)
+error = output * (1 - output) * SUM all nodes downstream (error * weight)
+
+support vector machines - drawing lines that intersect the edge points of each classification, then take median between them.
+
+k-means clustering - training examples clustered based on features' similarities          splitting data into clusters.
+ centroids of the cluster, and which cluster a training example belongs to.
+ start with an initial estimate of k centroids - pick 3 training points and treat as centroids
+ until stopping citeria met: assign each data point to nearest centroid based on Euclidian distances, rewrite if other centroid becomes closer
+ update centroids: take average of all points in cluster, make that new centroid.
+
+feature scaling - min-max normalization x` = (x-min(x)) / (max(x) - min(x))
+
+Computational Learning theory - focuses on how many training examples are sufficient, how many errors before result acceptable
+ sample size - PAC framework - Probably approximately correct
+  learning setting - X all instances, C(X) target function, H hyp space, h hyp, L outputs best h
+  what is the minimum # samples needed assuming that learner does not necessarily come up with 0 error hypothesis, but rather small error.
+   learner doesn't need to succeed on every training example
+m >= 1/(2E^2) * (ln|H| + ln(1/8)) = min # samples.
+ in case of old, not old, ?. then there are 3^n hyps where n is number of boolean literals.
+ with 2 literals, 1/e * nln(3)+ln(1/e)....wtf?
+
+reinforced learning - learning by maximizing successes
+ Markov something
+  S: set of states
+  A: set of actions
+   you are an s IN S, you do an action a IN A. you get rewarded by the result, amount changing by maximizing reward.
+    example - robot to charging station. each room transfer, multiply reward received in future by .9, more mistakes, smaller reward.
+     only reward on final room, optimal path involves fewest rooms traveled.
+   Q(s,a) = r(s,a) + gamma * vSTAR(8thing(s,a))
+   r(s,a) = reward received by doing action a from state s
+   8thing(s,a)= the state resulting from applying action a to state s
+   gamma = value reward is reduced by following optimal policy?
+
+ Q(s,a) = r(s,a) + gamma * vSTAR(8thing(s,a))
+ Q(s,a) - the new value to set r(s,a) to
+ r(s,a) - the reward for performing action a at state s
+ gamma - the weighted loss every move taken
+ vstar(8thing(s,a)) - the max of potential actions for state s
+
+REVIEW STUFF, AKA WHAT HE THINKS IS IMPORTANT ENOUGH TO RE-LECTURE ON.
+
+majority of 4 chapters?
+
+ANNs everything in slides is fair game
+
+Q learning
+
+vapnic chervoneskis dimension   why? to put some quantity in training dimension?
 
 
 
@@ -285,13 +343,20 @@ error of o1 = 1/2 * (t1-o1)
 
 
 
-
-
-
-
-
-
-
+find s
+candidate elimination
+k nearest neighbor
+naive bayes
+normal bayes
+bayes optimal classifier
+decision tree
+ entropy, gain
+Perceptron, delta rule (gradient descent)
+backpropagation
+k means clustering
+PAC
+SVMs
+markov chains/Q learning/ reinforcement learning
 
 
 

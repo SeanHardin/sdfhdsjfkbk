@@ -1,0 +1,357 @@
+CS 300 Data Structures:
+office hours MW 2:30-4:20, Th 9:30-10:20 in L222
+
+
+2 points for introducing self in CANVAS
+1 for attendence max 3 times a week
+5 points for assignment completed 100% first time
+5 points for completing problem set activvity
+1 point per contribution to class/canvas discussion, max 5 points a week
+
+assignments 1,2 worth 50 points, 3 is 100 4 is 150 midterm 1 is 100, 2 is 150, quizes are 20 each
+
+
+Program Execution models:
+  Interpretation - interprets and executes source file. (PHP, Javascript, Lisp)
+  compilation - compile into machine code (010101) then executes (C, C++)
+    dependent on platform
+  hybrid - compile with javac(ompiler) into .class file (byte code) which can be read by J(ava)V(irtual)M(achine) and interpreted/excuted. (Java)
+    independent of platform, can be shared
+
+smula - first object oriented language
+
+high level language - C - meant for people to read
+low level language - assembly - meant for computers to read, not humans
+
+to use programmer's file, #include "filename.h"  do not use <>
+
+integer data - char 1byte short 2bytes int 4bytes long 8 bytes bool 1 byte (0 is false, else true)
+floating point using scientific notation - float double long double
+
+unsigned int - cannot be made into a negative, gives nonsense if negative
+
+Bitwise operators & | ^ ~ 
+
+5 0101
+3 0011
+5&2 0001 because only space where both had it.
+operator order
+()
+++ -- ! + - (cast) sizeof
+*/%
++-
+< <= > >=
+== !=
+&&
+||
+?:
+= += -= *= /=
+
+conditional operator: c=(a>b)?a:b;     if a>b, c=a; else c=b;
+
+File input/output
+  #include <iostream>//needed for >>
+  #include <fstream>//for file stuff
+    declare file var: ifstream, ofstream
+    open file: fileName.open("filename.xxx");
+    use stream variable (<<, >>)
+    close the file: fileName.close();
+
+default parameters:
+void m(int x=1, int y=20)//defaults to default if value not passed.
+  cout << x<<" "<<y<<endl;
+  
+instantiation an array:
+int a[3][4] ={{0,1,2,3},{4,5,6,7},{8,9,10,11}};//need the second dimension in []
+
+int numbers[2];
+int* p;
+p=numbers;//points to first element in array
+
+string x = 30;
+string& y=x;
+
+& REFERENCE OF THE VARIABLE, USED IN INITIALIZATION TO REFERENCE THE ACTUAL VARIABLE, USED IN ASSIGNMENT TO REFER TO ADRESS ONLY
+* DEFEFERENCE AND IDENTIFY POINTERS, COMPLETELY DIFFERENT FROM REFERENCE, NEEDS FUNCTION TO IDENTIFY POINTERS TO USE.
+
+Heap - memory where objects are stored
+pointer = new type [number_of_elements]//EXCLUSIVELY FOR POINTERS TO USE
+delete p;//deallocate the space given for new variable
+
+RAM broken to 2 parts. stack, heap
+stack - orderly so its fast to find data
+heap - disordered so slower to find data
+
+POINTERS TO OBJECTS: use -> in place of .
+
+this: a pointer to the object using it.
+point(int x, int y){var1=x;var2=y;}
+point(int x, int y){this->x=x;this->y=y;}
+point(int x, int y){(*this).x=x;(*this).y=y;}//all the same.
+
+static members
+  static data members are known as class variables.
+  if the value is changed, all members will use that change.
+
+friend functions
+  private and protected members of a class cant be accessed from outside the same class
+    but friends can
+  to declare an external function as a friend, declare a prototype of this external function within the class as a friend.
+
+LinkedList
+ everything i remember. data, and pointer to next in list, end points to null.
+class node{
+ int data;
+node* next;
+}
+head->data = data in first
+head->next->data = data in second
+
+add to head of list:
+head = new node(data, head);???
+node* current = new node;   current-> data = 20;   current->next=head;   head=current;
+
+insert new node in middle of a 4 element list:
+node* p = new node; p->data=30; p->next=q->next; q->next=p;
+
+remove first node:
+node* temp = head; head=head.next; delete temp;
+
+remove the node pointed by p from list where q points to preceding node:
+q->next=p->next;  delete p;//NEED AT LEAST 2 ADDITIONAL POINTERS TO DELETE A NODE FROM A LIST
+
+traverse the list and sum all values
+node* p=head;
+int sum=0;
+while (p!=null){sum += p->data;p=p->next;}
+
+&& operator stops searching if the first operand is false.
+(if current !=NULL && current->next==n) is valid because drops before trying an illegal command.
+
+STACK - data structure where elements are added and removed from the same end. 'last in, first out'
+QUEUE - first in, first out.
+
+recursion - function calls itself to solve a smaller version of its problem.
+think of factorials 1x2x3x4...
+every recursive process has a base case, and a recursive case
+base - processed without recursion
+recursive case - reduces problem into base case.
+
+Trees: defined recursively, collection of nodes... the root and 0+ non-empty sub trees.
+root - has child nodes
+internal nodes - all nodes that aren't the bottom
+child - subtree of another tree
+parent - tree with the child.
+sibling node - nodes with same parent
+leaves - nodes without children
+edge - link between nodes
+length - number of edges from root to node
+THERE IS ONLY ONE PATH FROM ROOT TO ANY NODE
+depth(node) the length of unique path from root to node.
+depth(tree) depth of deepest node
+height(node) length of longest path from node.
+  height(tree)=depth(tree)
+
+Binary tree - no node can have more than two children
+  full tree - all levels are full except deepest level which is partially filled from left.
+
+preorder - root, left, right.
+inorder - left, root, right
+postorder - left right root?
+
+expression tree - tree that reads inorder to create an expression. a+b*c + is root, * is second root   ALSO CALLED INFIX NOTATION
+  leaves are operand constants, other nodes contain operators
+  PREFIX - PREORDER TREE - +a*bc
+  POSTFIX - POSTORDER - abc*+
+
+Compile postfix expression - convert postfix to an expression tree
+  make stack - push first char, operand. push second char, operand. push third char, operand.    
+  check fourth char, operator, pop top 2, put in tree, push to tree.  check next char, operator, assign root, first pop to right, second pop to left
+
+ make from a+b*c to abc*+ - read string, print operands, push operators to stack. when operator has less precedence, pop all stack to output before pushing. when done with string pop all to output.
+ 
+binary search tree - left nodes less than root, right nodes higher than root. NO DISCUSSION ON INEFFICIENCY/RESTRUCTURING TREE
+   for restructuring... i may be able to use a stack to store values in sorted order... then what?  recursively split stack in half before adding back to tree?
+
+FOR BST (binary search tree)
+preorder - root, left, right - same order as inserting into list.
+inorder - left, root, right - finds nodes from lowest to highest.
+postorder - left, right, root - 
+
+AVL tree: - binary search tree with a balance condition Adelson-Velskill and Landris, screw those names.
+  for any node in the tree, the height of the left and right children can differ by at most 1.
+  4 ways to balance - left outside case - from adding on outside. inside case, from adding inside, different solutions for each
+  let X be the imbalanced node. 4 cases to be fixed, insertion in left subtree of left child of x, right subtree of left child, left subtree of right child, right subtree of right child.
+    FIXING: - Case 1, 4 single rotation.  Case 2, 3 double rotation.
+single rotation - switch the roles of the parent and child while maintaining the search order.      R-R rotate left.     L-L rotate right.
+L-R double rotation - 1st is left rotation between X's left child and its grandchild.     2nd rotation is right rotation bewteen x and its new child.
+R-L double rotation - reverse the order ESSENTIALLY JUST TURNING R-L TO RR THEN ROTATING LEFT TO FIX THE NEW RR
+L-R ex   3         3          2       rotates 1 left, rotates 3 right.
+        1   ->    2      ->  1 3  
+         2       1
+
+Maps - relation between a set of keys and a set of values. like a 2d array, can only look at 2nd dimension if have key from first.
+  each key can map to at most 1 value.
+  functions - size(), insert(k,v), get(k) (return v), delete(k)
+set - an ordered container that does not have any duplicates
+hashing - use hash function to map keys into positions in a hash table KEYS ARE NOT STORED, ONLY USED TO FIND LOCATION
+  if element e has key k and h is a hash function, then e is stored in position h(k) of table
+    to search for e, compute h(k) to locate the position. if no element e, dictionary does not contain e.
+
+HASH FUNCTIONS - always give a unique value for each unique input.
+  simplest possible formula.
+  distribute keys evenly among the cells of the hash table
+problems - keys may not be numeric, number of possible keys can be much larger than space available, different keys may map same location.
+EXAMPLE OF HASH FUNCTION - assuming key is integer
+  key%tableSize  //prime values better to decrease collision.
+  folding - split integer into parts, add them, then take %   (123,456,789) (123+456+789)%tableSize
+  truncation - pick first 3 digits, maybe good if you know certain size?
+  0-999 - square key, then truncate
+EXAMPLE assuming key is string
+  sum ASCII values of characters in key %tableSize
+    problem, diff names same characters, key length < 8
+  take first 3, return (key[0]+key[1]*27+key[2]*729)%tableSize  //27 is prime as best chance to eliminate collisions.
+    with only 3 characters, 26*26*26 isn't all matched up.
+  take all (key[i] * 37^i)
+COLLISION RESOLUTION - 
+  open hashing (separate chaining) - keep a list of all elements that hash to same value
+    array of elements are pointers to first node of list
+    ex. 0,1,4,9,16,25,36,49,64,81   hash = key%10
+      0 - 0   1 - 1,81    2 -    3 -   4 - 4,64  5 - 25  6 - 16,36   7 -  8 -   9 - 9,49  
+      instead of values, hash table is full of pointers to linkedLists, collision no longer breaks hash table, but limit is gone. uses linklists
+  closed hashing - (open address) - all items still within hash table    
+    linear probing - collisions resolved by sequentially scanning an array until an empty cell is found
+      ex. 89,18,49,58,9 into empty hash table size 10   hash(x)=(x+f(i))%10 i=attempt   f(i)=i
+        to search, need to hash value, then iterate until it finds an empty slot, or search value.
+        lazy delete - mark value to delete later, STILL HAS CLUSTERING PROBLEM
+    quadratic - linear, with f(i)^2 instead.    CLUSTERS A BIT LESS
+    double hashing - a second hash is used to drive the collision resolution
+      same numbers as linear, hash(k) = (hash(k)+f(i))%tableSize f(i)=i*hash2(k)   hash2 = P-K%P  P is some prime number
+        spaced out a bit further than quadratic. searching is less wasteful.
+
+PriorityQueue (Heap) - a queue which stores tasks with partial ordering based on priority.
+  ensures highest priority task at the head
+  mainly supports 2 basic operations, insert and remove minimum item. top is default to minimum. which is top?
+  WITH ARRAY: called binary heap - a binary tree with 2 properties:
+    structure property - must be a complete tree.     
+    ordering property - for every node in the tree, the children are greater than or equal to their parent
+  for any element in array[i], left child is in array[2i], right child is in array[2i+1], parent is in array[i/2]
+    0 1 2 3 4 5 6  7    index of array referencing a tree, counting left to right, top to bottom.
+      1 3 7 4 6 10 11
+
+  INSERT FUNCTION - insert x into heap -> create hole in next location?
+    if x can be placed there, do so. else bubble up hole towards root by sliding element into hole's parent down...
+    if x is greater than parent, place it.   else move parent to child location and recursively check if x fits in new hole.
+
+  DELETE FUNCTION - minimum always at root.  remove minimum, hole is created at root.  last element must be moved.
+    if it fits, move to hole. if not, move smaller child to root. recursively do so until last element fits.
+
+Sorting (internal) - bubble, insertion, selection, merge, quick, radix, timsort
+  bubble - list divided into sorted/unsorted. smallest from unsorted moved into sorted.
+    work from right, sorted is when a pass completes and moved the smallest unsorted all the way left.
+  insertion - unsorted/sorted. each pass, first element in unsorted moved to sorted in appropriate place.
+    if first unsorted less than element in sorted, move sorted right, compare next, until false. then place.
+  selection - unsorted/sorted. smallest unsorted, swap with first in unsorted list (becomes sorted)
+  merge sort - divide list in halves, sort each separately, merge sorted halves into sorted array
+    split all until single element in each, then merge them in order until back to full size
+  quick sort - splits array into 2 parts, sorts parts independently while dividing them, combines by concatenation.
+    pivot value - value selected to split lists in two. lesser values to left, larger values to right
+    once sorted into lesser/greater, swap pivot with last value of lesser.
+  radix sort - doesn't use key comparison to sort.  treats each item as a character string.  first groups items by rightmost character
+    orders the groups by the rightmost character.  combines groups.  repeats for all character positions in the data from right to left.
+    0234 2154 0222 0004 0283 1560 1061 2150
+    1560 2150|1061|0222|0123 0283|2154 0004 THEN REMOVE BREAKS.
+    0004|0222 0123|2150 2154|1560 1061|0283  THEN REMOVE BREAKS
+    0004 1061|0123 2150 2154|0222 0283|1560   THEN REMOVE BREAKS
+    0004 0123 0222 0283|1061 1560|2150 2154    THEN REMOVE BREAKS  ...and its ordered
+    
+Tries - 'try' store characters in nods(not keys)  each node has r children (one for each possible character) 
+  root is empty, non null child nodes are characters, only the end of a chain spelling a key holds the value they refer to.
+  as user types letters, tree advances showing fewer and fewer options until the user sees what they want.
+  get("she") return value if endpoint for key for said value.
+  TAKES TOO MUCH STORAGE. alternative - make a ternary tree...and do magic.
+
+Graphs - 2 parts, a finite set of vertices, a finite set of edges (V,E)  Basically a tree with interconnected nodes
+  V={A,B,C,D,E}  E={AB,AC,AD,BA,BE,CA,CD,DA,DC,DE,EB,EC,ED}
+  two vertices are adjacent if they are joined by an edge.
+  a path between 2 vertices is a sequence of edges that begins at one vertex and ends at another vertex - ABE = AB and BE
+  a simple path passes through a vertex only once
+  a cycle is a path that begins and ends on the same vertex - ABEDA
+  if the edge pair is ordered then the graph is called a directed graph - A->B B->E E->D D->A A->C (A is adjacent to B)(B not adjacent to A)
+    by default, graphs are undirected. (arrows ruin default)  directed edges can point both ways.
+examples - street maps (road1 connects to road2...) facebook, linkedin
+Connectivity - strongly connected, connected, weakly connected, unconnected
+  undirected graphs are connected if there is at least one path between any two vertices.
+  all graphs are unconnected if there is any section of vertices not connected to the rest through some edge
+  directed graphs are strongly connected if there is a path from any one vertex to any other in the graph.
+  directed graphs are weakly connected if it is not strongly connected
+  a complete graph has an edge between every pair of vertices
+  a graph is weighted if the edges are labeled with numeric values     ..what a weak definition.
+
+Implementation - most common implementations: 
+  adjacency Matrix - matrix[vertices][vertices] 1 for adjacent, 0 for rest    for weighted, weights instead of 1, infinity instead of 0
+  adjacency list - for each vertex, keep a list of adjacencies     list with N vertices has N linkLists, for vertex i,
+    V=ABCD  E=AD,AB,BC,BA,CB,DA     [A]->B->D  [B]->A->C   [C]->B   [D]->A   (undirected graph) if directed, only keep initial adjacency,
+      if weighted, must also keep the value of the weight along the vertex.
+Graph traversal - iterate through a graph starting from one vertex and visiting all reachable vertices from start.
+  must mark each vertex during a visit and must never visit a vertex more than once.
+  MIGHT NOT VISIT EVERY VERTEX ON THE GRAPH.      depth-first traversal, breadth-first traversal.  they sound recursive.
+  depth-first - for given vertex v, goes deep as possible before backing up, but print as you go?
+    make stack, push start, mark start, while (stack isn't empty){if (no unvisited vertex adjacent to v) pop() else select unvisited vertex
+      adjacent to v, push new vertex, mark new vertex.}
+  breadth-first - from start, queue up all adjacent, pop start. 
+    make queue, add start, mark visited, while (queue not empty){w = q.pop; for each unvisited vertex adjacent, add and mark
+Union-Find (Disjoin set) data structure - set of objects, union: connect 2 objects, find: check if path connected 2 objects
+  union(3,8) - merge sets containing 3 and 8 together.
+  find(2,9) - return true if in same set
+quick-find - integer array of size N. id[i] = 0,1,2,3,4,5,6,8(p),8(q),9   say id[p] == id[q] then p and q are connected.
+  optimized for finds, but inefficient for unions
+  class QuickFind{int id[]; public: QuickFind(int n=100){for(int i=0;i<n;i++)id[i]=i;} bool find(int p, int q){return id[p]==id[q];}
+    void union(int p,int q){int pid=id[p]; for (int i=0;i<n;i++){if(id[i]==pid)id[i]=id[q];}
+quick-union - integer array size N. id[i]  is the parent of i;
+0 1 2 3 4 5 6 7 8 9
+0 1 9 4 9 6 6 7 8 9   must connect by root, not nodes.
+  class QuickUnion{int id[]; public: QuickUnion(int n=100){for(int i=0;i<n;i++)id[i]=i;} int root(int p){while(p!=id[p]) {p=id[p];}
+    return p;} bool find(int p, int q){return root(p)==root(q);} void union(int p, int q){int i =root(p); int j=root(q); id[i]=j;}
+
+which data structure should be used for a word counter? - hash map
+file system? - tree
+e-commerce site? - binary search tree
+contact list? - tries
+social networking sites - directed weighted graph
+keep track of function calls - stack
+map - weighted directed graph
+chessboard - 2d array
+browser history - stack(s)
+
+
+
+
+
+LIST OF DATA STRUCTURES
+array, 2d array
+stack
+queue, priority queue
+linkedlist
+tree, bst, avl tree
+tries
+directed graph, undirected, weighted
+find, quick find, quick union
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

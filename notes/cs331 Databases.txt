@@ -1,0 +1,1126 @@
+Bo, Norman, Fred
+
+
+ENTITY - Square
+attribute - circle
+1 to many - one points to many with an arrow
+
+
+
+
+
+Why study databases?
+  shift from computation to information. 
+    'LOW END" scramble to webspace
+    "high end" scientific applications
+ datasets increasing in diversity and volume
+  digital libraries, interactive video, human genome project
+  need for DBMS exploding
+ DBMS encompasses most of CS
+   OS, languages, theory, "a"i, multimedia, logic
+
+ data independence and efficient access
+files vs DBMS
+ application must stage large datasets between main memory and secondary storage...
+
+Data Models: a collection of concepts for describing data
+  schema - description of particular collection of data, using a given model       
+  relational model of data: most widely used model today
+    main concept: relation: table with rows and columns
+    every relation has a schema, whih describes the columns or fields.**basically the name for the row/column
+EX. Student(Sid:Int, Sname:String, Saddress:String);
+  schema - basically like a class, the entity that contains information
+
+Levels of Abstraction
+  many views, single conceptual (logical) schema and physical schema
+    views describe how users see data
+    conceptual schema defines logical structure
+    physical schema describes the files and indexes used.
+ 1. view 1,2,3 - how users see the data
+ 2. conceptual schema - defines structure
+ 3. physical schema - location in storage 
+EX. 
+Conceptual schema:
+  students(sid:String, name:String, login:String, age:integer, gpa:real)
+  courses(cid:String, cname:string, credits:integer
+  enrolled(Sid:String, cidString, grade:String
+physical schema:
+  relations stored as unordered files
+  index on first column of students
+External schema (view)
+  course_info(cid:String, enrollment:integer)
+
+Data independence
+  applications insulated fom how data is structured and stored
+  logical data independence - protection from changes in logical structure of data
+  physical data independence - protection from changes in physical structure of data
+
+Concurrency Control
+  concurrent execution of user programs is essential for good DBMS performance.
+    because disk accesses are frequent and relatively slow, it is important to keep the cpu humming by working on several user programs concurrently.
+  interleaving actions of different user programs can lead to inconsistency: check is cleared while accout balance is being computed
+  DBMS ensures such problems dont arise: users can pretend they are using a single-user system.
+
+Transaction an execution of a DB program
+  transaction - an atomic sequence of database actions - basically the instructions
+  each transaction, executed completely, leaves DB in a consistent state if DB is consistent when transactionbegins.
+    users can specify some simple integrity constraints on the data, and the dbms willenforce these constraints.
+    beyond this, the DBMS does not really understand the semantics of the data. 
+    thus, ensuring that a transation (run alone) preserves consistency is ultimately the user's responsibility
+
+scheduling concurrent transactions:
+  DBMS ensures that execution of {Ta...Tn} s equivalent to some serial execution T1'...Tn'
+    before read/write object, transaction requests lock on object, waits till DBMS gives it, all locks are released at end of transaction
+    idea: if action of Ti (like write x) affects Tj(which perhaps reads x), one of them will obtain the lock on x first and the other is forced to wait until Ti completes. ordering the actions
+    what if Tj already has a lock on y and Ti later requests a lock on y? deadlock. Ti or Tj is aborted and restarted. doesnt save either.
+      happens when 2 users are waiting for the data that the other one has locked.
+
+ensuring atomicity
+  DBMS ensures atomicity (all or nothing property) even if system crashes in middle of a Xact
+  idea: keep a log of all actions carried out by yhe DBMS while executing a set of Xacts:
+    before a change is made to the database, the corresponding log entry is forced to sa safe location. (WAL protocoll OS support for this is often inadequate)
+    after a crash, the effects of partially executed transactions are undone using the log (thanks to WAL, if log entry wasnt saved before the crash, corresponding change was not applied to database.
+
+The log
+  the following actions are recorded in the log:
+    Ti writes an object the old value and the new value. (log record must tgo to disk before the changed page
+    Ti commits/aborts: a log record indicating this action
+  log records chained together by Xact id, so it's easy to undo a specific Xact(ie. resolv a deadlock)
+  log is often duplexed and archived on "stab;e" storage
+  all log related activities (and all cc related activities such as lock/unlock, dealing with deadlocks, etc) are handled transparantly by the DBMS.
+
+Databases make these folks happy
+  end users and DBMS vendors
+  DB application programmers (smart webmasters
+  database administrator (DBA)
+    designs logical/physical schemas handles security and authorization, data availability, crash recovery, database tuning as needs evolve (must understand how DBMS works
+
+Structure of a DBMS
+  typically has a layered architecture
+  figure does not show concurrency control and recovery components
+  this is one of several possible architectures: each system has its own variations. 
+    Query optimization and execution, relational operators, files and access methods, buffer mnagement, disk space anagement (from top to bottom)
+
+summary
+  DBMS used to maintain, query large databases
+  benefits include recover from crashes, concurrent access, quick application development, data integrity and security.
+  levels of abstraction give data independence
+  DBMS typically has layered architecture
+  DBAs hold responsible jobs and are well-paid
+  DBMS R&D is one of the broadest, most exciting areas in CS
+
+
+CHAPTER 2 - Entity relationship model
+
+Overview of DB design
+  Conceptual design: (ER model is used at this stage)
+    what are the entities and relationships in the enterprise?
+    what information about these entities and relationships should e store in the database?
+    what are the integrity constraints or business rules that hold?
+    a database 'schema' in the ER model can be represented pictorially (ER diagrams)
+    can map an ER diagram into a relational schema
+
+ER model basics
+  entity - real world object distinguishable from other objects. described (in DB) using a set of attributes
+  entity set - collection of similar entities. (ie. all employees)  
+    all entities in an entity set have the same set of attributes
+    each entity set has a key
+    each attribute has a domain
+  relationship - association among 2 or more entities. (ie. alex works in pharmacy department)
+  relationship set - collection of similar relationships can include multiple entity sets
+    an n-ary relationship set R relates n entity sets E1...En
+      same entity set could participate in different relationship sets or in different "roles" in the same set
+  INSERT diagram of employee schema with ssn, name, lot. 
+
+key constraints
+  consider works_in: an employee can work in many departments and a dept can ave many employees.
+  in contrast, each dept has at most 1 manager, according to the key constrain on manages.
+  INSERT 1 to 1, 1 to many, many to 1, many to many diagram
+
+participation constraints
+  does every dept have a manager?
+    if so, this is a participation constraint: the participation of departments in manages is said to be total - wouldn't accept NULL (as opposed to partial ie students to a department)
+      every 'did' value in departments table must appear in a row of the manages table
+
+weak entities
+  a weak entity can be identified uniquely only by considering the primary key of another (owner) entity - impossible to not have owner
+    owner entity set and weak entity set must participate in a 1 to many relationship set (1 owner, many weak entities)
+    the relationship is called identifying relationship
+    weak entity set must have total participation in this identifying relationship set.
+
+ISA (is a) hierarchies
+  as i C++ or other programming languages, attributes are inherited
+  if we declare A ISA B, every A entity is also considered to be a B entity
+  INSERT diagram showing ISA in triangle linking employees, contract_emps, and hourly_emps
+  Overlap constraints: can Joe be an Hourly_emps as well as a Constract_emps entity? (allowed/disallowed)
+  covering constraints: does every employee entity also have to be one of the other employee types? (yes/no)
+  reasons for using ISA
+    to add descriptive attributes specific to a subclass
+    to identify entities that participate in a relationship(senior eployees only to be managers)
+
+aggregation
+  used when we have to model a relationship involving entity sets and a relationship set
+    aggregation allows us to treat a relationship set as an entity set for purposes of participation in (other) relationships
+
+Conceptual design using the ER model
+  design choices
+    should a concept be modeled as an entity or attribute? entity or relationship?
+    identifying relationships: binary or ternary? aggregation
+  constraints
+    a lot of data semantics can (and should) be captures
+    but some constraints cannot be captured in ER diagrams
+
+Database design process:
+  analyze requirements - data used, aplication, operations
+  conceptual design - develop design and constraints
+  logical database design - we will only use relational
+  schema refinement
+  physical database design - consider workloads, design shape
+  application & security
+
+Entity vs Attribute
+  should address be an attribute of Employes or an entity (connected to employees by a relationship)
+  depends upon the use we want to make of affress information, and the semantics of the data:
+    if we have several adresses per employee, address must be an entity (since attributes cannot be set-valued)
+    if the structure(city, street etc) is important (we want to retrieve employees in a given city), address must be modeled as an entity (since attribute values are atomic(all or nothing))
+
+Entity vs Relationship
+  first ER diagram OK if manager gets a separate discretionary budget for each dept.
+  what if manager gets a discretionary budget that covers all managed depts?
+    redundancy - dbudget stored for each dept managed by manager
+    misleading - suggests sbudget associated with dept-manager combination
+  Employee(manager)
+Jone->%500->CS
+Alex->%600->Business
+
+Binary vs Ternary relationships
+  if each policy is owned by just 1 employee, and each dependent is tied to the covering policy, first diagram is inaccurate
+  what are the additional constraints in the 2nd diagram? - policy is 1 to many
+  previous example illustrated a case when two binary relationships were better than 1 ternary relationship
+  an example in the other direction: a ternary relation contracts relates entity sets Parts, Departments, and Suppliers, and has descriptive attribute qty. No combination of binary relationships is an afequate substitute.
+   
+QUIZ WILL BE AN ER MODEL ONLINE
+
+CHAPTER 3
+
+relational model: most widely used model, legacy systems" in older models
+  recent competitor: object oriented models: synthesis emerging - object oriented relational model
+
+relational database: a set of relations
+  relation: made of 2 partsL
+    instance: a table with rows/columns (#rows = cardinality, #fields = degree/arity
+    schema: specifies name of relation plus name and type of each column (students(sid:String, name:String, login:String, age:integer, gpa:real)
+5 columns, 3 rows: cardinality = 3, degree = 5, every full row must be distinct, no duplicates allowed
+
+Relational Query languages
+  SQL - needed to be a standard since it used many vendors.      data definition language..?
+    to find all 18 year old students, we can write:
+      SELECT *
+      FROM Students S//S is name of the table of students
+      WHERE S.age=18
+      //gets all data from students who match
+    to find just names and logins, replace the first line:
+      SELECT S.name, S.login
+      //just gets the name and login field from students who match
+
+      SELECT S.name, E.cid
+      FROM Students S, Enrolled E
+      WHERE S.sid=E.sid AND E.grade="A"
+      //get the name and course id from the only match
+
+Crafting Relations in SQL
+  CREATE TABLE Students (sid:CHAR(20), name:CHAR(20), login:CHAR(10), age:INTEGER, gpa:REAL)
+  //creates the students relation. each domain of each field is specified and enforced by the DBMS when rows get added or modified.
+
+  CREATE TABLE Enrolled (sid:CHAR(20), cid:CHAR(20), grade:CHAR(2))
+  //creates the enrolled table
+
+courses    enrolled    student
+cid        cid         name
+cname       ssn         ssn
+           grade       
+//enrolled links courses and student with cid and ssn, and has its own field 'grade' that depends on the relation.
+
+DROP TABLE Students
+//destroys the relation Students. schema info and rows deleted
+
+ALTER TABLE Students
+  ADD COLUMN firstYear:integer
+  //schema of students is altered by adding a new field; every row in current instance is extended with a null
+
+INSERT INTO Students (sid, name, login, age, gpa)
+VALUES (53688, 'Smith', 'smith@ee', 18,3.2)
+
+delete
+from students s
+where s.name = 'smith'
+
+Integrity constraints
+  IC: condition that must be true for any instance of the database; (domain constraints(character limit))
+    ICs are specified when schema is defined, and checked when relations are modified
+  A legal instance of a relation is one that satisfies all specified ICs
+    DBMS should not allow illegal instances
+  if DBMS checks and sees illegal instance, should stop it.
+
+Primary key constraints
+  a set of fields is a key for a relation if:
+    no two distinct tuples can have same values in all key fields and
+    this is not true for any subset of the key.
+      part 2 false? a superkey - has a primary key and a non primary key
+      if theres >1 key for a relation, one of the keys is chosen (by DBA) to be the primary key
+    sid is a key for students
+
+Primary and candidate keys in SQL
+  possibly many candidate keys (specified using UNIQUE), one of which is chosen as the primary key
+CREATE TABLE Enrolled(normal fields, PRIMARY KEY (sid,cid)//need both to be the key?
+  for a given student and course, there is is a single grade
+CREATE TABLE Enrolled(normal fields, PRIMARY KEY(sid), UNIQUE(cid,grade))
+  used carelessly, an IC can prevent the storage of database instances that arise in practice
+
+foreign keys, referential integrity
+  foriegn key - set of fields in one relation that is used to 'refer' to a tuple in another relation. (must correspond to primary key of the second relation) like a 'logical pointer'
+  sid is a foreign key referring to Students:
+    Enrolled(sid string...)
+    if all foreign key constraints are enforced, referential integrity is achieved, ie, no dangling references
+    can you name a data model w/o referential integrity? 
+
+foreign keys in SQL
+  only students listen in students relation should be allowed to enroll for courses
+CREATE TABLE enrolled(data, pPRIMARY KEY (sid, cid), FOREIGN KEY (sid), REFERENCES Students(sid))
+  one student in students is enrolled in 3 courses in enrolled.
+
+enforcing referential integrity
+  consider students and enrolled; sid in enrolled is a foreign key that references Students
+  what should be done if an enrolled tuple with a nonexistent student id is inserted? REJECT IT.
+  what if a tuple is deleted?
+    also delete all enrolled ruples that refer to it. disallow deletion of a student tuple that is referred to.
+    set sid in enrolled tuples that refer to it to a default sid
+    (in SQL, set sid in enrolled ruples that refer to it to a special value null, denoting 'unknown'.
+    similar if primary key of Students tuple is updated
+
+referential integrity
+CREATE TABLE Enrolled)data, PRIMARY KEY (sid, cid), FOREIGN KEY (sid), REFERENCES Students(sid) ON DELETE CASCADE ON UPDATE SET DEFAULT
+  SQL supports all options. default is no action. (delete/update rejected),
+  cascade - also delete all tuples that refer to it
+
+where do ICs come from
+  ICs are based on the semantics of a real world enterprise that is being described in the database relations
+  we can check a database instance to see if an IC is violated, but we can NEVER infer that an IC is true by looking at an instance.
+    an IC is a statement about all possible instances
+    for example, we know name is not a key, but the assertion that sid is a key is given to us
+ key and foreign key ICs are the most common; more general ICs supported too.
+
+BONUS FOR BUILDING GUI WITH JAVA FOR PROJECT//just the console is inadequate for bonus, but good for passing
+
+Relationship sets to tables
+  CREATE TABLE Works_In(ssn CHAR(1), did INTEGER, since DATE, PRIMARY KEY (ssn, did), FORIEGN KEY (ssn) REFERENCES Employees (ssn), FOREIGN KEY (did) REFERENCES Departments (did))
+  //creats the table for the relation of employee and department
+  in translationg a relationship set to a relation, attributes of the relation must include:
+    keys for each participating entity set (as foreign keys).  this set of attributes form a superkey for the relation
+superkey - when multiple keys but one isn't completely unique
+
+translating er diagrams with key constraints
+  map relationship to a table: note that did is the key now.   separate tables for employees and departments
+  since eahc dept has a unique manager, we could instead combine manages and departments
+    CREATE TABLE Manages(ssn CHAR(11), did INTEGER, since DATE, PRIMARY KEY (did), FOREIGN KEY (ssn) REFERENCES Employees(ssn), FOREIGN KEY(did) REFERENCES Departments(did))
+    CREATE TABLE Dept_Mgr(did INTEGER, Dname CHAR(20), budget REAL, ssn CHAR(11), since DATE, PRIMARY KEY (did), FOREIGN KEY (ssn) REFERENCES Employees (ssn))
+
+does every dept have a manager?
+  if so, this is a participation constraint: the participation of departments in manages is said to be total
+    every did value in departments table must appear in a row of the manages table (with a non-null ssn value)
+
+Participation constraints in SQL
+  we ca capture participation constraints involving one entity set in a binary relationship, but little else (without resorting to CHECK constraints)
+    CREATE TABLE Dept_Mgr(did INTEGER, dname CHAR(20), budget REAL, ssn CHAR(11)NOT NULL, since DATE, PRIMARY KEY (did), FOREIGN KEY (ssn) REFERENCES Employees(ssn), ON DELETE NO ACTION)
+    //constrains ssn to not be null, doesn't delete does nothing  (above is one to many?)
+
+REFERENTIAL INTEGRITY in SQL
+  default is NO ACTION. CASCADE - delete all tuples that refer to deleted tuple
+  SET NULL/SET DEFAULT - sets foreign key value of referencing tuple
+  
+review weak entities
+  weak entity - identified only by the primary key of another (owner) entity
+  owner entity set and weak entity et must participate in a one to many relationship set (1 owner, many weak entities)
+  weak entity set must have total participation in this identifying relationship set
+DIAGRAM EMPLOYEES (ssn underlined, name, lot) line (shaded) POLICY (cost) left shaded arrow (shaded) DEPENDENTS (dotted underlined pname, age)
+
+translating weak entity sets
+  weak entity set and identifying relationship set are translated into a single table.
+    when the owner entity is deleted, all owned weak entities must also be deleted
+    CREATE TABLE Dep_Policy(pname CHAR(20), age INTEGER cost REAL, ssn CHAR(11) NOT NULL, PRIMARY KEY ....
+
+translating ISA Hierarchies to Relations
+  general: 3 relations: Employees, Hourly_emps and Contract_emps
+    hourly emps: every emp is recorded in employees. for hourly emps, extra info is recorded in hourly emps(hourly wages, hours worked, ssn); must delete hourly emps tuple if referenced employees tuple is deleted
+    queries involving all employees easy, those involving just hourly emps require a join to get some attributes
+  alternative
+    hourly emps: ssn, name, lot, hourly wages, hours worked.
+    each employee must be in one of these 2 subclasses
+
+weak entity, relationship, and line between are bolded
+  dotted underline under name for child
+
+ER models meaning of dotted underline? - foreign key************************************************************************************************************************************************
+                     normal underline? - primary key/unique value
+
+CREATE TABLE policies(policyid INTEGER, cost REAL, ssn CHAR(11) NOT NULL, PRIMARY KEY (policyid), FOREIGN KEY (ssn) REFERENCES Employees (ssn) ON DELETE CASCADE)
+
+
+views - a definition for a relation
+  CREATE VIEW YoungActiveStudents (name, grade) AS SELECT S.name, E.grade FROM Students S, Enrolled E WHERE S.sid = E.sid and S.age<21;
+    views can be dropped using the DROP VIEW command. 
+
+Views and security
+  views can be used to present necessary information (or summary), while hiding details in underlying relations
+    given YounStudents, but not Students or Enrolled, we can find students s who have enrolled, but not the cid's of the courses they are enrolled in.
+
+relational model summary - a tabular representation of data, simple and intuitive, currently the most widely used
+  integrity constraints can be specified by the DBA, based on application semantics, DBMS checks for violations
+    Two important ICs, primary and foreign keys, in addition, we always have domain constraints.
+
+example instances
+we will use these instances of the sailors and reserves relation in our examples
+  if they key for the reserves relation contained only the attributes sid and bid, how would semantics differ?
+  instance - part of a table that is selected using certain definitions ie age<21
+
+table reservations. foreign key sid, sailors  bid boat   primary key day?
+
+BASIC SQL QUERY
+SELECT [DISTINCT] target-list FROM relation-list WHERE qualification GROUP BY grouping-list HAVING group-qualification
+
+relationlist - list of relation names (possibly with a range variable after each name)(
+target list - list of attributes of relations in relationlist***************************************************************************************************************************************
+qualification (attribute op const, or attribute 1 op attribute 2, where op is (<,>,=,<=,>=,!=) combined using AND, OR, NOT
+grouping-list - list to order the results of select
+group qualifications - same as other qualifications
+DISTINCT - optional keyword indicating that the answer should not contain duplicates. default is that duplicates are kept
+
+Conceptual evaluation strategy
+  semantis of an SQL query defined int erms of the following conceptual evaluation strategy:
+    compute cross product of relation list
+    discard resulting tuples if they fail qualifications
+    delete attributes that are not in target list
+    if distinct is specified, eliminate duplicate rows
+  this strategy is probably the least efficient way to compute a query. noptimizer will find more efficient strategies to compute the same answers.
+SELECT S.name FROM Sailors S, Reserves R WHERE S.sid=R.sid AND R.bid=103
+  find the sailors who have used boat 103 and have the same sid in the sailors table and reserved table.
+
+syntax
+  SELECT S.sname FROM Sailors S, Reserves R WHERE S.sid=R.sid AND bid =103
+  SELECT sname FROM Sailors, Reserves WHERE Sailors.sid=Reserves.sid AND bid=103
+
+CHAR - set number of characters
+VarCHAR - only uses as many chars as entered, less space taken.
+DATE - stores date
+DATETIME - stores date and time?
+
+
+drop [temporary] table [if exists] tble1name, tble2name [restrict | cascade];
+temporary - drops temporary table, only useful if shares name with real
+if exists - checks if it exists so dropping doesn't cause error
+restrict - 
+cascade - for porting to other databases? optional
+
+STRING COMPARISONS
+  can compare strings with =, <, >, etc to compare them
+    % - can replace 0 or more characters
+    _ - can replace a single character.
+'_AB%' is equal to any 3+ character string with AB at the second and third spots.
+
+WHERE '_AB%' LIKE input_name;
+
+<> IS THE SYNTAX FOR NOT EQUALS
+
+UNION - chain together 2 compatible set of tuples
+EXCEPT - runs the first one, but remove entries that follow the except call   replaced by WHERE NOT EXISTS
+INTERSECT - finds where 2 queries match   replaced by IN - boolean, if a IN b
+
+ALL SQL TYPES FOR VALUES
+CHAR(length) - length number of characters  **blank chars still counted when comparing
+VARCHAR(max length) - length of # of characters in it, max is cap
+INTEGER - truncates decimals, -2147483648 to 2147483647
+BIGINT, TINYINT 
+REAL - 64 bits, a float.
+FLOAT(precision) up to 64 bits
+DOUBLE(precision, scale) - 64 bits, default precision of 38, default scale 0
+DATE - YYYY-MM-DD
+TIME - HH-MM-SS
+TIMESTAMP - YYYY-MM-DD HH:MM:SS    '1999-12-31 23:51:59'
+
+nested queries......
+  WHERE claue can contain another query (so can FROM and HAVING)
+  to find sailors who've not reserved 103, use NOT IN
+
+EXISTS is another set comparison like IN
+if unique is used and * is replaced by r.bid, finds sailors with at most 1 reservation for boat 103. (unique checks for duplicate tuples, * denotes all attributes.
+
+Aggregation
+COUNT - count distinct
+COUNT([DISTINCT] A)
+SUM([DISTINCT] A)
+AVG([DISTINCT] A)
+MAX(A)
+MIN(A)
+
+SELECT COUNT(*) FROM sailors s;
+SELECT AVG(s.age) FROM sailors s WHERE s.rating=10
+SELECT s.sname FROM sailors s WHERE s.rating=(SELECT MAX(s2.rating) from sailors s2);
+
+SELECT * FROM sailors s WHERE s.rating > ANY (SELECT s2.rating FROM sailrs s2 WHERE s2.sname='Horatio');
+
+SELECT s.sname, MAX(s.age) FROM sailors s #ILLEGAL QUERY IDK WHY
+SELECT s.sname, s.age FROM sailors s WHERE s.age= (SELECT MAX(s2.age) FROM sailors s2);#CANT PUT =s.age ON RIGHT SIDE FOR SOME REASON
+
+EVERY - all past it must be true...
+
+SELECT s.rating, AVG(s.age) as AVGage FROM sailors s WHERE s.age>=18 GROUP BY s.rating
+HAVING 1<(SELECT COUNT(*) FROM sailors s2 WHERE s.rating=s2.rating);
+
+SELECT * FROM cities WHERE EXISTS (SELECT 'sara'); - return everything in cities, select 'any string' is always true
+SELECT * FROM cities WHERE city IN (SELECT 'sara'); - select 'sara' is false, returns NULL
+
+
+SELECT A QUERY, SELECT QUERY OPTION ON TOP, SELECT EXPLAIN CURRENT STATEMENT***********************************************************************************************************************
+
+Nulls - used when there is no data in a field, may or may not be intentional
+  issues - checks if null, treated as > or < than a value? 
+  need 3 value logic - true, false, unknown.   new operators needed for this, particularly outer joins.
+    arithmetic operations:    NULL + x = NULL;  
+    aggregates (count, max etc) NULL ignored
+      with duplicates - either equal values or both contain NULL    2 NULLS would be read as a duplicate
+    count *                    NULL as another value to be counted
+  BOOLEAN - NULL in a row turns whole evaluation to NULL
+    EXISTS, UNIQUE can return false from a single NULL.
+  Logical connectivities (AND, OR) - NULL read as FALSE
+  <>=etc - returns unknown
+IS (NOT) NULL
+
+NOT unknown = unknown
+unknown OR unknown/false = unknown
+WHERE 
+
+Outer join - allows rows in one or both of the tables being joined to appear in result even if no match in other table
+ex join of sailors and reserves
+left outer join - sailor rows with no matching rows in reserves will appear with value of NULL for columns inherited from reserves
+right outer join - reserves rows with no matching rows in sailors will appear with value of NULL for columns inherited from sailors
+full outer join - both sailors rows and reserves rows with no matching rows in other table will be included, padded with NULL values appropriately.
+sailors::
+
+SELECT * FROM table_a NATURAL JOIN table_b - finds matching column names, then looks for matching values, then takes those tuples.
+
+SELECT a.docId, a.docName, c.patname, c.date FROM doctors a LEFT JOIN visits c #ON a.docId=c.docId #USING(docId)
+SELECT a.docId, a.docName, c.patname, c.date FROM doctors NATURAL LEFT OUTER JOIN visits;
+  if match with right, take data from right and display it. if no match, display NULL for right values that arent in left. all while displaing left data.
+
+
+Integrit constraint review - all legal conditions for relations
+  inserts/deletes/updates that violate them aare disallowed
+  can be used to ensure semantics in application
+  CREATE TABLE sailors (sid INT PRIMARY KEY, sname CHAR(10), rating INT, age REAL, CHECK (rating >= 1 AND rating <= 10);
+    enforce rating to be between 1 and 10.
+  CREATE TABLE reserves (sname CHAR(10), bid INT, dat DATE, PRIMARY KEY(bid, day), CONSTRAINT constraint_name CHECK ('Interlake' <> (SELECT b.bname FROM boats b WHERE b.bid=bid)))
+    makes constraint named constraint_name that
+
+CREATE Domain rating_range default 1 CHECK (value>=1 and value <=10)
+CREATE userdefined type
+
+CREATE TABLE sailors (sid, sname, rating, age PRIMARY sid CHECK ((SELECT COUNT(s.sid) FROM sailors s) + (SELECT COUNT(b.bid) FROM boats b)<100)#wont read boats table
+CREATE ASSERTION smallClub CHECK ((SELECT COUNT(s.sid) FROM sailors s) + (SELECT COUNT(b.bid) FROM boats b)<100)
+
+Triggers - procedure that starts automatically if specifid changes occur to DBMS
+  event - what activates it
+  condition - tests whether the triggers should run
+  action - what happens if trigger runs.
+  
+CREATE TRIGGER youngSailorUpdate#event# AFTER INSERT ON SAILORS REFERENCING NEW TABLE newSailors#condition# FOR EACH STATEMENT #action#INSERT INTO youngSailors(sid, name, age, rating) 
+SELECT sid, name, age, rating
+  FROM newSailors N WHERE N.age <=18
+
+CREATE TABLE account (num INT, amount DECIMAL(10,2));
+CREATE TRIGGER ins_sum BEFORE INSERT ON account FOR EACH ROW SET @sum = @sum + NEW.amount;
+SET @sum = 0;
+INSERT INTO account VALUES (137,14.98),(141,1937.50),(98,-100.00);
+SELECT @sum AS 'Total amount inserted';
+##shows Total amount inserted which was the sum of each amount added.
+
+  used for database consistency - but more useful to use ICs for this
+  soome cases triggers allow us to maintain database integrity in more flexible ways
+  additional uses - alert to unusual events (additional discount for qualified customers "enough purchase last month", generate log of events to support auditing and security checks (create
+    a customer purchase history), gather statistics on a table.
+
+relational algebra - query language to manipulate and retrieve data from database
+  strong formal foundation on logic.  allows for much optimization
+  query languages are not programming languages - not turing complete, not comple, only for easy/efficient access to databases
+
+2 mathematical query languages for 'real' languages
+  relational algebra - operational for representing execution plans
+  relational calculus - users describe what they want not how to compute it
+
+a query is applied to relation instances, and the result of a query is also a relation instance
+  schemas of input relations for a query are fixed (but every query will run regardless of instance.  the schema for the result of a given query is also fixed. determined by definition of the query language constructs
+  positional vs named field notation - positional notation for easier formal definitions, named field notation more readable
+
+RELATIONAL ALGEBRA 
+basic operations :
+  selection (sigma) - select subset of rows from relation
+  projection (pi) - deletes unwanted columns from relation
+  cross-product (large x) - allows us to combine 2 relations
+  set-difference (horizontal line) - tuples in relation 1 but not in relation 2
+  union (union) - tuples in relation 1 and in relation 2
+additional operations - intersection, join, division, renaming: not essential but useful.
+since each operation returns a relation, operations can be composed
+
+projection - deletes attributes that are not in projection list. like select?
+selection - select rows that satisfy selection condition - no duplicates in result. (sigma)rating>8(s2)   (pi)sname,rating((sigma)rating>8(S2))  like where?
+union... too complicated union compatible - same number of columns, (fields have the same type but not really)
+cross product - each row in s1 is paired with each row of R1 LIKE select table1, table2;   p(C1->sid1,5->sid2),s1Xr1)
+joins - R(join)c s = (sigma)c(RXS) - condiion join 
+division a/b ->  <x,y> IN <  get x where y is found for all y.
+
+
+GROUP BY - keyword for COUNT() function that counts each unique entry instead of total number of entries. THIS IS HOW YOU SHOULD TEACH THIS KIND OF THING SARA...
+
+|><| (2 triangle thing) is a join
+p - renaming
+  p(tempred, pi(sid) ((sigma(color='red' Boats)join reserves)
+sigma - select where (qualification) from (table)
+pi - projection - delete all but listed columns
+U - union
+upside down U - intersection
+^ - and
+V - or
+/ - take all from left which has all of right. result on left loses a column
+-| (cut top off) - not
+Backwards E - there exists - binds variable.
+upside down A - for all   - binds variable
+
+relational calculus
+  tuple relational calculus TRC - bound to tuples
+  domain relational calculus DRC - domain elements (=field values)
+  both are simple subsets of first-order logic
+
+atomic formula - simplest form of a formula... x op y where op = (<,>,=,<=,>=,!=)
+I,N,T,A refers to tuples in sailors - sid, sname, rating, age respectively.
+
+(I,N,T,A|I,N,T,A IN Sailors ^ EVERY B,BN,C NOT(B,BN,C IN Boats) V (EXISTS Ir,Br,D (Ir,Br,D IN Reserves^I=Ir^Br=B))) DRC
+{S|S IN Sailors 1^S.rating>7} TRC
+
+{P|EXISTS S IN Sailors(S.rating>7^P.name=S.name ^ P.age=S.age)}
+
+All expressions of relational calculus can be expressed in SQL
+unsafe queries with infinite answers are also possible.
+
+sql in application code
+  sql commands can be clled from within a host language
+    sql statements can refer to host variables
+    must include a statement to connect to the right database
+  two main integration approaches: embed sql in host language (deprecates it)
+    create special API to call SQL commands (JDBC)
+  impedance mismatch - sql relations are sets of records with no bound on number of records. no such data structure exists traditionally in procedural languages such as c++
+    SQL supports a mechanism called a 'cursor' to handle this
+
+CREATE PROCEDURE curdemo()
+BEGIN DECLARE dont INT DEFAULT FALSE;
+DECLARE a CHAR(16);
+declare B, C int;
+declare cur1 CURSOR FOR SELECT id.data FROM test.t1;
+DECLARE cur2 CURSOR FOR SELECT i FROM test.t2;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+OPEN cur1; OPEN cur2;
+
+read_loop: LOOP FETCH cur1 INTO a, b;
+FETCH cur2 INTO c;
+IF done THEN LEAVE read_loop;
+END IF;
+IF b<c THEN INSERT INTO test.t3 VALUES (a, b);
+ELSE INSERT INTO test.t3 VALUES(a,c);
+END IF;
+END LOOP;
+CLOSE cur1; CLOSE cur2;
+END;
+
+CURSORS:
+  can declare cursor on a relation or query statement (which generates a relation)
+  can open a cursor, repeatedly FETCH a tuple, then MOVE the cursor, until all tuples have been retrieved
+    can use special clause called ORDER BY
+
+Database APIs alternative to embedding
+  add library with database calls - special standardized interface: procedures/objects
+    pass SQL friendly strings from language, preents result sets in language-friendly way.  Oracle's JDBC: java API.  database can be across a network.
+
+architecture? - four main components. application(initiate/terminate connection), driver manager(load driver), driver(connect to data source/translates results/errors), data source(runs statements)
+steps to submit database query - load JDBC driver, connect to data source, execute sql statement, close connection.
+driver management - all drivers managed by drivermanager class. loading a driver:
+  in java - import java.sql.*
+  DriverManager.registerDriver(new Driver());
+connections in JDBC - JDBC URL: jbdc:<subprotocol>:<otherParameters>
+ex - String url="jbdc:mysql://localhost:3306/dbName";
+Connection con;
+try{
+ con = DriverManager.getConnection(url,usedId,password);//user usually root, pass whatever it was made.
+} catch SQLException excpt{...}
+
+statement types" statement - no parameters, like select all
+prepared statements - accept parameters at runtime
+callable statement - database stored procedures
+
+String sql="INSERT INTO sailors VALUES(?,?,?,?)";
+PreparedStatement postmt=conn.prepareStatement(sql);
+pstmt.clearParameters();
+pstmt.setInt(1,sid);
+pstmt.setString(2,sname);
+pstmt.setInt(3.rating);
+pstmt.setFloat(4,age);
+int numRows = pstmt.executeUpdate();//pstmt.executeQuery();
+
+Statement st = conn.createStatement();
+st.executeQuery("select * from employees");
+
+int sld=5;
+CallableStatement st = conn.prepareCall("storedProcedureName");
+st.setInt("param1",sld);
+st.execute();
+
+PreparedStatement.executeUpdate() only returns number of affected records
+PreparedStatement.executeQuery() returns data, encapsulated in a ResultSet object (a cursor)
+
+ResultSet rs = pstmt.executeQuery(sql);
+//rs is now a cursor
+while (rs.next()){
+//process the data...
+}
+
+rs.previous() - moves one ro wback
+rs.absolute(int num) moves to the row with the specified number
+rs.relative(int num) moves forward or backward, negative for backward
+rs.first(), last() first and last piece of data
+
+WORK CHECKS
+CREATE VIEW with its own CHECK, table checks simply do not restrict anything # view isn't removed from table at all***********************************************************************************
+
+
+
+
+most of java.sql can throw SQLException if errors occur. SQLWarning is a subclass, not thrown, would have to be tested for.
+//nobody cares about warnings.
+
+try{}catch{}finally{
+conn.close(); }
+
+examining database metadata:
+  DatabaseMetaData md = con.getMetaData();
+  //print info about driver
+  ResultSet trs=md.getTables(null,null,null,null);
+  String tableName;
+While(trs.next()){
+tableName = trs.getString("TABLE_NAME");
+System.out.println("Table: " + tableName);
+//print all attributes
+ResultSet crs = md.getColumns(null,null,tableName,null);
+while (crs.next()){
+System.out.println(crs.getString("COLUMN_NAME" + ", ");
+}}
+
+Stored procedures - made in the workbench
+  CREATE PROCEDURE ShowNumReservations() SELECT s.sid, s.sname, count(*) FROM sailors s, reserves r WHERE s.sid=r.sid GROUP BY s.sid,s.sname;
+    CALL 'DBName','StoredProcedure-Name'();
+3 modes IN, OUT, INOUT (input, output, both)
+  CREATE PROCEDURE faculty_names (IN con CHAR(20)) SELECT Name, fname FROM faculty WHERE fname=con;
+
+CREATE PROCEDURE IncreaseRating (IN sailor_sid bigint, IN increase INTEGER) UPDATE sailors SET rating = rating + increase WHERE sid=sailor.sid;
+
+CALL 'DBName'.'IncreaseRating'(<{IN sailor_sid bigint}>,<{IN increase INTEGER}>);
+CALL 'DBName'.'IncreaseRating(3,5);
+
+IN JAVA...
+ CallableStatement cStmt=conn.prepareCall("{call faculty_names(?)}");
+cstmt.setString(1,"James_Smith");
+ResultSet res =cstmt.executeQuery();
+while(res.next()){
+System.out.println(res.getString("fname"));
+}
+
+INOUT and OUT 
+
+DELIMITER $$
+CREATE PROCEDURE p (OUT ver_param CARCHAR(25), INOUT incr_param INT) 
+BEGIN #set value of OUT parameter
+SELECT fname FROM faculty LIMIT 1 INTO ver_param;
+#increment value of INOUT parameter
+SET incr_param=incr_param +1;
+END $$
+DELIMITER;
+
+SET @y=5
+call (p(@x, @y);
+select @x, @y;
+
+IN JAVA
+CallableStatement cstmt2 =conn.prepareCall("{call p(?,?)}");
+cstmt2.registerOutParameter(1, java.sql.Types.VARCHAR);
+cstmt2.setInt(2,5);
+cstmt2.registerOutParameter(2, Types.INTEGER);
+cstmt2.execute();
+
+System.out.println(cstmt2.getString(1));
+System.out.println(cstmt2.getInt(2));
+
+Schema refinement and normal forms
+
+Problems caused by redundancy - redundant storage, update anomalics, insertion anomalics, deletion anomalics
+  
+example - 2 tables. wages - R, W (8,10), (5,7)
+update - can we update W in the relation table?
+insertion - what if we dont know W for R and want to insert?
+deletion - if delete all employees with R=5, we lose information about wage for R=5.
+  NOT NORMALIZED BECAUSE relation table has 2 columns that are dependent on each other.
+
+Reduncancy is at the root of several problems with relational schemas: redundant storage, insert/delete/update anomalies
+integrity constraints, in particular functional dependencies, can be used to identify chemas with such problems and suggest refinements
+main refinement technique: decomposition (replacing ABCD with say, AB and BCD or ACD and ABD
+decompositionshould be used judiciously - is there reason to decompose the relation? what problems would decomposing it cause?
+
+Functional dependencies - kind of IC that generalized the concept of a key.
+  if K is a key for R, then K->R
+
+example S-> SNLRWH (which are the fields for hourly_emps with primary key S)
+FIX REDUNDANCY - use 2 smaller tables to store the data, only keep one field, make new table with kept field, the related field.
+
+Functional dependency FD -
+  if X->Y holds true where Y is not a subset of X, then this dependency is called non trivial.
+  ex. empid, empname, empaddress.   empid->empname and empid->empaddress are both non trivial
+
+  X->Y holds true where X intersect Y is null then this dependency is completely non trivial
+
+  A->B is trivial if B is a subset of A, A->A is also trivial.
+  (SID, sname)->SID, grade is trivial because its sid is a subset.
+
+SSN->did did->lot implies ssn->lot
+transistivity - if X->Y and Y->Z then X->Z   F+
+augmentation - if X->Y then XZ->YZ for any Z
+Reflexivity - if X(is subset of)Y then Y->X
+Union - 
+
+Normalization - the process we use to efficiently organize data by eliminating redundancy, storing data in right table, and eliminating 
+  need to restructure database when data added.
+5 levels - each level needs to fill all previous levels before it can be filled. 
+  THIRD LEVEL IS SUFFICIENT FOR MOST DATABASE APPLICATIONS
+
+NORMALIZATION IS PART OF DESIGN PROCESS
+LEVEL 1 - no repeating or duplicate columns?. each cell contains onl single value. Each record is unique, identified by primary key
+  ex. table, has multiple items in color, duplicate records, and no primary key
+    fixed by adding tuples for each color, making type and color the primary key
+LEVEL 2 - all non-key fields depend on all components of the primary key, guaranteed if primary key is single field. transitivity is fine.
+  price and tax depend on item, not color.
+    break table into 2, item and color in one, item, price, tax in the other.
+  when we decompose a relational schema R ith a set of dependencies into R1 and R2 we want:
+    lossless join decomposition - completely reproduce whole table    no redundancy (BCNF or 3NF)      dependency preservation
+      lossless join - R=R1 U R2, R = R1 JOIN R2    IF recreation creates extra tuples, there is loss
+      A join is lossless IF and ONLY IF R1 intersect R2 ->R1 OR R1 INTERSECT R2 ->R2
+      R=ABCDE, R1=ABC R2=ADE    R1 INTERSECT R2 = A, LOSSLESS.
+        If A was not the key for either, then it is NOT LOSSLESS.
+      Dependency preserving decomposition - the decomposition is dependency preserving iff (Ui * Fi)+=F+
+        basically, we want to minimize the cost of global integrity constraints based on FDs
+    R=ABC F(A->B, B->C, A->C) key=A   solution AB and AC AND WHAT WAS THE PROBLEM EXACTLY? BUT that solution eliminates B->C so not FD
+LEVEL 3 - already level 2, nonprimary attributes do not depend on other nonprimary attributes, all transitive dependencies moved to other table
+  tax depends on price.   break item/price/tax into item/price and item/tax
+  a. X is superkey for R, or A is a key attribute for R.   where x is 
+LEVEL 3.5 BCNF- X is a superkey for R.    NOT ALLOWED TO USE TRANSITIVITY
+  may lose a functional dependency if do this.
+  ex. X is client/office, is a key of office.
+  ABC A->B B->C        AB A->B and BC B->C
+  ABCDE a->B BC->D both violate because superkey ABC is key?
+    AB A->B key A     and      ACDE AC->D key ACE.  fails because AC is not full key
+      ACD AC->D key AC    and     ACE no dependencies left, key ACE
+        
+  candidate keys - can only be from superkey at start?   ONLY BCNF IF FULL SUPERKEY->other fields. not partial. ******************************************
+
+      is lossless join, not dependency preserving. BC->D was eliminated.
+  EX3 ABCDE A->B BC->D key ACE breaks.
+    BCD BC->D key BC     and     BCAE A->B key ACE breaks      BC INCLUDED BECAUSE THATS THE KEY FOR LEFT.
+      AB A->B key A      and     ACE no dependency key ACE
+    lossless, dependency preserved
+
+  ABCDEH A->BC E->HA key DE both break.
+    ABC A->BC key ......idk check slides
+
+CLOSURE - find candidate key and superkey,   check whether FD can be derived from given FD set,    find minimal basies
+  keys - to check X->A   compute X+  check if A (IN) X+
+  attribute closure (A+) - the set of attributes that can be determined by the key.
+    A->B and A->C    A+ = {A,B,C}
+    find closure - add element of attribute set to result set.
+      recursively add element to result set which can be determined from the elements in the result set.
+SNO->sname SNO->sphone SNO->sstate SNO->scountry SNO->sage sstate->scountry
+  SNO+ = every one of them.
+  sstate+ = sstate, scountry
+AB->C AD->B B->D
+  A+ = A   B+ = BF   C+ = C   D+ = D   AB+ = ABCD   AC+ = AC   AD+ = ABCD   ABC+ = ABD+ = ACD+ = ABCD+   BCD+ = BCD
+  
+R+ = ABCGHI  A->B A->C CG->H CG->I B->H   INTERMEDIARY STEP, start with any values that don't show up on right side.
+  AG+ = AG -> ABCG -> ABCGHI   DOES A->R?no  DOES G->R?no
+    AG is a superkey for set.
+BOSQID     IS->Q S->D B->O I->B
+  start with SI+, = BOSQID, is superkey
+
+SAMPLE QUESTION ON TEST
+R+ = ABCDEH   A->B BC->D E->C D->A     start with EH... only one option has both thats the answer
+
+CHECK IF FD CAN BE DERIVED FROM GIVEN SET
+  A->B    find A+ using set F       if B is a subset of A+ then A->B is true.
+
+MINIMAL BASIS - the least redundant form for FDs
+  A->BC => A->C  A->B   - split RHS of each FD
+  if can remove attribute from LHS and still get same RHS, remove it.
+  if S-f implies S still, remove f
+EX ABCDE   AB->C B->D D->A A->D D->E A->E
+  B is key, get rid of D->E, since have D->A and A->E     A->D too?      AB->C => B->C because only B is key
+  AB->C => B->C because only B is key,    A->D and B->D exclude each and see if A/B still ->D, if yes, delete, if no, keep. keep both.
+    D->E and A->E excluse D->E Dstill->E so remove it.
+
+
+userid->email,fname,lname,ip     zip->city,state
+
+Data on External Storage
+  disk - can retrieve random page at fixed cost, reading several consecutive pages is much cheaper than reading random order
+  tapes - can only read pages in sequence, cheaper than disks, used for archives
+  file organization - method of arranging a file of records on external storage
+    record id is sufficient to physically locate record.   indexes
+    Architecture - Buffer manager stages pages from external storage to main memory buffer pool. fils and index layers make calls to buffer manager
+    Alternatives - heap (random order) files - suitable when typical access is a file scan retrieving all records
+      sorted files - best if records must be retrieved in some order, or only a 'range' of records is needed
+      indexes - data strutures to organize records via trees or hashing. speed up searches for a subset of records based on keys
+        updates are much faster than in sorted files.
+        3 returns - everything with that key, the search keys for the records?, the list of all record ids?
+        techniques - B+ tree, hash table
+      Alt 1 - only one index per piece of data, or else redundant.
+      Alt 2,3 - data entries typically smaller than data records. Better than Alt 1 with large data, especially with small keys.
+        3 is more compact than 2, but leads to variable sized data even if search keys are fixed length. CAN RUN OUT OF STORAGE no warning
+      Index Classification - primary - search key contains primary key     secondary ?
+        Clustered vs unclustered
+
+CREATE [UNIQUE/clustered] INDEX index_name ON table_name(table_primary_key);
+CREATE UNIQUE INDEX index_name ON table_name(table_primary_key) using [Btree/Hashing];
+
+DEFAULT FOR TABLE IS HEAP
+
+Choice of index - consider most important queries, if additional index can make it better
+  implies that we understand how a DBMS evaluates queries and creates evaluational plans. discusses simple 1 table queries
+  must also consider the impact on updates in workload - queries go faster, updates slower, takes up disk space.
+...where E.num=23432423   suggest hash index
+...where E.age > 40    sugest tree index
+...where age>40 and salary=5000
+example select E.dno from emp e where e.hobby=Stamps  - if many employees match this, consider making the clustered index
+select e.dno from emp e where e.eid=23432423  - unclustered..?
+order of attributes is important for range queries.  key<sal,age> <> key<age,sal>
+  ...where age=30 and 3000<sal<5000 - clustered <age,sal> much better than <sal,age>
+    because it stops when it finds 30, then searches salaries, whereas other would search salary first.
+COMPOSITE SEARCH KEY - index with 2 fields?  
+
+Index only plans - dont need table, can answer from index alone
+  select d.mgr from dept d, emp e where d.dno=e.dno  create index on e.dno    scan index for wanted depts first, then only get corresponding ones
+select e.dno, count(*) from emp e group by e.dno   create index on e.dno    only scan entries in index, then count them
+  if <age,dno> finds age>30, sorts, counts     if <dno,age> IDK	
+
+
+NoSQL - we will be looking at MongoDB, which is document oriented.
+  typically is split between servers, separated by a hashed key.   based on CAP theory - must always give something up,
+    consistency, availability or tolerance to failure and reconfiguration will be lost when taking more and more data.
+  Theory - Given many nodes, nodes contain replicas of partitions of the data
+    Consistency - all replicas contain same version of data, slient always has same view of the data
+      if delete, all replicas deleted the same
+    Availability - System remains operational on failing nodes(a server goes down), all clients can always read and write
+    Partition tolerance - multiple enry points, system remains operational on system split, system works well across physical partitions
+  SATISFYING ALL # OF THESE IS IMPOSSIBLE BY CAP THEOREM
+sharding data - distributes single logical database system across cluster of machines.
+  uses range based partitioning to distrubute documents based on shard key
+  automatically balances the data associated with each shard,         can be turned on and off per collection (table).
+
+replica sets - redundancy and failover, but have zero downtime for upgrades and maintenance.
+  master/slave replication - strong consistency, but delayed consistency (is that even a problem?)
+
+NoSQL vs RDBMS - looser schema definition,   applications written to deal with specific docs/data,   
+  applications aware of schema definitions instead of data,   designed to handle distribution/large databases
+  trade offs - no strong support for ad hoc queries, but designed for speed and growth of database. query language through API, relaxed theACID properties
+benefits of NoSQL - elastic scaling - RDBMS scales up, bigger load, bigger server.  NoSQL scales out, distributes across multiple hosts seamlessly
+  DBA specialists - RDBMS requires highly trained expert, NoSQL requires less management, auto repair and simpler data models used
+  big data - RDBMS capacity and constraints of data volumes at its limit, NoSQL designed specifically for Big Data.
+  flexible data models - RDBMS schema management must be managed,  NoSQL databases more relaxes, schema changes not manages as complicated unit
+  economics - NoSQL is cheaper
+  support - RDBMS vendors provide high level of support to clienty,  NoSQL are open source with startups, not much reputation yet
+  maturity - RDBMS is mature, meaning it is stable and dependable, NoSQL are still implementing basic features.
+  administration - RDBMS administrator well defined role,  NoSQL has no administrator needed, but someone needed to maintain.
+  lack of expertise - RDBMS workforce trained,  NoSQL still recruiting.
+  analytics/business - NoSQL designed for the web.
+ACID = Atomicity, Consistency, Isolation, Durability   RDBMS
+
+
+MongoDB - doc oriented NoSQL database, hash based, no schema, no data definition language.  in practice, this means storing hashes with any
+  value that you choose.   keys are basic data type but stored as strings.   document identifiers (_id) will be created for each document
+  and field name   reserved by system.  application tracks the schema and mapping    uses BSON format (based on JSON)
+  written in C++, upports APIs in many computer languages, (JS,P,Ruby,Perl,Java,scala, C#,...
+
+  dynamic schema - some documents can have different fields from others of the same type
+  CAP approach - PC, multiple entry points, consistent, but some data might be unavailable for a time.
+
+  A Mongo instance may have 0+ databases, each database has 0+ collections, collections have 0+ documents, documents have 0+ fields( or document?)
+    sounds a lot like folders in windows.
+  BSON format - binary encoded serialization of JSON like docs.  one or more key value pairs are stores as single entity.
+    {"name": "Joseph", etc}
+  index functionality - has uniqueness, if try to add second salary different from first, will get rejected.
+  CRUD examples >db.user.insert({first: "john", last: "doe", age: 39})
+  db.user.find(){"_id":objectid("51"), "first": "john"...
+
+
+KNOW DIFFERENT, BENEFITS OF KNOWING ONE OVER THE OTHER PROS/CONS, WHY WE HAVE NOSQL IN THE FIRST PLACE.
+
+WHAT IF A STUDENT ISN'T ENROLLED ANYMORE, HAVE A FILTER FOR ONLY ENROLLED STUDENTS - IN GRADUATED INCLUDE 'NO LONGER STUDENT' OPTION?
+FINAL TIMELINE SHOULD BE A LOG OF WHAT HAPPENED, NOT WHAT WE THOUGHT WOULD HAPPEN
+INSTALLATION GUIDE FOR MYSQL/GUI
+system functionalities - basically explain the UI
+MENTION WHO DID WHICH PART
+
+
+TRANSACTION MANAGEMENT
+concurrent execution of user programs is essentila in DBMS performance - disk accesses are frequent and slow, so important to work concurrently
+  A user's program may carry out many operations on the data retrieved from the database, but the dbms is only concerned about what data is read/written on the database
+  a transaction is the DB<S' abstract view of a user program: a sequence of reads and writes.
+scheduling transations:
+  serial schedule - schedula does not interleave actions of different transactions - T1 then T2
+  equivalent schedule - for any state, the effect of executing the first schedule is identical to executing the second schedule
+  serializable schedule - a schedule is equivalent to some serial execution of the transactions OBJ1 then OBJ2 priority, then T1/T2
+Transactions commit to database once they have finished, if serializable, T2 could commit before T1 finishes, could break system.
+  uncommitted - A backed out after B used their modified value
+  unrepeatable reads - B changed value after A read it, A reads again only to see different value
+  overwriting uncommitted data - B writes over i1 after A does, and commits before A does.
+FIXES - 2 phase locking - shared lock for reading objects, exclusive lock for writing. all locks released when transaction completes
+  if transaction holds exclusive lock, no other transaction can get either lock on that until it is comitted.
+  strict 2 phase locking allows only serializable schedules?
+THE LOG - includes all of the following
+  Ti writes object (old value, new value), must be applied to disk before changing page
+  Ti commits/aborts (indicate each action)
+  log records are chained together by transaction id, so its easy to undo a specific transaction.
+  log is often duplexed and archived on stable storage.
+  all log related activities (and all CC related activities like locking, deadlock resolution, etc) are handled transparently by DBMS
+Recovering from a crash - 3 phases
+  analysis - scan log forward to identify active transactions and dirty pages in buffer pool?
+  redo - redoes all updates to dirty pages in buffer pool as needed to ensure updates are written to disk
+  undo - the writes of all transactions active at crash are undone.
+
+transaction does following: customer is queried for desired flight time and cities. information about desired flight is located in A and B
+  which system retrieves from disk.    the customer is told about options and select a flight whose data is in B. A reservatiion on that
+  flight is made for the customer.       the customer selects a seat for the flight, seat data is in C.     the system gets the customer's
+  credit card number and appends the bil for the flight to a list of bills in D.    customer's phone and flight data added additionally
+  to E for a fax to be sent.
+EQUALS: r(A) r(B)     w(B)    r(C) w(C)     r(D) w(D)     r(E) w(E)
+
+T1 READ(A,t) t=t+2 write(A,t) read(B,t) t=t*3 write(B,t)
+T2 read(B,s) s=s*2 write(B,s) read(A,s) s=s+3 write(A,s)
+
+serializable - serial for object
+  T1 rA  T1 wA  T2 rA  T2 wA  T1 rA  T1 wA  T2 rB T2 wB
+  nonserializable - T2 reads, T1 reads, T2 writes, T1 writes.
+serial - all of T1, then all of T2, or reverse direction. only 2 possibilities
+
+NEED A GROUP BY FOR COUNT errors otherwise.
+
+list all aIDs of apartments with capacity 1, what is best index for IO performance - clustered on capacity field
+50% are male, best way to list SID of male grads. - no index, file size would ruin it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+free, all sql we know, cloud?
+ABOUT THE PLANNING HELL. just because an assignment is open for 3 days doesn't mean everyone takes 3 whole days on it...
+
+
+
+
+
+REVIEW******************^%$#@!#$%^&*(&^%$#
+
+CREATE TABLE table)
+name text primary key,#text is an actual type
+number int, rating float not null);
+
+create table table2(
+name varchar(25) primary key,
+number int primary key #invalid
+rating float
+
+a. select address from studio where name='MGM studios';
+b. simple. screw it
+c. select name from moviestars where name in (select starName from starsin s, movies m where movieTitle=m.title and (s.year=1980 or m.title like '%Love%');
+d. select name from movieexec where networth >= 10000000;
+e. select name from moviestar where address like '%Malibu%' or gender = male;
+
+a. select name from mstar where gender=male and name in (select starname from starsin s where movietitle='titanic');
+b. select name from starsin where movietitle in (select title from movies where studioName='MGM' and year=1995);
+c. select name from movie exec where cert# in (select presc# from studio where name='MGM');
+
+JOINS FIND THE QUALIFICATION BEFORE CALCULATING CROSS PRODUCT, ON REFERS TO THE CONDITION TO JOIN
+
+1. select avg(grade), max(grade), min(grade) from took group by oID;
+2. select sid, surname, cgpa from students where sid in (select sid from took group by sid having count(*) >9);#group by needs to be part of select?
+3. 
+
+if you switch the position of project and select operators, do they have the same value as original? 
+  yes, they do, unless the project eliminates something the selection operator uses, project slashes columns, select slashes tuples
+
+pi(sid)(sigma(exists(sigma grade<50)and exists(grade>80))Took)?
+pi(sid)(sigma(grade>80took))(intersect)pi(sid)sigma(grade<50)Took)
+pi(sid)(sigma(grade>80)took INTERSECT sigma(grade<50)took
+
+pi(sid)(sigma(grade>85)took OR sigma(oid=oid ^ grade>50 ^ instructor='Atwood')?
+pi(sid)(sigma(grade>85)took U sigma(grade>=50)took INTERSECT sigma(instructor='Atwood')Offering);
+pi)sid)(sigma(grade>85 v (instructor='Atwood' ^ grade>=50)(took join offering));
+
+LEARN SELECT STATEMENTS*************************************************************************************************************************************************************************
+team work plan is only our plan for our future work with the client, ie when we meet what we clarify, etc.
+
+
+
+
+
+
+
+tentative ER diagram for project...
+
+inventory - type VARCHAR(20), itemId VARCHAR(20)
+Students_advised - sid VARCHAR(20), name VARCHAR(20), advisor VARCHAR(20)
+Rented - sid VARCHAR(20) PRIMARY KEY, itemId VARCHAR(20), checked_out DATE, returned DATE
+
+faculty - fid VARCHAR(20) PRIMARY KEY, office_no TINYINT, phone_no VARCHAR(20), 
+
+EMAIL FATMA ABOUT MEETING TIME FOR DISCUSSION
+
+
+
+
+
+
+
+
+feedback - easier to understand to see standard diagram side by side with diagrams of tables
+more example case studies, i hadn't realized there was a specific notation for weak entities, primary keys and foreign keys.

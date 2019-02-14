@@ -1,15 +1,51 @@
-render a table?
-design architecture
+final thing: site, login, have credits, choose game, against people, 
 
-understand webGL (merge projects) eh.....
+pieces:
+  site hosted on azure
+  menu buttons made to work on site
+  game select on initial webgl screen on site
+    user as guest player if not logged in
+    user as username if logged in
+    number of active games/players in shown game
+    rules of selected game shown somehow
+  chat function for chosen game, or global chat depending on which is chosen
+  player bar shows all players in selected game and their cards, bet, action.
+  login and register at top of site to take user to login or register page
+  login page which player enters login information and selects login
+  register page to allow a user to register as a new user on the site
+  some method of earning money at no cost
+  page to buy chips, not a priority.
+  
 
+BACKEND gamestate:
+  choosing a game sends json requesting for game rules and graphic rules, potentially same file has both.
+  server also sends json of player data for game new player is added to.
+  client reads json to create game
+  client only allows actions as defined in rules
+  once user finishes action, send json to update server's gamestate
+  server verifies legal move, sends updated status to all players
+  player set bet, server validates
+  win state
+    give out player bet, win screen
+  loss state
+    take away player bet, lose screen
+  player has option to stay in game or leave by clicking button when they win or lose
+  
+BACKEND DATABase controller:
+  function update balance(user, bet)
+    assume logged in user, directly update their balance
+  function new user(user, pass)
+    add new user to table, hash password?
+  function login(user, pass)
+    login, similar logic to new user
+  function add move(game#, user, action)
+    record the player's move in db
 
-start working on design doc
-start working on test doc
+TESTING:
+  write tests for all functionalities
+  redo majority of test doc to match
 
-update project management plan and SRS
-11/14 tech talk, know how webgl draws by then.
+STRAY THOUGHTS:
+  custom game builder with short tutorial on how it is used
 
-drag cards within the canvas, snap in place, draw from deck yourself?
-cards aren't defined until server acknowledges that a player should be drawing it.
-FOR NOW, let cards just pop in.
+rules logic: states, valid actions in state/state change, score for actions, 

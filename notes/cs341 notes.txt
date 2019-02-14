@@ -436,6 +436,58 @@ o Email
      retrive mail   keeps all messages in a server that users can organize into folders.
 
 
+NA: network address translation - DEFINITELY ON THE TEST, KNOW HOW IT WORKS>************************************
+
+o Be able to explain / define the following terms / acronyms:
+ o SDN - Software Defined Networking
+     use a logically centralized control plane to make router networks easier to manage, custom forwarding tables. 
+ o AS - Autonomous Systems
+     regions of aggregated routers set up to make networks scale globally
+ o OSPF - Open Shortest Path First
+     router floods OSPF link-state advertisements to all other routers in entire AS to update forwarding tables
+ o BGP - Border Gateway Protocol - the big routing protocol
+     eBGP - external Border Gateway Protocol
+       obtain subnet reachability status from neighboring ASes
+     iBGP - internal Border Gateway Protocol
+       propagate reachability information to all AS-internal routers, determine good routes to other networks based on reachability info.
+ o DHCP - Dynamic Host Configuration Protocol
+     allows host to dynamically obtain an ip address from the network server when connecting
+ o Net Neutrality
+     treating all packets neutrally, not prioritizing any over any other.
+o IP Addressing – CIDR - Classless InterDomain Routing
+    subnet portion of address with an arbitrary length, formag: a.b.c.d/x where x is the # of bits in subnet portion of address
+o Difference between IPv4 and IPv6
+    IPv4 - 32 bit address almost completely allocated, needed more space
+    IPv6 - 40 byte header, added priority, removed checksum
+o NAT - Network Address Translation
+ o How does it work?
+     Router in control of home network, to rest of world has its own ip, then assigns connections to the assigned ip from home network
+     ie. home to out, NAT translates it such that source is NAT and not pc, then sends it out
+ o Be able to explain / fill in all of the addresses on slide 4-57
+ o Know how it uses Transport AND Network layer protocols
+     network - changes input dest to hosted router and output source to self
+     transport - recomputes checksum to match the changed ip. needs to change port.
+o IP Tunneling
+    IPv6 is attached as the payload of an IPv4 header, so an IPv4 router can still move it around and IPv6 can unpack it
+o Per router control plane vs. logically centralized
+    Per router - components in each and every router interact in control plane
+    logically centralized - remote control agent interacts with only local control agents
+o Intra-AS vs. Inter-AS routing
+    intra-AS - routing among small number of hosts, all need to use same intra protocol.
+    inter-as - must have intra protocol, as well as a protocol to communicate with other AS'es.
+o Hierarchical OSPF–understand how it works and the types of routers -boundary, backbone, area border
+    2 level hierarchy - local area and backbone. 
+      local areas - connected by area border routers
+      backbone connected by boundary routers to other backbones, backbone routers to the local areas.
+o Dijkstra’s Algorithm - next is shortest, if new path shorter, change it. run everytime neighboring node changes
+ o Given a graph and a table, be able to reproduce theresults of slides 5-15 and 5-16
+ o Complexity is O(n^2)...what does n stand for?
+     number of nodes in network
+o Distance Vector / Bellman-Ford algorithm
+ o Understand the formula on slide 5-20,21
+     distance (x-y) = min{weight(x-v) + distance(v-y)}
+ o Understand the key idea that gives it advantages for routing compared to Dijkstra’s, slide 5-23
+     parallelized, only update other nodes when changes are found, doesn't need to recompute EVERYTHING.
 
 
 
@@ -443,10 +495,86 @@ o Email
 
 
 
-
-
-
-
+o Be able to explain / define the following terms / acronyms:
+ o SDN - Software Defined Networking
+     use a logically centralized control plane to make router networks easier to manage, custom forwarding tables. 
+ o ICMP - Internet control message protocol
+     used by hosts and routers to communicate network-level information to each other.
+ o AS - Autonomous Systems
+     regions of aggregated routers set up to make networks scale globally
+ o OSPF - Open Shortest Path First
+     router floods OSPF link-state advertisements to all other routers in entire AS to update forwarding tables
+     2 level hierarchy, local area and backbone. local areas connected by boundary, backbone, area border, internal routers from out to in.
+ o BGP - Border Gateway Protocol - the big routing protocol
+     eBGP - external Border Gateway Protocol
+       obtain subnet reachability status from neighboring ASes
+     iBGP - internal Border Gateway Protocol
+       propagate reachability information to all AS-internal routers, determine good routes to other networks based on reachability info.
+ o Hot Potato Routing
+     when a router has multiple paths to route outward, chooses the path with the smallest intra-domain cost, ignoring total cost.
+ o MAC address - media access control
+     used to locally get frame to a physically connected interface, works on LAN mostly
+ o ARP - Address resolution protocol
+     switches have ARP table with ip/MAC mappings, add new entry if needed, has time to live
+ o VLAN - virtual local area network
+     group up ports in a switch to only connect to each other, to host 'multiple' LANs despite all being the same LAN.
+     can also be extended across multiple switches.
+ o Trunk Port - 
+     special port to handle connection between multiple switches being used as VLANs.
+o IP Addressing – CIDR - Classless InterDomain Routing
+    subnet portion of address with an arbitrary length, formag: a.b.c.d/x where x is the # of bits in subnet portion of address
+o Difference between IPv4 and IPv6
+    IPv4 - 32 bit address almost completely allocated, needed more space
+    IPv6 - 40 byte header, added priority, removed checksum
+o NAT - Network Address Translation
+ o How does it work?
+     Router in control of home network, to rest of world has its own ip, then assigns connections to the assigned ip from home network
+     ie. home to out, NAT translates it such that source is NAT and not pc, then sends it out
+ o Be able to explain / fill in all of the addresses on slide 4-57
+ o Know how it uses Transport AND Network layer protocols
+     network - changes input dest to hosted router and output source to self
+     transport - recomputes checksum to match the changed ip. needs to change port.
+o Dijkstra’s Algorithm - next is shortest, if new path shorter, change it. run everytime neighboring node changes
+ o Given a graph and a table, be able to reproduce theresults of slides 5-15 and 5-16
+ o Complexity is O(n^2)...what does n stand for?
+     number of nodes in network
+o Distance Vector / Bellman-Ford algorithm
+ o Understand the formula on slide 5-20,21
+     distance (x-y) = min{weight(x-v) + distance(v-y)}
+ o Understand the key idea that gives it advantages for routing compared to Dijkstra’s, slide 5-23
+     parallelized, only update other nodes when changes are found, doesn't need to recompute EVERYTHING.
+o Link layer services 6.7
+    framing - encapsulate with MAC address in header
+    reliable delivery between adjacent nodes
+    flow control
+    error detection
+    error correction
+    half duplex and full duplex???
+o Channel partitioning TDMA vs FDMA
+    TDMA - time division multiple access - all 'slots' given equal amount of time in rounds to send, cycles through, going idle if nothing sent
+    FDMA - frequency division multiple access - each channel given different frequency
+o Routing to another LAN 6.47-52
+    host ARP queries adapter, sends to adapter, adapter arp queries next, sends, this keeps looping
+o Ethernet
+ o Bus/hub vs star/switch
+     bus/hub - all hosts connected to single bus, high probability of collision
+     star/switch - switch in between hosts, routes packets to avoid collisions
+ o General frame structure
+     preamble - 7 bytes with 10101010 pattern followed by 1 byte with 10101011, used to sync clock
+     destination address - 6 byte destination MAC address, if not found, drop frame
+     host address - host MAC address
+     type - indicates higher layer protocol (usually IP)
+     Data
+     CRC - cyclic redundancy check, drop frame is error detected
+ o Connectionless and unreliable, is that bad?
+     connectionless just means no handshaking, unreliable just means no acks or nacks are used. lets TCP handle that, would be overhead otherwise
+ o Switch forwarding 6.63-68
+     switches have switch table - MAC for host, interface host is connected to, timestamp
+     switch 'learns' connected hosts when it receives a frame from one.
+     switch forwards frame to all interfaces except one that sent frame originally to propagate originally, only to dest if in table.
+ o Switches vs routers 6.70
+     routers store and forward from network layer header and have routing table for ip
+     switches store and forward from link layer header and forward through flooding, then learn a table to send to.
 
 
 

@@ -1,0 +1,408 @@
+software engineering - designing and maintaining a piece of software for sale and use. MORE ABOUT THE PROCESS
+software engineering components - scalability, maintaining, requirements, cost, time, non-functional requirements (security, quality)
+software - generic products, customized
+ generic - developed and controlled by an organization, all decisions made by organization
+ customized - designed to fit a client's requirements, organization works with them to make the program.
+example of failure - Internet explorer - needs web pages designed specifically for it to function.
+good software - does what it should do, actively maintained, dependable (not down when maintained, works standalone), reusable (use features
+ in other software)
+difference between software engineering and computer science - cs more about theory, SE concerned about practices to deliver software
+software engineers are usually involved in the whole process of creating software, as well as aftercare.
+key challenges facing software engineering - designing adaptable software that wont need a complete overhaul every update?
+ security for software, earning and keeping consumer trust. scalability(one server vs many), reduce resources and dev time spent.
+difference from internet becoming a thing - more frequent updates, significant increase in usage.
+cost of software engineering - resources, testing, maintenance
+best teqhniques/methods - no proper standard, best practices split among types of software.
+  use understood dev process, achieve dependability to deliver expectations, understand specifications, effective at reusing resources
+
+software project failures:
+  increase system complexity - world is ever changing and constantly demanding more, higher chances of breaking something? this is out of place...
+  failure to use software engineering methods - incompetence leading to something breaking
+y2k - computers designed only for last 2 digits, nothing in place to handle year 2000. nothing serious happened.
+
+software engineering ethics - any behavior positive or negative that has an impact on the environment.
+  minimalist - dont do anything that is harmful, so considered ethical
+  idealist - do something to prevent harm from happening in the first place, failsafes
+core ethics - ethics present in one's own culture
+professional ethics - additional responsibilities that job requires.
+professionalism - ethical responsibilities for having a job
+
+4 ethics for SE? - confidentiality of employer, confidence? (right to refuse work that goes against beliefs (like nuclear weapons))
+ intellectual property rights..? (dont misuse company resources), missed 4th
+
+ACM code of ethics - standard code for software engineers
+
+software process - roadmap to achieve high quality software or products meeting all desired requirements
+ basically the framework for activities tasks and action, whatever the hell that means
+ the process defines the approach taken to engineer software.
+
+
+Project will be a plan-driven assignment.
+
+SOFTWARE ENGINEERING PROCESS******************************************
+ 4 main items in the process
+  specification - figure out what the requirements are (elicitation and analysis, specification, validation all of requirements)
+   elicitation - observation of existing systems/collect requirements from stackholders
+   specification - collect all requirements from step 1 into one document, separate user and system requirements.
+   validation - realism (actually usable), completeness, consistency.
+   requirements - functionalities, features, services, security(varying levels), safety (these 2 are nonfunctional requirements, not from client)
+  design and implementation - (architecture, database, interface, component selection (design))
+   architecture - identify overall structure of the software
+   database - identify and design main data structure of the database if one is used
+   interface - how it will look to the consumer
+   component selection - if system reuses other systems, what are reused components and how will they be integrated
+    some systems need more than these, others need less. implementation is done based on which model is used. interdependent and interleaved together
+  validation - testing (component, system, customer)
+   component - test components and any prototypes currently made.
+   system - if system integrates with other systems
+   customer (Beta testing) - published for a few users to get feedback for changes before complete release
+    in agile development - test driven approach - assume first, implement to match..?
+  evaluation/maintenance/updating - can cope with changes with minimal cost.
+   change tolerance approach - use flexible model so when requirements change, it will be easy to handle, takes more maintenance.
+   change anticipation approach - predict how requirements will change in future and build for it. (prototypes are helpful here?)
+    prototype - experimental build for testing
+     designed around one of the objectives to give a proof of concept before finishing it
+     functionalities defined, the rest left off from it. (dont care about security or looks when testing basics)
+     validation.
+ who is involved - software engineers, project manager, technical manager (engineers and the managers in charge of them)
+ why is it important - want something stable and centralized
+steps of the software engineering process - dont exist. these notes suck. depends on how you will adapt...
+what is the output - high quality software program, documentation, data
+how do I ensure I've done it right - CMMI - capability maturity model integration - has up to 6 levels, each takes more than previous
+ for organization, basically a set of standards to apply to practice.
+
+software process approaches:
+ plan-driven - process activities planned and decided on before any other progress is made.
+ agile - incrementally work on activities, not structured at all.
+waterfall model - work from top to bottom individually, cant move on unless previous stages complete. 
+ requirements defined, system and software design, implementation and unit testing, integration and system testing.
+  afterwards, operation and maintenance, can go from here to any other step, must still go in order.
+  often will need to wait on a team to finish their part before being usable.
+V model - requirement modeling, architectural design, component design, code generation,
+ unit testing (can to back to code or component), integration testing (architectural/component),system testing(requirements/architectural,
+  acceptance esting(requirements)   first line goes down, second line goes back up with arrows pointing back to first line things at same
+   level and the level above it.
+ extra steps to validate software early on instead of waiting right til the end.
+both of these models are better for large projects. and are both plan driven models.
+Increment/iterative model - agile model: outline description, then concurrently: specification, development, validation. swap between initial, 
+ and intermediate versions until reaching final version.
+ commonly used in many projects small and large alike. 
+ disadvantages - unclear progress made, which frustrates managers.
+spiral model - hybrid of waterfall and incremental... to get risk analysis of waterfall and 
+ cost is cumulative for whole process, has same drawbacks as incremental, way more documentation for this process.
+ changes in requirements can be accumulated, convenient to validate design earlier, show customers work is being done.
+reusable model - reuse-oriented model - use other plan type, but mainly reuse old parts in it.
+ requirements specification, software discovery and software evaluation, requirements refinement, configure application system or
+  adapt components and develop new components, then integrate the system together.
+  less customization than other models since focus is on reuse, lose control over final product.
+  faster to go through than other models
+
+agile manifesto - individuals and interaction over processes and tools
+  working software over comprehensive documentation
+  customer collaboration over contract negotiation
+  responding to change over following a plan
+
+principles of agile:
+ customer involvement
+ embrace change
+ incremental delivery - customer specifies more requirements each increment.
+ maintain simplicity - work to eliminate complexity from the system
+ people, not process
+
+extreme programming release cycle - select user stories for release, break down stories to tasks, plan release, develop/integrat/test,
+ release, evaluate system, repeat cycle.
+  user stories - specifications
+  refactoring - initial implementation
+
+agile development - project divided into large number of small tasks known as sprints
+ each one, team works through full software dev cycle including planning, requirement analysis, design, coding, testing, release
+ each one is done in a fixed period, like 4 weeks
+ size is based on team size
+
+scrum - 
+ product owner - comes up with product idea
+ scrum master - servant for the team, manager basically.  FOR PROJECT ONE PERSON NEEDS TO BE THIS, ROTATE ROLES.****************************
+ team - 
+  take from product backlog - basically a list of all requirements for the whole project, constantly changing
+  select set of objects for sprint, called sprint backlog.
+  burndown chart - shoes plan for progress over the course of the sprint. Aim is to reach 0 by the end.
+
+ ceremonies - sprint planning - planning poker - product reads user story, team members each give values to represent workload
+               if dont reach consensus, ask highest and lowest to justify their reasoning
+              daily scrum - every morning, team members quicky meet to provide updates to other members. use whiteboards 
+               different headers: to start, in progress, done.  put sticky notes with sprint backlog task and estimated completion time.
+
+Agile -
+ user stories - come up with stories based on necessary tasks from backlog, usually as short simple description from person
+         who desires the new capability. 
+        typical template - "As a <user role> I want to <what they want> So that <reason>"
+	As a customer who drives i want to find a conveniently located branch so that i can minimize driving time.
+  ex - as customer want pictures to visualize product
+   into tasks - thumbnail pictures, clickable for details
+  as customer need to have credit card details to pay online
+   into - personal profile (edit profile(name, picture, credit card), login
+  as vendor want to sell items
+   into - seller profile, 
+****************************************************************************************
+ refactoring - modifying software to improve readability without changing what it does. Internal structure can be improved.
+  motivation - code size can be reduced and restructured into simpler code.
+  when to reafactor - when adding new functions, need to fix a bug, when preparing for code review.
+  when not to refactor - when it would be faster to rewrite instead of update, when deadline approaches.
+  process - identify 'smells', pick worst to fix, do so, test program, repeat process.
+  code smells - (only try to fix one at a time):
+   bloaters - long method, primitive obsession, data clumps, lare class, long parameter list, duplicate code
+   object-oriented abusers - alt classes with different interfaces, 
+   lazy class - class that doesn't do much, better to combine with other class?
+   unused class, method, field, parameter
+   comments are sometimes used to hide bad code
+   EXAMPLE - class animal{final int MAMMAL=0... string getskin(){switch statement}}
+    better as class animal with default, class mammal extends animal overwrite getskin with return "hair", class bird extends animal return feathers... 
+     this is scalable, the original... not as much?
+   null object - make nullUser inherit user and return basic.plan() instead of plan...
+   replace error code with exception - void withdraw(int amount) throws BalanceException{if(amount>balance){throw new BalanceException();)balance -=amount;}
+   duplicate code - 2 subclasses use same method, move method into parent and call it from each instead.
+   using single method to do multiple tasks.
+ test-driven development - 
+ pair programming - 
+use case - actor, (user)
+UMF - union     use case
+ users, admin, provider drawn on model, each one has arrows pointing away from them that point to a single requirement they have.
+  each item may have more arrows coming off to break it into even smaller tasks. less critical tasks marked by dashed line.
+  admin(istrator) - manage catalogue - ..., update user details
+MVC - model, view, control. model updates view isSeenBy user uses controller manipulates view. CYCLE.
+
+Scaling - scale up - system scales
+ scale out - organization scales.
+
+multi-team scrum -
+ role replication - each team has product owner
+ product architects - architects in each time work together to design architecture
+ release alignment - aligned so demonstrable and complete system is produced
+ scrum of scrums - representatives from each team meet to discuss plan
+
+requirements - anything to describe the system or how it works.
+ user requirements - no details, just state what system will do, uses natural language. written for user
+ system requirements - very detailed, written for devs, includes functional and non-functional
+  functional - required for system to function.
+   how the system should react to particular input, behave for particular situations, list of items system should do, descriptions about
+    system, expected users and type of service for each
+  non-functional - not needed for service to do its job, but may be required from user. looks, "*ility"
+   constraints on the system service, time constraints, development process constraints (performance, operations, platform used). safety, 
+    legal requirements
+CASE STUDY - medicare - want patient info to be accessible across different clinics, must be accessible through web server.
+ must have a secure nertwork   stakeholders - clinic's staff, patients, IT, non-medical clinic staff.
+  ex - user reqs - the mentcare syste shall generate monthly management reports showin the costs of drugs prescribed by each clinic that month
+  system reqs. 1.1 - on last working day each month, summary of drugs prescribed, cost, clinic generated
+   1.2 - system generate report for printing after 17.40 on last working day of month
+   1.3 - report created for each clinic, list individual drug names, total prescriptions, # doses, total cost
+   1.4 - if drugs available in different dose units (10,20 mg etc) separate reports for each dose unit
+   1.5 - access to drug cost reports restricted to authorized users as listed on management access control list.
+
+closed interview with idea manager - have clear list of questions to ask
+open - dont ask what they want from the system, instead ask if they want possible additions to the system.
+ ie - suggest reports, they say how often they want some.
+
+scenario - description of how a user would use a system
+ user stories - taken out of scenario for individual aspects
+  use case - the details for how system gets used. shows the sequence of actions an actor uses with the system.
+   kitchen staff - notifying food readiness, read the order to make, confirm availability. ...this is totally wrong...
+   use case name is short phrase beginning with a verb
+
+events and use cases:
+ department submits class schedule - submit department class schedule
+ time to produce university class schedule - produce university class schedule
+
+components of use case diagram - 
+ actor - a named stick figure
+ use case - an oval containing use case name
+ association bteween initiating actor and use case - line with arrowhead towards case?
+ association between participating actor and use case - line without arrowhead
+ system or subsystem boundary - a rectangle
+ dotted line headed with <include> or <extend> for each, or generalization solid with arrowhead pointing to parent.
+  include - base case explicitly incorporates the behavior of another case - requirement for both bubbles, has dotted line pointing towards 
+            self for both bubbles that require that requirement.
+   done in place of including that requirement detail in both individually.
+ extend - optional relationship, not all who are connected fit this requirement.
+ extend, include, generalization
+
+use case narrative - more detailed description about use case diagram
+ 
+ ex - use case: register for classes. actor:student purpose:register a student for lasses and record the student's schedule
+  description:a student requests the sections of classes desired for a term. the system adds the student to each section if space is 
+  available. on completion, the student receives a list of the classes in which he or she is enrolled.
+   student, arrow towards case 'register' <include> towards case validate SID.
+
+review checks - 
+ verifiability - is the requirement realistically testable?
+ comprehensibility - is the requirement properly understood?
+ traceability - is the origin of the requirement clearly stated?
+ adaptability - can the requirement be changed without a large impact on other requirements?
+
+context diagram - 
+ list potential external entities... and more but that went away too fast.
+ pretty much just a flowchart. contains systems and who interacts at each point.
+
+DFD (data flow diagram) - highest level is context diagram, as levels are added, more detail is given at higher levels. start at 0.
+ key components - the process itself, the data it is storing, the data flow with arrows
+  shows flow etween external agents (sources/sinks) and prcesses and data stores in system.
+   ext agent  arrow to process  arrow to data?
+ processes - have number, name, desc, 1+ output data flows, 1+ input data flows (rounded rectangle top area)
+ data flow - name, desc, 1+ cnnections to process (arrow)
+ data store - number, name, desc, 1+ input data flow, 1+ output data flow (rectangle left area)
+ entity (source/sink) - simple rectangle, outside source, can only have inputs or outputs.
+ no process can only have outputs, no process can only have inputs, no process can produce outputs with insufficient inputs (what?)
+labeling system - 1.0 2.0 3.0 for top. 1.1 1.2 1.3 for next.  1.11 1.12 1.13 for next.
+ 
+lemonade example - lemonade connects to employees, customers, inventory
+ employee(1.1) connects to payments, sale, production
+  payments(1.11) connects to: record working hours connects employeeData, calculate payroll connects to employeeData, pay employee connects employee
+
+MIDTERM 1STUFF STARTS HERE
+sequence diagram - shows sequence of interactions that take place during particular use case. FOR DESIGN PHASE
+ objects and actors involved are listed along top of diagram with dotted lines drawn between each
+ interactions between objects are indicated by annotated arrows. DIAGRAM ACCOUNTS FOR TIME, FARTHER DOWN TAKES MORE TIME
+  diagonal lines - objects with different lifetimes being linked
+  solid arrow line - synchronous message - waiting for response from object called.
+  normal line - asynchronous message
+  dotted line - return message
+  arrow back to self - needed event happening entirely inside one part.
+  alt/else blocks - square up parts, alt is the case if true, else is the case if not. 
+  opt - with a condition statement, only act if condition is true, otherwise skip entire block
+  loop - with condition, repeat until condition false(or specified # of times)
+
+class diagram - a model for code to make it readable for non-coders
+ box with 3 sections, class name, attribute list (names and types), methods
+  +method is a public mething
+  -method is is private
+  ~method packaged, anything in package can use
+  #method protected, package and subclasses can use.
+ relationships - ARROW POINTS TO CONTAINER/use
+  stick LINE - association - simple relation between 2 separate classes. - should know each other, but dont need each other to function.
+  solid (not filled) arrow - inheritance
+  dotted solid(not filled) arrow - implementation
+  stick diamond - aggregation - one method needs the other in order to function
+  filled stick diamond - composition - both methods rely on the other to function.
+
+ line with 0,1 from A to B means B knows either 1 or 0 items in A
+ line with 1 from A to B means B knows exactly 1 item in A
+ line with 1,* from A to B means B knows 1 or many items in A
+ line with 0,* from A to B means B knows none or many items in A
+
+design patterns - solutions to recurring problems; guidelines on how to tackle certain problems.
+
+ a software design pattern is a general reusable solution to a commonly occurring problem within a given context in software design.
+ generally is a template and not a set solution to make it more reusable.
+ make it easier to reuse successful designs and architectures, make documentations, ....unimportant i guess
+
+ 3 groups: creation - automation of creation for classes
+           structural - compose classes to work with others???
+	   behavior
+
+ singleton pattern - creational design category
+  ensure that only one instance of a class is created
+   ie. can only have one window manager or print spooler
+  provide a global point of access to the object
+  allow multiple instances in future without afecting singleton class' clients
+    USE STATIC IN JAVA
+    private static Class <name> = null; if ==null, <name> = new Class(); return <name>
+
+  adapter(or wrapper) pattern - works in between 2 classes to convert from one to the other.
+
+  strategy pattern - group algorithms together to make them interchangeable? 
+   make an interface for the algorithm, then implement it each way desired, the diagram has all implementations point to interface, which 
+   is aggregate to the main class that the user interacts with.
+    example - shopping cart called cart.pay(new PaymentMethod(contructor args)); pay then calls paymentmethod.pay(all fields needed to pay)
+     cart accepts an object of the type of the interface, but both calls are only the implementation.
+
+MIDTERM - ethics, deign pattern, refactoring, system models, sequence diagram, class diagram, data flow diagram
+
+architectural viewa
+ 4 plus 1 view - logical, physical, developmental, process views all looking at the system architecture with their own lens.
+  logical - functionality of the system from end user perspective. uses sequence diagram
+  process - explains how the system's processes are communicating with each other. runtime behavior.
+  physical - shows how hardware interacts with software in the system. deployment diagram
+  development - programmer's perspective, a whole lotta how. package, component, class and more diagrams.
+
+package diagram - package itself looks like a storage folder. components inside package are put inside that folder. packages can go in too.
+ package A depends on B if A contains a class that depends on B.
+  represented by a dotted line with or without the word <<use>>
+ element import - <<Import>> if elem imported is public. <<access>> if private. on dotted line?
+ FINAL DIAGRAM DOESN'T SHOW WHAT THEY CONTAIN. only the sublevels made later do.
+
+TITLE DIAGRAMS!!! page numbers, our scope wasn't clear?TOS is constraint.
+
+Component diagram - a modular diagram made up on replaceable components. WE WONT HAVE TO DRAW ONE, BUT WILL HAVE TO UNDERSTAND IT.
+ black box view - interfaced provided and required only
+  oval with line to box - input
+  half circle with line to box - output
+ white box view - structure of interfaces and internal structure
+ little squares seem to show all connections between systems but have no real meaning behind them.
+
+properties of good architecture - 
+ minimizes coupling between modules - modules dont need to know much about one another to interact
+  low coupling makes future changes easier
+ maximizes cohesions within modules - goal to have components highly inter-related
+  high cohesion makes a module easier to understand.
+
+web application architecture using the ModelViewController pattern
+ 
+N-tier architecture - split system into layers, each layer interacts only with layer underneath it.
+
+client-server architecture - pic of 4 clients all with double arrow to internet with double arrow to each of 4 different servers.
+  client server, client is event driven, server is 
+ 
+pipe and filter architecture - chunks of processes that do work on input in sequence and filter them into different paths?
+  for processing data in chunks without any user interaction.
+
+event driven architecture - multiple subsystems process same events, differently. -realtime, or multiple sensors at all times?
+ this includes web pages since they respond immediately.
+
+micro service - split system into smaller systems where each becomes independent service. for huge architectures
+
+NO BEST ANSWER, MUST IDENTIFY TRADEOFFS BEFOREHAND.
+
+
+Software testing and JUNIT - 
+ stages of testing:
+  dev testing - system tested during development to find bugs/defects
+  release testing - separate team tests complete version before released
+  user testing - potential users test system.
+
+general testing guidelines:
+ choose inputs to force system to generate all error messages
+ design inputs that cause input buffers to overflow
+ repeat the same input or series of inputs numerous times
+ force invalid outputs to be generated
+ force computation results to be too large or too small
+
+Junit 5 - 3 parts: Jupiter, Vintage, platform
+ more split up than 4, 
+file, project structure, modules, select folder, mark as tests.
+ create class in tests, automatically becomes test class.
+  @test
+  click bulb, import junit 5
+  or project structure, libraries, maven, search for Junit.Jupiter.api
+
+  @test(before method), @BeforeAll(just once), BeforeEach(every time), @AfterEach, @AfterAll, @RepeatedTest(n)
+  @DisplayName("name")//optional
+  @disabled("disables this test"), void testName(){//code}
+
+ALL ASSERTS - expectThrows, assert: True, False, Equals, NotEquals, ArrayEquals, Null, NotNull, Same, NotSame, All, Throws
+ assertAll - assertAll("this is message", ()->assertEquals("string", field.getString()), MORE LAMBDA EXPRESSIONS
+ assertThat(actual, is(not(equalTo(expected))));//really clunky...
+  IF YOU CAN THINK IT, YOU CAN WRITE IT. BUT GOD IS IT CLUNKY. ie. assertThat(list, allOf(greaterThanOrEqualTo(expected));
+ @test(expected=specificexception) in junit 4.
+ in junit 5 - assertThrows method, possibly with lambda expressions
+ assumeTrue(tzone.getDisplayName().equals("US/mtns"); inside methods. if assumption false, ignores test.
+ junit 4 - part of annotation
+ junit 5 - assertTimmeout(ofSeconds(15), ()->{method being tested}
+
+function point estimation process - FP = UFC * (.65 + .01 * RCAF)   FP-#function points  UFC-unadjusted function points  RCAF-adjustment factor (0 to 70)
+ compute UFC - relates to #: user inputs, user outputs, user online queries, logical files, external interface
+  weightes factors are applies to each components according to complexity. sum up products.
+ compute RCAF - from list of general system characteristics, give a weight from 0-5. the sum of all of them is RCAF.
+divide FP by organization's average to get: man hours to complete system?
+
+gantt chart - table times on columns, rows of tasks, dependencies give it shape ot down-right angle
+ dependencies marked on top of task in question.
+

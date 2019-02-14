@@ -1,0 +1,257 @@
+OSes must run instructions from RAM, not anything else.
+applications can be user applications or kernal applications.
+ kernal is the core that has full permissions, users do not.
+
+*Operating System Roles:
+ Referee (resource allocation) - allocate resources, isolate programs from each other, communicate between programs, fault isolation.
+ illusionist - vms (running guest OS), illusion of infinite memory, illusion of app having all memory to self.
+ glue - common services (copy/paste, file read/write, ui), separate apps from hardware io devices, aws as example
+
+OS criteria:
+ reliability - does what it should do.
+ availability - stays online, no crashing
+  MTTF (mean time to failure) - want to minimize, MTTR (to repair) - also want to minimize
+ privacy - applications don't see each other's files unles allowed
+ security - security.
+ performance - overhead, farines, response time, throughput
+ adoption - 
+
+time sharing OS - scheduler always running to not have waste
+personal computing systems - hardware was cheap, humans expensive
+distributed os - same os among many computers.
+
+BIOS processes:
+ POST (power on self test)
+ Booting - starting 
+
+processes: if one crashes, it shouldn't affect others, should not be able to access unallocated memory.
+ 
+LAYERS OF OS
+Hardware - physical components
+ Kernel - accesses everything on whole pc with full control.
+  System Calls - untrusted
+   Additional Libraries - untrusted
+
+RAM:
+ sleep - keep memory in ram, stop running
+ hibernate - store ram in disc, power off, reload it when power back on.
+
+process control id:
+ pid - identifier
+ state - new(just started), ready(waiting to exe), running(kernel can interrupt, change to ready), waiting(io), terminate
+ priority
+ program counter
+ memory pointer
+ context-data
+ io status
+ accounting info
+
+dual-mode hardware support - priviledge instruction, memory protection via virtual addresses, timer
+ timer - device that periodically interrupts the processor
+ kernel mode - cpu executes with protection checks off
+ user mode - cpu checks every instruction before executing to verify if it is permitted
+
+mode switch
+ interrupts - triggered by timer or io devices
+  on interrupt, cpu will switch to kernel mode, disable interrupts, push data on the kernel stack, program counter and statuc register
+   load the handler start address by looking it up in the interrupt vector table
+ exceptions - triggered by unexepcted behavior of the process, bad address access, invalid operation
+ system call - functions asking kernel to do a thing.
+
+privileged instructions
+memory protection
+
+exe - executable instructions, global and static variables.
+dual mode support - kernal and user modes, a bit in the status register determines which.
+
+process hierarchies
+ parent creates child processes
+ windows has no conceptual process hierarchy
+
+process creation in UNIX - fork() creates exact copy, exec() replaces address space with new program
+CoW - copy on write
+
+
+
+
+
+
+interrupt comes from hardware, not software.
+hardware works asynchronously alongside software
+devices usually connected to cpu, but some allowed access to RAM (main memory)
+user vs kernel mode switching bit held in status register, change to kernel mode slower since perms need to be checked.
+each application has user stack and kernel stack
+ user stack - variables and local data?
+ kernel stack - saving state during interrupt, including contents of user stack?
+count++ is 3 instructions (in terms of retrieve, add store), so it is not an atomic instruction.
+when creating a process, a memory region is assigned for it.
+processes have different spaces, but threads of the same process share the same space.
+ locks are used to have threads work together.
+every thread gets its own portion of the process' stack.
+
+Thread.join() - links the chosen thread with the currently executing thread, so it must finish before the executing thread continues.
+ used inside of runnable/thread subclasses to create chains.
+
+
+
+OS roles:
+ Referee:
+  manage shared resources
+  isolate different users and applications from each other
+  communicate between users and applications
+ Illusionist:
+  each process thinks it has machine to self
+  each process thinks it has infinite memory/storage/network transport
+ Glue:
+  common services and libraries
+OS evaluation:
+ Reliability - does what it should
+ Availability - accessable
+ Security - security
+ Portability - move to new hardware platforms?
+ Performance - responsive?
+ Adoption - other users?
+BIOS - basic IO system
+ POST - power on self test - tests hardware is functioning
+ Bootstrap Loader - locate OS, pass control to it
+UEFI - unified extensible firmware interface - gives bios logic to have settings that can be changed.
+Kernel - access to full hardware.
+Process - first 3 common to all threads, stack unique to each
+ Machine instructions - compiled code
+ Data - store global and static vars before main
+ heap - dynamic memory
+ stack - local variables.
+thread control block:
+ IP
+ process counter
+ stack pointer
+ registers
+Process States
+ new - admitted to read
+ ready - scheduler dispatch to running
+ running - interrupt to ready
+           io or event wait to waiting
+           exit to terminated
+ waiting - io or event completion to ready
+ terminated
+Process Control Block - all info os needs on all processes
+ id - given by cpu
+ state
+ priority
+ program counter - address of next instruction for process
+ memory pointers - ?base-limit?
+ context data
+ io status info - list of io devices allocated to process
+ accouting info - cpu time, account numbers, stuff...
+process switching - store process info to run multiple at 'once'.
+dual move operation - kernel and user mode. identified by single bit in status register
+ mode switch
+  interrupt - 
+   polling - kernel waits until io is done
+   interrupts - kernel can do other work while waiting
+    switch from user move to kernel mode, disable interrupts, push 3 words onto kernel stack
+     program counter, status registe, page number causing problem(page faults only)
+    load the handler's start address by looking it up in interrupt vector table
+Virtual RAM - page tables mapping virtual memory to actual memory
+ stores some of the data on disk to save space.
+
+
+user thread vs kernel thread
+ user - 
+ kernel - know about each other
+ models:
+  many to 1 - many user threads all attach to a single kernel thread
+   syscall - called thread blocked, rest move to other kernel thread
+  one to one - threads each attach to one kernel thread
+  many to... many - i am unsure of how this one works. 
+
+context switch - switch threads
+process switch - switch programs
+
+
+
+linux commands?
+echo $SHELL            path to shell?
+echo $$                process id of shell
+/ is root, ./ is current directory
+ls - list files
+  -l  long format
+  -a  hidden files
+  -la combines previous two.
+  *.txt    - only shows files that end in .txt
+cd - change directory, tab autocompletes, and shows folders in next directory after.
+pwd - print current directory.
+  | more - only shows as much as can fit on screen, take enter to show more entries, used after other commands.
+  > fileName.txt    - edits file to contain the results of the command used
+  >> fileName.txt    - appends file to contain the results of the command used as well as previous contents
+cp file1 file2      - copies contents of file 1 into file2
+rm      remove file(s)
+
+
+file: myscript.sy
+#!/bin/bash
+#Basic scripting
+#name
+echo Here are files in dir
+ls
+echo im $0 (script name) and have $# command line arguments. (num params passed)
+echo Here they are: $* ()
+echo and second arg is $2
+
+chmod 755 fileName   - unlocks perms on file.
+      777 all perms unlocked.
+
+perm ownership
+ls -l first grouping:   -rwxrwxrwx      3 groups(user group other), each can read, write, execute, set in binary
+ RWE   100 = 4 = only read.    one set for each group, one letter for each ability.
+
+wc - word count
+  -w words
+  -l lines
+  -c bytes
+
+tail fileName - print last x lines of file
+grep someString fileName - find lines containing string
+ -5 number to get
+ -c count occurences
+ - return lines without string
+ -i case insensitive
+SIMILAR TO REGEX
+^starts with this
+$sort fileName - prints contents in sorted order?
+
+public synchronized returnType methodName(){} - lock based on the object used to call method
+synchronized(obj){} lock based on the specific object used
+public static synchronized returnType methodName(){} - lock based on the class object itself (only one can exist)
+
+
+locks: 2 methods:
+acquire - give lock to requester, if already taken, put requester to sleep and track them
+release - unlock lock, notify first in wait queue.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

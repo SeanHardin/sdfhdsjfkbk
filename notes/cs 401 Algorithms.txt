@@ -1,0 +1,396 @@
+download both files from site in syllabus
+right click project, properties, libraries, add JARs, find the file location of them.
+  should show up in project as referenced libraries.
+
+use files on same page to test if it works.
+
+right click .java, properties?run configuration?, arguments, input 440.0 3.0//THIS IS WHAT STRING ARGS READS
+
+
+one person writes 1 or 0, shows to 3 others. 2 always tell truth, 2 tell truth or lie. after hearing all 4, player bets and guesses
+starting with $100, how much can the player guarantee to win?
+cases: assuming always 1
+  1111 player knows 1, cant determine liar
+  1110 player knows 1, knows one liar before bet
+  1100 player cant guarantee, knows both liars after
+player knows 2 liars
+  always gets it
+player knows 1 liar
+  1111 player knows 1, cnt determine other liar
+  1110 player knows 1, if liar is 
+  1100 player knows 1, found other liar
+
+can bet after knowing, worst case:
+ 1100, bet 0, figure out liars, bet 100, win 100, bet 200, win 200, earn 300.
+ 
+
+game 2, 3 people lie 1 tells truth, same start, what is the max?
+assume writes 1.
+111 player knows 1, no new info
+110 player wont know, knows 1 liar
+100 player wont know, knows truthteller
+player knows 1 liar
+111 player knows 1, no new info
+110 if liar is 1, player wont know, knows truthteller, if liar is 0, player knows 1, no new info
+100 if liar is 0, player wont know, knows truthteller, liar cant be 1
+player knows 2 liars
+always wins.
+
+(100-x)*4
+(100+x)*2
+
+(100-x)*2 = 100+x
+200 - 2x = 100 + x
+3x = 100 x == 33
+
+266 = min
+
+can ebt after, worst case:
+110, player knows 1 liar and lost. 100 player knows truthteller and lost. any, player wins 100.
+
+THE FAILURE WAS MY ASSUMPTION THAT THE PLAYER CHOSE 0 HERE. IF THEY INSTEAD CHOOSE THE MOST COMMON VALUE, IT FORCES A WIN OR CASE 3.
+the worst case is not necessarily not knowing who is telling the truth...
+either take a loss but know the truth
+or take a win but don't know full truth yet.
+
+
+Algorithm analysis - studying different algorithms to compare them to each other.
+  care about how time taken changes with increase in data. (big O notation) MOST IMPORTANT ONE.
+  care about memory usage, storage?, network (bandwidth for mobiles)
+performance - how much time/d.. is actually used when a program runs
+complexity - how do the resource requirements of an algorithm scale?
+asymptotic analysis - take the limit as n -> infinity of the time an algorithm takes.
+ time complexity and BIG-O notation - consider only computable functions (decidable) - functions that will terminate.
+  consider only deterministic machines, consider some input : program will always run on that input.
+  consider all inputs size n
+ goal - find a function of N to find the running time for an arbitrary value of the running time f(N).
+example graph, N by runtime cubed.  has different performance for small n, as n gets larger, acts just like N^3
+1, N, N^k k << n... all polynomial time
+2^N exponential time.
+Order of growth - from smallest to largest
+ O(1)  constant
+ O(logN) logarithmic   - requires assumptions about data. ie: already sorted
+ O(N) linear
+ O(NlogN) linearithmetic
+ O(N^2) quadratic
+ O(N^3) cubic
+ ...
+ O(2^N) exponential
+ 
+for determining runtime, always choose worst runtime.
+ if else - take whichever runs slower, even if it executes less.
+ n sized for loop - N multiplied by contents.
+
+needed math:
+ 1+2+3... n(n+1)/2 - arithmetic series
+ a^i from i=1 to n   a(1-r^n)/(1-r) - geometric series (a1/a0 = a2/a1 = a3/a2...)
+ b^x = y   ->  log(b)(b^x) = log(b)(y)  ->  x = log(b)(y)
+
+calculate complexity of the following program:
+for (int i = 0; i < n; i++)
+ for (j = i+1; j < n; j++)
+  count++
+
+== n * depends on i * 1     inner loop = n - i - 1
+== n(n+1)/2
+
+for (int i = 1; i < n; i *= 2){
+ for (int j = 0; j < i; j++){
+  sum++;
+ }
+}
+
+outer:	inner:
+1	1 = 2^0
+2	2   2^1
+4	4
+8	8
+	n-1 = 2^(m-1)
+sum(inner items) = # times it repeats total    dont consider outer since inner is already dependent on it.
+ geometric series, a(1-r^n)/(1-r)    a = 1 (first element)    n = m-1
+  1(1-2^(m-1)/(1-2)    (2^(m-1)-1)/2-1      2^(m-1) - 1    2^(m-1)  ?
+
+n-1 = 2^(m-1)     making the function O(n)
+
+
+
+
+
+1(1-2^m)/(1-2)    2^m - 1 = sum of series.   
+n-1 = 2^(m-1)   log(n-1) = m-1    m = log(n-1) + 1
+2^(log(n-1) + 1)    2*2^log(n-1)    2*(n-1)   2n-2 is the order of the function.
+
+
+17 49 47 46
+
+
+outer:	inner:
+n	n
+n/2	n/2
+etc
+
+N+n/2+... = n(1+1/2+1/4...) ratio = 1/2    N(1/(1-r)) = 2n  which is O(n)
+
+
+
+UNION FIND (Disjoint Set) - dynamic connectivity problem
+ given a set of N objects, supports 2 options: connect 2 objects, tell if 2 objects are connected.
+ properties - symetric - p is connected to q and q is connected to p
+  transitive - a to b, b to c, then a to c.
+  connected component - maximal set of objects that are mutually connected - {{0}, {1,4,5},{2,3,6,7}}
+ UF.java in given libraries
+ void union(a,b) - connect 2
+ int find(a,b) - find number of set 5 belongs to  (constant time)
+ boolean connected(a,b) - tell if 2 are connected
+quickfind - keep array whih holds group number for each item.  - CANNOT HANDLE LARGE N.
+ find(int p) {return array[p];}
+ connected(int p, int q) {return array[p]==array[q];}
+ union(int p, int q){for (int i =0; i < array.length; i++) if (array[k] == array[p]) array[k] = array[q];}//order N
+
+int n = StdIn.readInt();
+UF uf = new UF(n); while(!StdIn.isEmpty()){
+ int p = StdIn.readInt();
+ int q = StdIn.readInt();
+ if (!uf.connected(p,q){
+  uf.union(p,q);
+  StdOut.println(p + ' ' + q);
+ }//will only print when it makes a connection
+
+uf - quick find, quick union, weighted qu, weightes and path compression qu
+ quick find - array of set number, constant find, O(n) merge
+ quick union - each set is a tree of elements, each element has explicit parent in tree. root points to self, find(x) find root of tree
+  containing x.   union(x,y) merging trees containing x and y, root of y becomes root of x.
+  find - while(array[i] != x) x = array[i]; return x;  O(n) (but only in worst case)
+  connected - return find(x) == find(y);  O(n) because calls find.
+  union - array[find(x)] = find(y); (O(n) worst case, but O(1) best case)
+ weighted qu - add array which holds tree size for every node.  link smaller tree's root to larger one, determined by root size
+  union - if (size(find(x))<size(find(y))) array[find(x)] = y; size[find(y)] += size[find(x)];  include other case.
+
+log(base a)(N) = log(base c)(N)/log(base c)(a)
+
+ weighted and path compression qu - in find operation, as it passed through nodes, set their root to the final root. RECURSIVE.
+
+Sorting - cost model - compare values, swap values  - may take extra memory
+ selection sort - scan array, place element at beginning, do again on shortened array.
+ insertion sort - start from left, compare next value with values until find its place. 
+  WORKS BEST ON MOSTLY SORTED LISTS - think something presorted that you added a few elements to, quick to resort it.
+  would be better to do a binary search to find place as each value gets added.
+ shell sort - improved insertion sort - has gap value, compares new element to index-gap value, goes down the line, decreases gap number
+  sequences for gap: prat - 1,2,3,4,6,8,9,12   knuth - 1,4,14,40,72?
+ merge sort - divide halves, sort half, merge sorted halves into sorted whole. RECURSIVELY UNTIL 1 IN EACH SET
+  split array until down to 1, complexity comes from merging. copy smallest into new array, then next smallest, for each set
+  then for next layer, make another array, take smallest from one, smallest from other compare, until all values used. more layers.
+   merge sort(int a[], int first, int last){mergesort(a, 1, n/2); mergesort(a,n/2,n-1);merge(a, first, last)
+    2 mergesort calls in each mergesort, doubles number of calls each layer deep.   merge() call is O(N).
+    4 = 2^(m-2) =>  m = log(base 2)N + 1    
+   merge sort can run subsections in parallel with each other, ie running on multiple computers at once.
+
+   level:0		1		2		2^i * 2k-1
+	 2^0 k=2^(m-1)  2^1 k=2^(m-2)   2^2 k=2^(m-3)
+   # levels = 2^(m-1)       complexity = m*2^m - 2^m -1   ... NlogN
+  merge sort is stable - meaning duplicates never get swapped. (good for when sorting objects)
+ 
+  quicksort - choose some pivot point from list, partition elements so all smaller value on left, all larger values on right.
+   take first element as pivot, if less then, move to leftmost position in set2, else, leave it. maintains order.
+   repeat on smaller subsets.
+   common approach - take first, last, median, take middle of three    O(NlogN)
+  TIMSORT - merge sort combined with insertion sort.
+Donald Knuth - 
+Should i actually know the types of sorting that java uses?
+primitive data is stored in stack only, while reference data types are stored in heap while a pointer to them is in stack.
+ java uses quicksort for primitive data types
+ and TIMSORT for reference datatypes
+timsort used in java and python, recently found bug...
+sleeping sort in stackoverflow... - runs code 5 times at the same time, making some wait longer than others? i dont understand...
+
+with small data, n < 100, just use selection/insertion sort - small enough that quadratic doesn't matter.
+ 
+custom class implements Comparable - import compareTo, fill out. 0 for equal, -1 for <, 1 for > where 'this' on left.
+ if the class can not be changed, can wrap around it instead to use comparable. ***********************************************************
+  create class - implements Comparator<ObjectType>{ override, based on 2 objects instead of a this and an other.
+Collections.sort(listOfCustoms, new customComparator()
+
+prorityqueue - hospital, printing queue, cpu processor array representation (unordered) - insert=1 delete=N
+ ordered - insert=n delete=1
+method of getting better - logN for both, binary heap
+binary heap - NlogN for insert and delete, the keys are sorted i an array : each key is guaranteed to be >= keys at 2 children.
+ tree is heap ordered if the key in each node is >= the keys in both children. (max heap)
+ the largest key in a heap ordered binary tree is the root.
+ requirements: complete binary tree (lets us use arrays to represent), 
+  
+symbol table (method of searching)
+ key associated to value
+ put(key,value) - insert into table
+ search(key) - returns value for that key.
+ associative array - indexes are keys, array entrees are values. (indexes can be non-integers)
+ design - 
+  generics - don't specify type, allow any to be used
+  duplicates - avoid them, can change name of duplicates, but less efficient.
+  null keys - dont allow. ever.
+  null values - no key can be associated with null value
+  key equality - how to compare if the given key matches other keys or not? ie. Point(x=10,y=20)
+  if sorted, keys should be comparable in order to use > and < operators.
+
+BST - all nodes on left less than root, all nodes larger (or equal) on right. if deleting node with 2 children, take rightmost child of left subtree.
+ AVL - balances tree to maximize efficiency NOT ACTUALLY BEST
+
+2-3 trees (abstract) - allow nodes to hold more than one key value.
+ 2 node tree - standard bst. 
+ 3 node tree - 2 keys, with 3 children, one for left, one for between, one for right.   apparently both can be included in single tree.
+ 2-3 search tree - either empty, or satisfies the following requirements:
+  a 2 node with one key and 2 links has, a left link to a 2-3 search tree with smaller values, a right link to a 2-3 search tree with larger vals
+  a 3 node with 2 keys and 3 links has, left link to smaller, middle link to keys between root keys, right link to larger. all to 2 or 3 link nodes
+  insertion:
+   case L and R - if node the search terminates in is a 2 node, turn it into a 3 node.
+		  if node the search terminates in is a 3 node, 
+		   if tree contains only a single node (a 3), turn into a 4 node, then take middle value to convert into 3 2 nodes.
+		   if terminal node has 2 node parent, convert parent to 3 node using key that leaves remaining key in 3 node as middle?
+		   if terminal node has 3 node parent, propagate until a 2 node is found. ALL 3 NODES IN PATH BECOME 2 NODES IN PROCESS.
+		   if all nodes on path are 3 nodes, same as previous, root becomes a new 2 node pointing to the remaining 2 keys.
+ red-black binary search tree - implementation for the 2-3 tree - uses BST to implement 2-3 tree
+  colors links. red means that node is combined with its parent. black is treated as normal. (takes bool to keep info)
+  doesnt actually modify original binary search algorithm.
+  
+ IMPLEMENTATION - 
+  insert into single 2 node - 
+   if key is smaller, make new red link with the new key
+   if key is larger, key becomes new root, take's old root's right child and sets old root as left child with red link.
+  insert into 2 node at bottom - 
+   same as before, just with previous leaf node instead of root.
+  insertion into 3 node - 
+   key is on right - add as red link, convert both links to black. If middle node's color is black, make red.
+   key is on left - add as red link, rotate, flip the colors
+   key is in middle - add as red link, rotate left, rotate next level right, then flip colors.
+
+java methods built in to all java classes - equals, tostring, hashcode
+ if (obj instanceof Point) {then cast as point} else throw exception...
+ JVM - string optimized machine, CAN use string1 == string2 if both are known at compiletime. if user input at runtime, wont work.
+ implements comparable, override compareTo  keys of comparable type
+
+java does not have multiple inheritance, c++ does.
+every java class extends object, which is why it has equals, tostring, and hashcode
+hashcode - genereated hashcode from memory address used.
+ to rewrite this method, must create own hashing function and use it here.
+.equals cases: obj is null, obj is not instanceof this type, false; if obj is this, or custom match code, true;
+when setting new string, java just creates new string each time.
+
+Set<type> s = new HashSet<type>();
+ MORE FLEXIBLE THAN IF SAID HASHSET BOTH TIMES.
+ set is an interface, so cannot create generic set.
+ hashset has no duplicates, if try to add a duplicate then it just doesn't get added without any errors.
+
+hashing - handles more complicated keys, storage and access are order constant.
+ function t generate hash is one-way, cannot find key from inde value.
+ hash function - transform search key into index
+  uniformly distribute keys, easy to compute, always produces same value
+  specific functions:
+   positive integers - k % n (n=size of table), n should be prime to minimize collisions
+   floating point - k * m (not as good)      use bit representation of floating point number
+   string - hash = P * hash + string.charAt(i)  in java, defaults to 31 because easy to compute.   31 * i == i >> 5 - i
+    bit operations significantly faster than multiplication.
+   compound keys - ie, multiple integer fields, mix together, like how string is handled
+    phone number _ _ _ area code _ _ _ exchange _ _ _ _ extention   hash = ((area*P + exchange)%n + ext) % n)
+ collision resolution - change positions of position in hash is taken
+  separate chaining - for each index, keep a linked list of the key-value pairs whose keys hash to that index
+  linear probing - store N key-value pairs in hash table size M > N relying on empty entries in table, double size when N becomes too large
+   if index taken, place in next. on delete, mark node as deleted, overwrite marked node next time.
+ bloom filter - uses one bit to keep track whether an item is hashed to the location or not.
+  USAGE - check if item is in cache before attempting to load
+  DOES NOT STORE DATA ITSELF, ONLY STORES INFORMATION ON WHAT ITEMS ARE STORED, for big data, save time from searching for elements that arent in data.
+
+bloom filter - test if data contains chosen element
+ if false, then the element is definitely not in the set.
+ if true, then the element is probably in the set.
+ have an m-bit sequence, and k different hash functions.
+  for new key, change bits at index of all k hashes to 1.
+  if find even one 0 when searching a key, can't be in set
+
+interface - type of class with only variables and method names. does not include implementation
+ usage - as a foundation for classes which will use those methods, essentially only useful if many similar classes can be derived from one.
+  they are like the header for a c++ file, not necessary, but useful for organization?
+
+abstract - a type of class that implements an interface without defining all of the methods
+ usage - idk
+
+graphs - set of vertex/edge pairs.
+ degree - # vertices adjacent to chosen vertex
+ path - sequence of edges that begin at one vertex and end at another
+ simple path - path which never passes a vertex more than once
+ cycle - path that begins and ends on same vertex
+ simple cycle - combine simple path and cycle
+ ways to say a graph is both conected and acyclic:
+  has V-1 edges and no cycles
+  has V-1 eges and is connected
+  it is connected and removing any edge will disconnect it.
+  is acyclic and adding any edge makes a cycle
+ spanning tree - tree that reaches every vertex in a graph.
+adjacency list - array of linkedlists with adjcent nodes
+adjacency matrix - matrix showing connections
+array of edges - create edge class with V1 and V2
+array of vertices - have list from and list to
+
+must create iterable object in order to use for-each loops
+ private class IteratorName implements Iterator{
+  boolean hasNext(){return count<size} hash may be different
+  Object next(){i++;return a[i];}
+ public Iterable<type> name(int n){return storage[i];}//this seems to work
+
+depth first search - marks all vertices connected to a given source in time proportional to sum of their degrees.
+ to visit a vertex: mark as visited, recursively visit all adjacent vertices, store in stack
+
+abstract class has methods and interface parts.
+public abstract class search, public abstract void Search(param) - method is interface - ... make var protected for subclass to access.
+ subclasses must call super(params) to instantiate it. different from interface.
+
+Symbol table - symbols on left, index they are represented by on right. translate to String array with the indexes representing location.
+ST st = new ST<String, Integer>();//SYMBOL TABLE, can like a map, but less useful?
+ like a 2-way map?
+String[] a = in.readLine().split(delim);//splits into tokens?
+int v = st.get(movie);
+
+depth first search - O(V+E) for every vertex, search all edges. if node has been seen before ignore it.
+
+topological ordering - ordering of nodes in a graph based on a certain algorithm. rule in all of them is that you cannot choose a node
+ until all of its parents have been chosen.
+ reverse the ordering found with a depth first search added to stack after all adjacent nodes found.
+
+System.out.println(stack) prints stacks from the bottom to the top.
+
+strongly connected component - just another way to call a cycle. 
+ reverse the graph, perform a depth first search on the reversed graph, then perform a depth first search on the original graph using the
+ order found from the previous search
+
+min spanning tree - lowest cost spanning tree for a given graph.
+ requirements - graph is connected, 
+
+CUT property - a cut of a graph is a partition of its vertices into 2 nonempty disjoin sets. a crossing edge of a cut is an edge that connects a 
+ vertex in one set with a vertex in the other.
+  try to find the minimum edge that connects both sides of the cut. repeat until whole graph connected.
+  cannot overlap with a chosen edge.
+
+prims - select node, then next node the smallest distance away.
+kruskal - select smallest edge, keep doing so until find all
+
+edge class - weight, v, w; comparable
+edgeweightedgraph - vertices, edges, adj:Bag<edge>
+
+prims eager approach - eliminate ineligible edges from queue, tries to keep only one edge per vertex that isn't already connected to tree.
+ indexpriorityqueue, edgeto array(edge), distanceto array(double) initialise to infinity.
+
+Alternative to Dijkstra's algorithm - find topological sort, determine weight in found order.
+ topological sort removes need to keep track of minimum. but in its place, adds a reversed depth first search.
+
+when graph has negatives and cycles - Bellman Ford algorithm
+ this is inefficient as hell. 0 to V checking every edge as you pass it, THEN DOING IT AGAIN FOR EVERY VERTEX IN THE GRPAH
+  include boolean array, only make updates if boolean shows that node has been changed. much better.
+
+
+ 
+
+
+confused about the source object. do i arbitrarily populate it with values and just use an O(n) search to find items with the same hashcode?
+ is linkList fine? should the source be given a max size?
+for example, file should be the source, the cache would be storing the contents of it..?
+
+still confused. i'd need to see an example... if the source was a file, then how would I identify the contents of the file? by character?
+by group of characters? by word? by line?

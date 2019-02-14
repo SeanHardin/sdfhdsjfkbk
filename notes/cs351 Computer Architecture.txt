@@ -1,0 +1,738 @@
+computer architecture - science and art of designing, selecting, and interconnection hardware...
+  depends on OS, hardware
+
+Number Representation in computers - 
+  BIT - single unit of data, can store one switch, either on or off (1 or 0)
+    ALSO is single binary digit
+    sequence of bits can be used to represent other number systems.
+    32-bit as at most 4 GB RAM
+  BYTE - a sequence of 8 bits.  ie. ascii code has 256 characters, so one byte for 1 character. is integer type(albeit small)
+  Decimal - base 10 has added notation (2)(subscript 10) to represent decimal over other.
+  Binary - base 2 has notation (10)(subscript 2) to represent binary over decimal.
+  Octal - base 8 has notation (10)(s8) to represent octal.
+  hexadecimal - base 16 (10)(s16) or 0x10 notation   one digit represents 4 bits
+    a=10 b=11 c=12 d=13 e=14 f=15
+conversions - 
+  binary to decimal - 10110 = 0x2^0 + 1x2^1 + 1x2^2 + 0x2^3 + 1x2^4 = 0+2+4+0+8=14(s10)
+  decimal to binary - divide number by 2 until final product equals 0, then read the remainders from right to left. 
+    7/2=3 r 1   3/2=1 r 1   1/2=0 r 1
+  octal to decimal - 52(s8) = 2x8^0 + 5x8^1 = 42(s10)
+  decimal to octal - divide by 8 keep remainder...  42/8=5 r 2   5/8=0 r 5   = 52(s8)
+  hex to decimal - like others, just by 16
+  decimal to hex - 
+  hex to binary and reverse - each hex digit represents 4 digits of binary - F = 1111, a = 1010
+
+represent number as octal - precede with 0
+" as hex - precede with 0x
+" as binary - precede with 0b
+
+halfword - 2 bytes (16 bits)
+word - 4 bytes (32 bits)
+double word - 8 bytes (64 bits)
+quad word - 16 bytes (128 bits)
+
+Data representation in C: Data types in 32 bit and 64 bit
+  char - 1 and 1 BYTES
+  short - 2 and 2
+  int - 4 and 4
+  long - 4 and 8
+  float - 4 and 4  NEEDS THE LETTER f AFTER DECIMAL TO SPECIFY FLOAT OVER DOUBLE
+  double - 8 and 8
+  pointer - 4 and 8
+  int x = 16   byte becomes 00000000 00000000 00000000 00010000  because 16 fits in last byte, and takes 4 bytes of memory.
+    unsigned number - a nonnegative number, cannot store negative
+    signed number - first bit represents the sign, thus has one less bit used for value. Methods of being negative:
+      sign magnitude - first bit represents sign, rest represent magnitude.
+        0,1,2,3,4,5,6,7,-0,-1,-2,-3,-4,-5,-6,-7  are all possibilities from only 4 bits. PROBLEM - adding to negatives needs extra step
+      excess-k notation  (or offset notation) - zero point is taken as excess number, it becomes 0, above = positive, below = negative
+        only usable with leftmost bit, ie k-4 is 3 bits, k-8 is 4 bits, k-16 is 5 bits, etc
+        excess-4 notation - 100 = zero, 101 = one, 110 = two, 111 = three, 011 = -1, 010 = -2, 001 = -3, 000 = -4
+        find -15 with excess-128 - 10000000 = 0  15 = 1111  10000000 - 1111 = 01110001   (starting with 0 means negative)
+      one's compliment - reverse all bits to represent negative number  -  basically sign magnitude in reverse order.
+        000=0 001=1 010=2 011=3   100=-3 101=-2 110=-1, 111=-0  ADDITION RULE - excess added to right side (1000+1000=0001)
+      two's compliment - reverse all bits and add one to represent negatives. (one's compliment and add 1)
+        000=0 001=1 010=2 011=3   -> 111+001=1000=000=0 110+001=111=-1 101+001=110=-2 100+001=101=-3
+        if leftmost is 0, positive, 1, negative. has same values as excess-k, but no need to store value of k.
+          HOW EFFICIENT IS IT TO REVERSE ALL BITS OF A NUMBER?
+  OVERFLOW - arithmetic operation attempts to create number too large to be represented within available storage.
+    rule for detecting overflow in 2's compliment: carry into most significant bit not equal to carry out of MSB (leftmost bit)
+      15 + -15 = 00001111 + 11110001 = 1 0000 0000 carry is equal, can drop excess. = 0
+      01111111 + 00000001 = 11111111 (127+1=128?) leftmost bit not carried out what was in, overflow error. (value is -1)
+      
+using AND, OR, and XOR   like addition, but with these operators instead. 0011 AND 1010 = 0010   0011 OR 1010 = 1011   0011 XOR 1010 = 1001
+  in C: - & converts numbers into binary and calculates the AND function for them. (different from &&)
+    likewise, | for OR, and ^ is XOR
+  USES - manipulating bits in a word:
+    to turn on bits in a word - use the OR operation and a 'mask' word
+      0011 1010 0000 1111 (3A0F) 'turn on every other bit' (OR 0101 0101 0101 0101) = 0111 1111 0101 1111
+    conversely, to turn off bits, use the AND operation and some 'mask' word.
+      " (AND 0101 0101 0101 0110) (0 will turn off, 1 will keep original)
+    toggle bits some on and some off, use XOR
+      1010 1010 XOR 1111 1111 will flip all values.  1 will flip, 0 will keep same.
+    BITWISE OPERATIONS ARE MORE EFFICIENT THAN OTHER OPERATIONS.
+  RGB - 4 bytes, first byte is Alpha, 2nd is Red, 3rd is Green, 4th is Blue. 00000000 (A) 11000111 (R) 00111010 (G) 00011111 (B) (00C73A1F)
+    to get just blue, turn off red, green, alpha, so, calculate AND 00000000 0000000 00000000 11111111.
+  Shifting operations - << shifts numbers left x spaces 00010111=x  x<<1 x=00101110  (multiplies by 2^x)
+    >> shifts to right x spaces, new MSB becomes same as old MSB  00010111=x x>>1 x=00001011 (divides by 2^x)
+      ex2 101010=x x>>1 x=110101 ALL SHIFT OPERATIONS SHOULD BE DONE ON INTEGERS.
+    TO GRAB GREEN, AND with 00000000 00000000 1111111 00000000 then >>
+
+representing real numbers - 
+  fixed-point notation - binary point in 'center' of binary values, left side stands for integer, right side for decimal values.
+    may lose data, but better performance than floating point
+    may not be able to represent large numbers due to reserving some bits for decimal
+    fixed-point <8,4> means there are 8 bits in total, and 4 bits for the decimal values.
+    101.0101 = 1x2^2 + 1x2^0 + 1x2^-2 + 1x2^-4 = 4 + 1 + 1/4 + 1/16 = 5 and 5/16
+    fixed point <8,3>  00010.110 = 2.75      53.0=110101.0    26.5=11010.1    53.0/2= 011010.1 (same as 26.5)
+    every binary fraction can be represented with a decimal, but not every decimal can be represented in binary 
+      .3 = .01001100110011... would have to cut off.  suggestions - count the small increments (like cents) instead of dollars so no decimal
+      with only 2 fraction bits, there will be 2 decimal digits.
+  floating point notation - IEEE standard - 
+    32 bit - single precision floating point representation - lowest 23 bits store mantissa, next 8 bits store exponent, last bit is sign
+      (0 pos, 1 neg)  value = (-1)^s * 1.mantissa * 2^n      
+      3.125=11.001 -> 1.1001x2^1     [0][10000000][10010000...]   [sign][exponent in excess-127][mantissa]
+      this 0 means positive -> 00011.00101101 1.100101101x2^1  = [0][10000000][100101101000...]
+    64 bit - double precision floating point representation - 
+      same as single, but 11 bits instead of 8 for exponent, other 42 for mantissa
+      
+    5.325 -> 101.0101 -> 1.010101x2^2  because Scientific notation, first digit always 1, not stored. rest is called mantissa
+    can represent large numbers, uses scientific notation  1.2345x10^2
+int 5/0 -> exception
+double 5.0/0=infinity
+double 0.0/0=NaN
+special cases in java? - 
+  exp =11111111   means there is problem
+  not a number ( NaN)
+  0xFFFFFFFF
+  0x7F800000 -> 0111111100001000  = positive infinity, (if0xFF80000000 then negative infinity)
+
+storing numbers in memory - 
+  byte - 8 bits
+  halfword - 16 bits
+  word - 32 bits
+  double word - 64 bit
+byte ordering - storing word///////////////////////////////////////////////
+  big endian notation - most significant bit stays in lowest memory address (100, 101, 102...) (java here)
+    0x01234567  =  memory cell (1)=01 (2)=23 (3)=45...
+  little endian notation - most significant bit stays in highest memory adress cell
+    0x01234567  =  memory cell (1)=45 (2)=23 (3)=01
+32-bit memory - 4 GB - every cell stores 1 byte. each cell labeled by number, hex in example...
+  int x = 10 0000 0000 0000 0000 0000 0000...1010   = 0x0000000A   ACTUAL VALUE IN BINARY, HEX MERELY FOR VISUAL SAKE.
+  big endian - (1)=00 (2)=00 00 0A
+64 bit - need 64 bits to represent address, 64 bits per cell?
+WILL NEED TO KNOW WHETHER BIT OR LITTLE ENDIAN BEFORE BEING ABLE TO READ A NUMBER FROM MEMORY.
+memory alignment - as bytes, each rectangle as a single byte (2 hex numbers) address increments by 1 byte///////////////////////////////////////////////
+  as word - each rectangle as 4 bytes, address increments by 4s
+address bus - 32 bit, has 32 wires, each wire carries 1 bit, charges the single wire for the address it wants back.
+  cpu issues address, sent through address bus to data bus, 
+data bus - depends on memory alignment, if word aligned, then has 32 wires, always something on data bus
+control bus - tells RAM if reading or writing. if 0, reads data from address and puts into data bus
+  
+address bus only carries addresses, data bus only carries data, control bus only carries order to read/write
+
+ASCII and unicode - ASCII - american standard code for information interchange. 8 bits(7)
+  ascii - 95 printable characters
+  hex  decimal  char
+  00   0        null
+  1F   31       control characters (\n, \r, \t...)
+  20   32       space
+  30   48       0
+  39   57       9
+  7E   121      a-z,A-Z (Z)
+  7F   122      delete....
+  .....  ends at 127, only needs 7 bits to store a character.
+representing strings - each char takes 1 byte.
+C: char str[6]="15213"; last digit must be stored as null or will keep reading until it finds one.
+windows: enter is \n\r  2 bytes
+unicode - contains more characters than ascii, 32 bits, continuously updated
+UTF-8, 16, 32 - smaller versions of unicode to save on space. encoding standards
+python: b="\U001F600"          print b.decode("unicode-escape")     //displays some smiley
+sign extention - extending number by applying to larger data type///////////////////////////////////////////////
+  fill extended bits with matching bit in MSB
+  in hex: 0-7 leading, fill with 0s, 8-F, fill with 1s BUT ONLY IF SIGNED
+java forces casting when trying to convert number to smaller data type? C wont tell.
+
+computers are digital - digital electronics operate with only 2 voltage levels: high voltage, low voltage. (perfect for binary)
+  two signals: Asserted signal (1) or not.
+circuit - a 'circular' path which electricity needs to flow.
+  short circuit - wire directly connects positive and lower ends of power supply. rapidly heats up and destroys the system.
+  resistors are used to reduce current flow to adjust the signal level and divide voltages.
+    color coded: gold=+-5%, silver  = +-10% (are the far end of the resistor)
+    first 2 bands represent digit value, black(=0,10^0),brown(=1,10^1), red, orange, yellow, green, blue, biolet, gray, white
+  open circuit - the circuit isn't complete so nothing is running.
+Electrical safety - requires a circuit to flow, birds can touch electrical wires because they dont touch low current while touching high.
+Arduino - open source microcontroller dev board.
+  microcontroller - computer with single integrated circuit dedicated to perform 1 task. contains memory, programmable IO, and processor.
+  breadboard - a grid that lets power run through it to distribute all around the circuit. 2 long bridges each side.
+  - means ground/low,  + means high voltage
+  LED have short and long leg. short means negative, long means positive.
+  2 functions in arduino, setup, loop ...  void setup(){ pinMode(13,OUTPUT;}   void loop(){digitalWrite(13, High);
+    delay(x);(milliseconds)   
+  sketch - compile, then load, 
+
+Representing logic functions - truth tables, boolean algebra, logic gates.
+  truth table - each entry specifies value of all outputs of a particular input combination.
+    input A,B,C  output D,E,F   D is true if at least one input is true,     E is true if exactly 2 inputs are true,  F true when all 3 true
+      truth table - ABC -> FFF FFT FTF FTT TFF TFT TTF TTT   for each set, DEF -> FFF TFF TFF TTF TFF TTF TTF TFT
+      boolean algebra - + is OR (A+B)  . is AND (A.B)  _ is negation (bar over A)   D=A+B+C F=A.B.C  E=A.B.C_ + A.C.B_ + B.C.A_
+  boolean algebra - laws - A+0=A=A.1 A+A_=1 A.A_=0 A+B=B+A A.B=B.A A.(B+C)=(A.B)+(A.C)  A+(B.C)=(A+B).(A+C)
+                           identity      inverse                      distributive  NO SYMBOL MEANS .
+    A(A_+B)=AA_ + AB=AB    A+(A_B)=(A+A_).(A+B)=A+B     (A+B+C...)_ = A_B_C_...      (ABC...)_ = A_+B_+C_... <-DEMORGAN'S THEOREM
+  gates - device that implements a logic function.    mound = AND  crescent = OR (points output)  triangle(circle tip) = NOT (towards output)
+  mound(circle tip) = NAND (AB)_        crescent(circle tip) = NOR (A+B)_    mound(circle tip, same input) = NOT but why?
+  crescent with leading line behind it = XOR (1 but not both)
+  gates have 4 sets, ie. 1,2 input, 3 is output, 4,5 input, 6 output, etc.
+
+ARDUINO - buttons - prongs accross from each other connected, pressing down connects sides too (connect to 5v so pressing turns on.
+
+WHY LEARN C PROGRAMMING LANGUAGE - close to assembly
+ differences from java: no objects, check errors explicitly, small standard library, manually allocate and free memory, no data safety, less portable
+ gcc -0 hello hello.c        creates hello.exe
+LANGUAGE:
+  #include <stdio.h>  //include header, printf in here
+  int main(void){}
+    printf("words");       printf(...)
+      "Number=%d", num                "%d\n", 5           "%c %c %c", 'A', 'B', 'C'      %d means int, not digit.
+      f1=200.3;f2=357.4    "It was %f miles", f1+f2          big=11e23   "%e \n", big
+  # <-- signifies that line is handled by the preprocessor.
+    #define HALFOF(x) x/2  //macro to halve number
+    #include <> "" <standard library> "user folder"
+predefined constants: __File__ name of current file   __LINE__ current line   __DATE__ current date    __TIME__time file compiled
+  #define TRACE {printf("Executing %s line %d\n", __FILE__, __LINE__);}
+     TRACE will not print out data in class
+  sizeof(item) gives size...
+  variables are case sensitive, cannot begin with a number, only reads first 31 characters of a name(can have different names match)
+  ~ is bitwise not operator
+  if (x=y){...} returns y after assigning it.
+  for loop, need to define variable before loop.
+  goto exists, but only shallower loop.  ONLY FOR EXITING
+  java labeled break - label before for/switch/while loop, break labelName;
+  arrays,mnot object so need size
+  pointers...(to return more than one thing at a time/change the value sent in
+  strings are character arrays, after the nth item, needs 0 to signify end of string  #include <string.h>    strlen(String s)  ((length))
+  enum direction{North, South, East, West};     enum direction currentDirection; //CAN ONLY TAKE ONE OF THE ENUMERATED VALUES.
+  Bitfields - unsigned int age:3; will only read the last 3 bits when reading the int. 8 wont be seen?
+  user input - #include <stdio.h>   int main(){ fflush(stin);   if (fscanf(stdin, "%d", &value) == 1){printf("%d]n", value);}else{printf("invalid");}
+    fflush - flush excess characters?     fscanf(source, format, where it is stored) BOOL 
+  files - FILE *file; file = fopen("data.txt", "wt");   fprintf... MISSED A LOT ON THIS PAGE...
+    
+  dynamic memory allocation - malloc()(keeps garbage), calloc()(flushes garbage data)        free memory - free()
+    char *line;  int lineLength = 100;  line = (char*)malloc(linelength);//returns address of memory block
+
+microbit.org - block based programming language for a tiny mirocontroller.
+  
+types of computers:
+  personal - general purpose, vairety of software, designed for use by individual, subject to cost/performacne tradeoff
+  server computers - designed for running larger programs for multiple users. accessed through network, high capacity, performance, reliability
+    provice greater computing storage, io capacity, range from small servers to building sized. crash is more costly than in pc.
+  supercomputers - highest performance and cost, tens of thousands of processors and many teravytes of memory. configured as servers, cost tens of
+    hundreds of million dollars. High end scientific and engineering calculations. Highest capability, but only small fraction of market.
+      Petaflop - a quadrillion (4 000 sets) flops/second.
+  embedded computers - designed to run one or a small set of applications that are integrated with the hardware.
+  personal mobile device - small wireless, connected to internet, need batteries, its a bloody phone...
+  cloud computing - relies on giant atacenters that are known as warehouse scale computers. portion of software run on PMD and part of cloud
+    amazon, google build WSCs containing 100k servers and let companies rent portions of them.
+
+assembler - one step above machine language, 
+  requires each instruction to be written in one line.
+    computer runs one line at a time from multiple programs if run at once.
+  
+lcd - liquid crystal display reacts to heat/electricity
+touchscreen - calculates pressure to tell where on screen was pressed. capacitive touchscreens allow multiple simultaneous touches.
+transistor - simple an on/off switch controlled by electricity.
+chips are made up of a number of transistors
+
+Moore's law - computing power tends to aproximately double every 2 years
+  meaning - the number of transistors that can be packed into a given unit of space will roughly double every 2 years.
+    currently at the limit of how small transistors can get, looking for new material to achieve even smaller.
+
+Von Neumann Architecture - memory, cpu(control unit, arithmetic logic unit), io
+  main components of computer, how they are connected.
+  FORMAL - memory and cpu separate, IO stuff, all connected with system bus. main memory stores instrctions
+  memory - holds data and the program processing the data. RAM is lost when power turned off. memory built from DRAM chips.
+    RAM is what holds everything you try to run.
+
+BIOS - holds startup information for cpu. runs on battery when pc off?
+
+RAM - volatile
+SAM - serial access memory - must go sequentially
+DRAM = dynamic random access memory - stores a bit of data using a transistor and capacitor. (filled capacitor is 1, empty 0
+SRAM - static RAM - 6 transistors, faster
+cache memory - consists of small, fast memory that acts as a buffer for DRAM. built from SRAM cells. fast, but expensive.
+
+SRAM is typically faster than DRAM, but more expensive. each SRAM cell comprised of 6 transistors unlike DRAM 1 transistor/1capacitor
+manufacturing integrated circuits - begins with Silicon, which is found in sand
+  materials can be added to silicon to make a conductor, resistor or semiconductor?
+  slice silicon cyllinders, clean off all dust, dice, set up, then sell to consumers.
+
+google/amazon trying to leave intel because of 2 bugs in it? hidden layer within with its own OS that can respond to foreign requests
+  other one allows anyone to access credentials stored on system.
+  ASSIGNMENT, figure out how these were discovered. "minux"?   web server specifically, programmed to respond to.
+
+Family of processors - INtel, ARM, aMD, IBM, MIPS
+  each have own Instruction Set Architecture - they do the same tasks, but with different instruction sets.
+    computer architecture - Instruction set architecture, Organization(how components assembled), Hardware
+      processer name specs - will give Instruction set and other stuff?
+    RISC (Reduced Intruction Set Computer) - every instruction has only one word. for smaller devices like phone, ARM.
+      must do work in registers
+    Complex Instruction Set Computer(CISC) - more complex instructions to use, ie. copy to location ie. Intel
+      can directly use main memory.
+Registers:
+  PC (Program Counter) - keep address of next instruction to execute
+  Memory address register - hold the address
+  MBR mem Buffer Register - hold the data (value or instruction)
+  IR (Instruction Register) - holds current instruction cpu is executing
+  ACC (Accmulater) - holds result of ALU
+
+FETCH - DECODE - EXECUTE CYCLE
+  cpu finds address in PC, sets MAR to address, takes value at that adress, stores to IR, increment PC.   (FETCH)
+  DECODE - parse instruction   then EXECUTE
+
+LOAD R1, A // loads data at A, store in R1    ////R1 means register 1
+ADD R4 R2 R1 // adds R1 and R2 vals stores in R4 supposedly.
+
+ARM - 32 floating point registers, 16 integer registers    ASSEMBLY CODE STARTS HERE
+  MOV R1, #5      copies the value of operand into a register     #5 means actual value, not memory.
+    MOV R0, #2     //can store value of other register too.
+    mov r1, r2, LSL #1    left shifts r2 and moves it into r1.
+      LSR, ASR
+  ADD a, b, c      adds b and c together and stores into a.
+    ADD R0, R1, R0     overwrites 2 in R0 with 7
+  SUB a, b, c      subtracts c from b and stores in a
+  LOAD values from memory into registers
+    LDR R3, [R2]
+  STORE result from register to memory
+    MOV R2, #0x1100
+    STR R0, [R2]      stores value from R0 into cell at 1100//[] means that value is memory address. MUST BE STORED IN REGISTER TO USE LIKE THIS
+  cmp r1, r2        subtract r2 from r1, used for branching, updates CPRS based on value.
+  and r2, r2, #1      if masks r2 with #1 and stores in r2.  5(101) mask 1 = 1
+
+Rasberry pie needs keyboard and monitor with usb and hdmi respectively. mouse too.
+  ifconfig    get ip address 10.12.224.100
+  pi is username on device   ssh is secure shell, encrypted message
+  ssh pi@10.12.224.100  //replace with one for specific pi.
+    runs on linux based OS.
+      mv addition.s add.s
+      cp addition.s add.s
+      ls - lists files in directory
+      clear - clears the screen of commands
+      rm -vf first.o - deletes the file first.o
+      mkdir (folderName)- makes a folder named folderName
+      cd (directoryName) - moves into directoryName   .. up a level 
+      vim - fileName.s - makes a text file named fileName   hit i to start writing code.     .s means it is assembly
+        .global main         main:     mov R0, #4        bx lr   -    tells to exit from file?
+      as -o ex1.o ex1.s   -    create object code from assembly code      gcc -o ex1 ex1.o     -     creates executable ex1 from object code
+      ./ex1          echo $?    -     prints value from instruction before echo to console
+                                        if other echo was before it, would return 0, same 0 as seen in C++ return 0;
+        R0 usually holds return from latest function?
+      exit - close connection with Rasberry Pi.
+
+RUN putty.exe
+  enter ip found on pi,     username is pi       password is admin
+  vim first.s         press i to type       escape exits back to normal mode
+    .global main      main:      assebly commands       bx lr
+    hit escape to exit edit mode       :wq    to exit the instance and save
+  as -o first.o first.s       assemble object objectName assemblycodename
+  gcc -o first first.o        compile object into executable first from first.o
+  ./first       runs the executable named first
+  echo $?       returns the value in r0.
+make a makefile (basically a batch to make exe) - syntax:
+  target : dependencies   
+    ex. first: first.o
+      gcc -o first first.o
+      first.o: first.s
+      as -o first.o first.s
+      clean:
+      rm -vf first.o
+  CTRL C TO BREAK OPERATION
+  vim Makefile  type the above in, then save, it works backwards
+    make - makes the file based on the code inside the makefile.
+    :%s/first/arithmetic/g     :%s search for first, replace with arithmetic, g means all in document.
+
+gdb
+  gdb --args something... - starts the debugger.
+  disassemble - lists steps and which step was last run?
+  print (or p) x - prints value in variable x to console
+  where - shows which step you are on.
+  info registers - shows all main register info.
+  info registers r3 - shows value in register 3.
+  stepi - steps forward?
+  break 0x000103fc
+  quit - exit debugger
+
+.global main identifies address of main    main: finds address of main, at start of assembly commands.
+bx lr - branch and exchange, link register - way to leave function
+
+
+//data section
+.data
+x:
+  .word 3
+y:
+  .word 4
+//code section
+.text
+.global main
+main:
+  LDR r1, addressOfX//get address of x
+  LDR r1, [r1]//store address in r1. both steps needed
+  LDR r2, addressOfY
+  LDR r2, [r2]
+  ADD R0, R1, R2
+  bx lr
+
+addressOfX: .word x
+addressOfY: .word y
+
+Branching - if the Program counter is not modified, it autoincrements. if it is modified, then it uses the new value instead of incrementing
+
+.global main
+main:
+  mov r0, #10
+  b end
+  mov r0, #5
+end:
+  bx lr    //B END JUMPS TO END BRANCH, THUS SKIPPING THE COMMAND TO SET IT TO 5.
+
+CPSR - current program status register - 8 bit register to keep track of status
+  in order: negative, zero, carry, overflow, unused, if...
+  IN BRANCHES:  B(type of branch) - jumps if bool satisfied
+    USE B end TO LEAVE BRANCH OR WILL CONTINUE LIKE A SWITCH STATEMENT.
+    EQ - Z=1   NE -   LT - < 
+
+Syntax for ARM instruction:
+  instruction Rdestination, Rsource1, source2  - last may or may not be register, second must be register.
+
+.data
+i:	.word
+x:	.word 0
+.text
+.global main
+main:
+  ldr r1, ai      -    adress of i
+  ldr r2, ax      -     load into r2 the address of x
+  ldr r3, [ax]     -    load value held by x into r3
+  mov r4, #1
+  str r4, [r1]   -    store value from r4 into address held by r1
+  b testCondition
+loop:
+  ldr r3, [r2]
+  ldr r4, [r1]
+  add r3, r3, r4
+  str r3, [r2]
+  add r4, r4, #1
+  str r4, [r1]//will keep running and go back to testCondition naturally
+testCondition:
+  ldr r4 [r1]     -    store value held by i into r4
+  cmp r4, #22
+  blt loop
+end:
+  mov r0, r3
+  bx lr
+ai: .word i
+ax: .word x
+
+c: int a[10];     a[0]  ->  *(a+0*elementSize)
+arrays in assembly
+  .data
+.balign 4    //makes address aligned 4 bytes at a time..?
+  a:
+    .skip 40  //allocates 40 bytes in sequence to use.
+  .text
+  .global main
+  main:
+    ldr r1, Aa
+    mov r2, #1
+    str r2, [r1]
+    add r3,r1,r2, LSL#2
+    str r2,[r3]
+    add r3,r3,r2,LSL#2
+    str r2,[r3]
+  Aa: .word a   //keeps track of base memory address in block.
+
+add r3,r1,r2  LSL#2
+str r2,[r3]
+
+equivalent to
+
+str r2, [r1, +r2, LSL#2]    will do operation and use that value for address
+
+ldr r2, [r1, #+12]!   will store operation into r1 before using it to load r2.
+
+str r2, [r1], +r3     will use r1, then change it based on operations after bracket.
+
+functions in ARM assembly - R13: Stack pointer(sp)     R14: Link register(lr) - holds address to return to when function completes
+  R15: program counter
+
+first 4 registers used for functions, if need more, need to use stack pointer to handle them all.
+
+int f(){ return 3+10; bx lr//jumps to address stored in link register} int main(){int x = f();//sets link register to current instruction
+  
+.data
+msg: .ascii2 "Hello, World"
+return: .word 0
+.text
+.global main
+main:
+  ldr r1, addressofreturn
+  str lr, [r1]
+  ldr r0, addressofmsg
+  bl puts  //calls puts function from C to run, since puts only took 1 arg, only used r0
+  ldr r1, addressofreturn
+  ldr lr, [r1]
+  bx lr
+.global puts  //identifies uses c..?
+addressofmsg: .word msg
+addressofreturn: .word return
+
+in stack frame, first value is return value. with nested calls, need to store lr value to main memory and load it back when done.
+
+pompt:
+  .asciiz "enter a number"
+prompt2:
+  .asciiz "you entered \n"
+number:
+  .word
+format"
+  .asciiz "%d"
+ldr ro, aprompt
+bl printf
+ldr r0, aformat
+ldr r1, anumber
+bl scanf//has 2 parameters
+ldr r0, aprompt2
+ldr r1, anumber
+bl printf
+.global printf
+.global scanf
+
+pr1:
+ .asciiz "Hello"
+pr2:
+ .asciiz "%d"
+.....
+ mov r0, addresspr1
+ mov r1, #2
+ mov r2, #1
+ bl printf  //print Hello
+ mov r1, #2
+ mov r2, #1
+ bl printf  //print Hello
+ mov r0, addresspr2
+ mov r1, #2
+ mov r2, #1
+ bl printf  //print 2
+
+passing more than 4 values:
+void test_function(int a, int b, int c, int d, int e);
+ mov r0, #5
+ str r0, [sp, #-4]!   //stack starts at top, so decrementing actually is where new data goes
+ mov r3, #4
+ mov r2, #3
+ mov r1, #2
+ mov r0, #1
+ bl test_function
+
+r3=4
+r2=3
+r1=2
+r0=1
+bl testfunction
+ldr r1, addressofvalue
+str r0, [r1]//testfunction overrides r0 with return statement
+
+
+.data
+msg: asciiz "factorial of %d is %d"
+.text
+factorial:
+ str lr, [sp, $-4]!
+ str r0, [sp, #-4]!
+ cmp r0, #0
+ bne is-nonzero
+ mov r0, #1
+ b end
+is-nonzero:
+ sub r0, r0, #1
+ bl factorial
+ ldr r1, [sp]  //AFTER ALL FACTORIALS, load stored number into r1
+ mul r0, r0, r1 //multiply by r0, then continue
+end:
+ add sp, sp, #+4  //pop stack pointer, dont need that number any more
+ ldr lr, [sp], #+4  //load next stack pointer location, LOOPS UNTIL REACHES ORIGINAL POINTER FROM MAIN
+ bx lr //loops back to factorial call.
+ 
+.global main
+main:
+ str lr, [sp, #-4] //store for final return
+//UNNEEDED sub sp, sp, #4 //i dont know what this does
+ mov r0, #5
+ bl factorial //store link register to next instruction, program counter to beginning of factorial
+ mov r2, r0 //store value into r2 since the printf needs it in third slot
+ mov r1, #5 //supposed to be the number being calculated 5!, second for printf
+ ldr r0, addressOfMsg //message to print
+ bl printf
+//UNNEEDED add sp, sp, #+4 //this cancels out what i dont know.
+ ldr lr, [sp], #+4 //also unsure about this one.
+ bx lr
+addressofMsg: .word msg
+
+STACK:
+stored original link register to stack, called factorial.
+recursion:: store current link register to top of stack
+  store current value of r0 to stack, compare r0 to 0 to see if 0 or not.
+  if 0, set r0 to 1 and finish up
+  if nonzero, decrement r0 and run factorial again to make next loop.
+
+computer performance - flow input operations per second (flops), 
+  response time - how long it takes to run a job
+  throughput/bandwidth - # of tasks completed per unit of time.
+  performance = 1/execution time.      "x is n times faster than y" = performance(x)/performance(y)
+    divide slower by faster, faster is n times faster than slower.
+  RAM, processor speed, IO all affect performance.
+  cpu only runs one instruction at a time, switches based on clock cycles. works task on high, switches task on low
+    overclocking - increase # of ticks per second.
+  2.0 GHz -  if one cycle in one second, is 1 Hertz   2.0 GH = 2 billion cycles in a second
+    GHz - essentially the speed of the processor, higher the better. 
+  clock rate/frequency = cycles per second   essentially speed.
+  cycle time - time for one cycle/between clock ticks.
+
+CPU time = cpu clock cycles * clock cycle time = cpu clock cycles/cpu rate
+cpu clock cycles = InstructionCount * CyclesPerInstruction
+  ex. 2GHz clock, 10s cpu time. design another computer with 6s cpu time. and 1.2x cycles
+   CPU time = clock cycles/rate -> 10 = x/2E9 -> x=2E10    cpu B time = 2.4E10 cycles/rate B  -> rate B = 2.4E10/6 = 4E9 = 4 GHz
+ performance A = 1/cpu Time     performance A/performance B A: cycle time: 250 CPI 2   B: cycle time: 500 CPI 1.2
+  IC*1.2*500/(IC*2*250)=1.2 so A is 1.2 times faster than B
+ A: CPI=2 rate=5GHz  B: CPI=1 rate=3GHz   B is faster?
+
+Amdohl Law - overall speedup = 1/((1-F)+F/S)    F=fraction enhanced   S=speed up of enhanced fraction.
+ ex. if we made 90% of the program run 10 times faster, overall speedup = 5.26 times faster.
+ program is 75% cpu and 25% IO. which is better?   a) increase cpu speed by 50%  b) reducing IO time by half
+  a is easy, b -> 1/((1-.25)+.25/2)  S=2 because half the time means twice as efficient.
+
+PC - Instruction/memory - Data, Registers - ALU
+Multiplexer - device that selects one of several input signals and forwards the selected input into a single wire
+ combinational logic - the logic gates we know.
+  A, B, S to gate, S chooses which from A or B goes through  AS_ + SB  essentially, S determines which, if S=1, B pass, if S=0 A pass
+ sequential logic - 
+decoder - between instruction memory and registers - 
+ logic block that has n-bit input and 2^n outputs where only one output is asserted for each input combination.
+ the n bits usually signified by n lines connecting to decoder close by each other.
+ 3 inputs maps to 8 outputs, each being a separate register?
+
+sequential logic - 
+ flip flops (d-type) - keeps state, data only read when clock switches from 0 to 1
+  clock connected to all flip flops at same time. if data high at this time, reads as 1, if low at this time, reads as 0
+   connected to each other, output of first is input for second, only read when clock hits high, if 1st goes high, 2nd waits a cycle to go high..?
+   I dont understand what these are useful for...
+
+Stages of the Datapath: steps taken by cpu to run single instruction
+ instruction fetch, instruction decode, ALU, Memory access, register write
+ assumption: single cycle cpu
+ all of instruction is executed within one clock cycle.
+ instruction fetch - register crap from earlier
+ instruction decode - read opcode to determine instruction type, read data from necessary registers.
+  register format - 32 bit register, 11 bits to opcode, 5 to mid register, 6 to shamt 5 for each of right register, left register
+ ALU - real work of instructions, + -  * & | shifting compare
+ memory access - load/store. 
+ write the register...
+#17 comes from instruction memory into ALU, for add r1, r2, #17
+
+timing for stages of datapath:  let 100=time for register read/write    let 200 = rest   (picoseconds)
+     fetch    decode    ALU     mem     RW       total
+ldr  200      100       200     200     100      800
+str  200      100       200     200     idle     700
+Rformat 200   100       200     idle    100      600
+               
+add r9,r0,r1  IF     ID     ALU      MEM     RW
+sub r2,r9,r3         IF     ID       ALU     MEM      RW    problem: r9 not written before being loaded for sub.
+  data hazard - instruction relies on data from previous instruction.
+   resolutions: stall (software) - stall the ID for sub until after write in add since it depends on it.
+    forwarfing (hardware) - directly transfers data from ALU to next instruction's ALU, more expensive
+
+Cache memory - unit of caching is block (64 bits), usually very small, very costly. BUT FAST.
+ cache hit - address found in cache, returns quickly
+ cache miss - not in cache, takes entire block from main memory since may need nearby data soon.
+ principle of locality - temporal locality - items accessed recently are likely to be accessed again soon.
+  spatial locality - items near those accessed recently are likely tobe accessed.
+ blocks in cache must be labeled with an address.  addresses are explicitly stored.
+ cache keeps additional bits beyond data.
+cpu read/write - if cache hit, gets data quickly, if cache miss, address passes through to get data.
+ to write cache hit - write through - as soon as value in cache gets updated, updates in main memory too.
+  write back - only updates main memory when cache memory will get deleted.
+ write cache miss - write allocate - write and add to cache.
+  write no allocate - write but dont place in cache
+
+A fully associative cache - block size - 64 bytes.  # lines - 512   number of sets - 1   address size - 32 bits
+ fully associative cache - on a miss, data can be copied to any one cache line.
+ problems - need to search every line for a hit, with 512 lines, would take a long time to go through all of them.
+direct mapped cache - each block can go into only one cache line - need tag, offset, and now an index to handle.
+ 1110 0011 1111 0000 1110 1110 0101 0011 
+  offset (byte number) = last 6 bits because block is 64 bytes 2^6=64
+  index (set number) = 9 bits before the last 6 bits since 512 lines 2^9=512
+  tag - remaning bits not used
+ index is the number of the line that the cache will be stored in, tag is the value given to that index, offset gives the desired byte.
+ in case of multiple blocks with same index, would need to overwrite existing cache, can be supplemented by adding additional set for cache.
+  general design approach - combine both associative and direct mapped memory.
+
+set associative memory - cache divided into groups of blocks called sets. each memory address maps to exactly 1 set in cache, but data may
+ be placed in any block within that set.
+1 way associative memory - n/1 sets, 1 block each - essentially a direct mapped cache
+2 way associative memory - n/2 sets, 2 blocks each - like a direct mapped, but holds a second block which can handle duplicate index issue.
+4 way associative memory - n/4 sets, 4 blocks each - in case there are more duplicates you want to keep.
+linesPerSet way associative memory - n sets, linesPerSet blocks each.
+
+n block cache - means there are n sets.    n block 1 way - has n 1 block sized sets
+ n block 4 way - has n/4 4 block sized sets...
+
+DRAM - 10 times slower than SRAM
+DISC - 100000 times slower than DRAM
+
+virtual memory - using main memory as ram, mainly for when RAM is too small to run program.
+ all programs to run are given a virtual address space from 0 to some size.
+  cpu converts virtual memory to physical address in RAM.  
+
+a system without virtual memory - cpu finds address in RAM, in word aligned will take 4 bytes from address?
+with virtual memory - cpu initiates a virtual address, which gets converted to physical address, and gets processed by cpu?
+ uses piece called Memory Management Unit in cpu. this converts cpu addresses, which are all virtual, into physical ones.
+  makes a page-table for each process(maps virtual address to physical address, virtual address is index, physical is the entry at the index).
+   physical address can be in disc as well thanks to this. THE PAGE TABLE EXISTS WITHIN RAM.
+   1 means data in RAM, 0 means data in DISC
+   when data is loaded, 0 changes to 1, address changes to location in RAM.
+   cpu keeps a register to hold page table address for active program
+ if validation bit is 0, very costly to get memory from disc. called page fault. to mitigate page faults, more data is stored in each page.
+
+ virtual memory adds a level of obscurity to data making it more secure than just using RAM alone.
+examples - one page in page table has 4 kb (2^12 bytes). OS has page fault, so it loads that data into RAM.
+
+virtual memory is same as cache, has its own fully associative system. So it has its own offset, tag, 
+ ex - 32 bit machine with 256 mb RAM, 4kb pages.     32 bits can use 2^32 max, way more than available RAM.
+  virtual address - 32 bits     physical address - 28 bits
+   12 bits for page offset (for 4 kb), virtual has 20 bits for page number, physical has 16 bits for it.
+   0x3204 - use 0x204 as page offset.  0x3 as page number. if page holds 0,0x6  then physical address = 0x6 + 0x204
+    works because pages are the same size, offset finds specific byte within the selected page.
+    PAGE IS EQUIVALENT TO TAG IN CACHE.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

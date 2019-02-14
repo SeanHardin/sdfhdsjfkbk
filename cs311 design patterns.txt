@@ -1,0 +1,78 @@
+creational, structural, behavioral   are the three main types.
+factory method, abstract factory, builder, prototpe, singleton
+structural
+adapter(class), adapter(object),    MOREOOEOREOROERO
+
+observer - use publish and subscribe model to get and update the actual data from any view.
+factory - create an interface, each type inherits it and has own methods..?
+
+FACTORY - define an interface for classes to inherit with different methods in each for different inputs.
+abstract factory - simply a factory of factories. used when system should be independent of products created, essentially a framework.
+builder - its a fucking constructor. made of a director class, implementation class, and a builder class
+ used to keep objects immutable, or clean up messy constructors
+singleton - static object, needs to be made first, then send same object to everyone.
+ java has a keyword "public synchronized SingletonThreadSafe getInstance(){..." to lock execution to a single thread.
+  change line to 
+prototype - copy-constructor. object and send that to user to hide creation of object.
+adapter (wrapper) - translate between 2 different pieces of code.
+bridge - decouple similar but different objects so updating one doesn't affect the other...apparently.
+composite - group up similar elements into a single 'composite', change all at once when changing one.
+decorator - external object to add feature to a single object. ie, coloredShape holds color and shape.
+facade - hide complex code in a simple user interface...
+flyweight - addition to factory, only makes one of each item, so future calls use old object to save on space.
+ map type to object, on get, send object or create if not there. client specific attributes are on client
+ but attributes that are the same to all clients are held in the shared object.
+proxy - a proxy that controls and manages access to the object it is protecting
+iterator - its an iterator.
+chain of responsibility - send data down a chain until find right one to process, basically chained if else statements...
+command - obfuscate commands by making generic command interface and specific command subclasses
+mediator - holds relations between objects in self to organize code better, also simple methods to set up this.
+memento - store state of object as a memento, give to originator to 'roll back'. until then, caretaker stores it.
+state - variable for state, different actions based on state.
+strategy - define a family of algorithms and allow them to be used interchangibly
+observer - store data in one place, access this place to display to various classes.
+template - preset order of operations, but let child classes define operations themselves. via abstracts
+visitor - move all operations on an object into the 'visitor' item.accept(visitor){return visitor.visit(this);}
+
+interpreter - 
+
+
+
+
+
+project related:
+going to inject a new state into existing code via dlls
+IProcessStep s = CreateObject();?
+AppFramework should be like a third party library
+
+XML - it is case sensitive, has root element
+
+
+in C++::
+using System; using SystemXml;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
